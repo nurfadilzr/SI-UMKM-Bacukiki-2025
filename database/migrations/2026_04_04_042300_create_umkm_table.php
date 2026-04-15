@@ -26,7 +26,7 @@ return new class extends Migration
       $table->decimal('longitude', 10, 7)->nullable();
       $table->index(['latitude', 'longitude']);
 
-      // $table->integer('spreadsheet_row_id')->unique()->nullable();
+      $table->string('spreadsheet_row_id')->unique()->nullable();
 
       $table->foreignId('kelurahan_id')->constrained('kelurahan')->cascadeOnDelete();
       $table->foreignId('kategori_id')->constrained('kategori')->cascadeOnDelete();

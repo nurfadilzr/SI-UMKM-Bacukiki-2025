@@ -4,13 +4,95 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Umkm;
+use App\Models\Kelurahan;
+use App\Models\Kategori;
 
 class UmkmController extends Controller
 {
+  // 1. Menampilkan halaman form upload
+  public function showImportForm()
+  {
+    return view('admin.umkm.import');
+  }
+
+  // 2. Fungsi mengubah Link Google Drive menjadi Direct Image Link
+  private function convertDriveLink($url)
+  {
+    // Mencari ID unik dari link Google Drive menggunakan Regex
+    if (preg_match('/[-\w]{25,}/', $url, $matches)) {
+      $fileId = $matches[0];
+      // Mengubahnya menjadi link export yang bisa dibaca tag <img>
+      return "https://drive.google.com/uc?export=view&id=" . $fileId;
+    }
+    return $url; // Kembalikan link asli jika gagal ekstrak
+  }
+
+  // 3. Proses membaca file CSV
+  public function processImport(Request $request)
+  {
+    // Validasi file harus berupa CSV
+    $request->validate([
+      'file_csv' => 'required|mimes:csv,txt|max:2048',
+    ]);
+
+    $file = $request->file('file_csv');
+    $handle = fopen($file->path(), 'r');
+
+    // Lewati baris pertama jika itu adalah header (judul kolom Excel)
+    fgetcsv($handle);
+
+    $row_number = 2; // Mulai dari baris ke-2 (karena baris 1 header)
+
+    while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+      // Asumsi urutan kolom CSV (Sesuaikan dengan file Excel/Spreadsheet-mu):
+      // 0: Timestamp/Row ID, 1: Nama UMKM, 2: Alamat, 3: Kontak, 4: Titik Maps, 5: Nama Kelurahan, 6: Nama Kategori, 7: Link Foto
+      // 0: Timestamp/Row ID, 1: Nama UMKM, 2: Alamat, 3: Kelurahan, 4: Titik Maps, 5: Kategori, 6: WA, 7: Foto
+
+      // Cari ID Kelurahan berdasarkan nama yang diketik di form
+      $kelurahan = Kelurahan::where('nama_kelurahan', $data[3])->first();
+      $kelurahan_id = $kelurahan ? $kelurahan->id : null;
+
+      // Cari ID Kategori berdasarkan nama yang diketik di form
+      $kategori = Kategori::where('kategori_umkm', $data[5])->first();
+      $kategori_id = $kategori ? $kategori->id : null;
+
+      // Proses link foto
+      $link_foto_asli = $data[7];
+      $link_foto_direct = $this->convertDriveLink($link_foto_asli);
+
+      // Simpan ke database (Gunakan updateOrCreate agar tidak ada data ganda)
+      Umkm::updateOrCreate(
+        [
+          // Patokan data unik (Misal dari Timestamp form atau ID khusus di Spreadsheet)
+          'spreadsheet_row_id' => $data[0]
+        ],
+        [
+          'nama' => $data[1],
+          'alamat' => $data[2],
+          'titik_maps' => $data[4],
+          'kontak' => $data[6],
+          'kelurahan_id' => $kelurahan_id,
+          'kategori_id' => $kategori_id,
+          'foto' => $link_foto_direct,
+          // Status default 'menunggu' dan 'aktif' otomatis terisi oleh database, 
+          // tapi jika ingin dipertegas, bisa ditulis di sini:
+          'status_verif' => 'menunggu',
+          'status_umkm' => 'aktif',
+        ]
+      );
+      $row_number++;
+    }
+
+    fclose($handle);
+
+    return redirect()->back()->with('success', 'Data UMKM berhasil di-import dan sedang menunggu verifikasi!');
+  }
+
   /**
    * Display a listing of the resource.
    */
-  public function index() {
+  public function index()
+  {
     $data = Umkm::with(['kelurahan', 'kategori'])->get();
     return view('umkm.index', compact('data'));
   }
