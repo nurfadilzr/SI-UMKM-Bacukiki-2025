@@ -91,10 +91,33 @@ class UmkmController extends Controller
   /**
    * Display a listing of the resource.
    */
-  public function index()
+  public function index(Request $request)
   {
-    $data = Umkm::with(['kelurahan', 'kategori'])->get();
-    return view('umkm.index', compact('data'));
+    // Mulai query dengan mengambil relasinya juga agar query database lebih efisien
+    $query = Umkm::with(['kelurahan', 'kategori']);
+
+    // Jika Admin mengisi kolom pencarian (Nama UMKM)
+    if ($request->filled('search')) {
+      $query->where('nama', 'like', '%' . $request->search . '%');
+    }
+
+    // Jika Admin memilih filter Status Verifikasi
+    if ($request->filled('status_verif')) {
+      $query->where('status_verif', $request->status_verif);
+    }
+
+    // Jika Admin memilih filter Status Aktif
+    if ($request->filled('status_aktif')) {
+      $query->where('status_aktif', $request->status_aktif);
+    }
+
+    // Ambil datanya, urutkan dari yang terbaru, dan batasi 10 data per halaman (Pagination)
+    $umkms = $query->latest()->paginate(10);
+
+    return view('admin.umkm.index', compact('umkms'));
+
+    // $data = Umkm::with(['kelurahan', 'kategori'])->get();
+    // return view('umkm.index', compact('data'));
   }
 
   /**
@@ -142,6 +165,18 @@ class UmkmController extends Controller
    */
   public function destroy(string $id)
   {
-    //
+    $umkm = Umkm::findOrFail($id);
+    $umkm->delete();
+
+    return redirect()->back()->with('success', 'Data UMKM berhasil dihapus dari sistem.');
+  }
+
+  public function verifikasi($id)
+  {
+    // Ambil data UMKM berdasarkan ID, sertakan juga relasi kelurahan & kategori
+    $umkm = Umkm::with(['kelurahan', 'kategori'])->findOrFail($id);
+
+    // Tampilkan halaman verifikasi dan kirim datanya
+    return view('admin.umkm.verifikasi', compact('umkm'));
   }
 }
