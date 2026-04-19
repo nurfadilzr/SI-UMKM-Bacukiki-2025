@@ -6,6 +6,9 @@ use App\Http\Controllers\UmkmController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/tes', function () {
+    return 'Halo, project bisa jalan!';
+});
 
 // Rute untuk menampilkan halaman form import
 Route::get('/admin/umkm/import', [UmkmController::class, 'showImportForm'])->name('umkm.import.form');
@@ -19,7 +22,17 @@ Route::delete('/admin/umkm/{id}', [UmkmController::class, 'destroy'])->name('umk
 
 // (Persiapan) Rute untuk halaman verifikasi nanti
 Route::get('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'verifikasi'])->name('umkm.verifikasi');
+// Route BARU untuk menyimpan/memperbarui data verifikasi
+Route::put('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'updateVerifikasi'])->name('umkm.updateVerifikasi');
+
+
 
 // git add . 
 // git commit -m ""
 // git push -u origin main
+
+// php artisan migrate:fresh --seed     
+
+// klo loading lama
+// di .env, SESSION_DRIVER=file
+// hapus semua file di folder bootstrap-cache kecuali .gitignore

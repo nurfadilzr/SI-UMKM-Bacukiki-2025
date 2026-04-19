@@ -18,13 +18,15 @@ class UmkmController extends Controller
   // 2. Fungsi mengubah Link Google Drive menjadi Direct Image Link
   private function convertDriveLink($url)
   {
-    // Mencari ID unik dari link Google Drive menggunakan Regex
+    // Mencari string acak (ID Drive) yang panjangnya minimal 25 karakter
+    // Terdiri dari huruf, angka, strip (-), dan underscore (_)
     if (preg_match('/[-\w]{25,}/', $url, $matches)) {
       $fileId = $matches[0];
-      // Mengubahnya menjadi link export yang bisa dibaca tag <img>
-      return "https://drive.google.com/uc?export=view&id=" . $fileId;
+
+      // Menggunakan endpoint Thumbnail (Lebih stabil & anti-error untuk tag <img>)
+      return "https://drive.google.com/thumbnail?id=" . $fileId . "&sz=w800";
     }
-    return $url; // Kembalikan link asli jika gagal ekstrak
+    return $url;
   }
 
   // 3. Proses membaca file CSV
@@ -107,8 +109,8 @@ class UmkmController extends Controller
     }
 
     // Jika Admin memilih filter Status Aktif
-    if ($request->filled('status_aktif')) {
-      $query->where('status_aktif', $request->status_aktif);
+    if ($request->filled('status_umkm')) {
+      $query->where('status_umkm', $request->status_umkm);
     }
 
     // Ambil datanya, urutkan dari yang terbaru, dan batasi 10 data per halaman (Pagination)
@@ -178,5 +180,31 @@ class UmkmController extends Controller
 
     // Tampilkan halaman verifikasi dan kirim datanya
     return view('admin.umkm.verifikasi', compact('umkm'));
+  }
+
+  // 7. Menyimpan Proses Verifikasi (Tahap Akhir)
+  public function updateVerifikasi(Request $request, $id)
+  {
+    // Cari data UMKM
+    $umkm = Umkm::findOrFail($id);
+
+    // Validasi input (Latitude/Longitude boleh kosong, tapi Status wajib diisi)
+    $request->validate([
+      'latitude' => 'nullable|numeric',
+      'longitude' => 'nullable|numeric',
+      'status_verif' => 'required|in:disetujui,menunggu,ditolak',
+      'status_umkm' => 'required|in:aktif,tidak'
+    ]);
+
+    // Perbarui data ke database
+    $umkm->update([
+      'latitude' => $request->latitude,
+      'longitude' => $request->longitude,
+      'status_verif' => $request->status_verif,
+      'status_umkm' => $request->status_umkm
+    ]);
+
+    // Kembali ke halaman tabel dengan pesan sukses
+    return redirect()->route('umkm.index')->with('success', 'Data UMKM "' . $umkm->nama . '" berhasil diverifikasi dan diperbarui!');
   }
 }

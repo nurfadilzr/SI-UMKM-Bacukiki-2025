@@ -14,7 +14,7 @@ class Umkm extends Model
     'kontak',
     'foto',
     'status_verif',
-    'status_aktif',
+    'status_umkm',
     'latitude',
     'longitude',
     'spreadsheet_row_id', // <- Jangan lupa masukkan ini

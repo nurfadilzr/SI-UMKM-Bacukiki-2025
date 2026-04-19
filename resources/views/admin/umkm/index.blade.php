@@ -172,10 +172,10 @@
       </div>
 
       <div class="col-md-3">
-        <select name="status_aktif" class="form-select" onchange="this.form.submit()">
+        <select name="status_umkm" class="form-select" onchange="this.form.submit()">
           <option value="">Status UMKM</option>
-          <option value="aktif" {{ request('status_aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-          <option value="tidak" {{ request('status_aktif') == 'tidak' ? 'selected' : '' }}>Tidak Aktif</option>
+          <option value="aktif" {{ request('status_umkm') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+          <option value="tidak" {{ request('status_umkm') == 'tidak' ? 'selected' : '' }}>Tidak Aktif</option>
         </select>
       </div>
     </div>
@@ -219,7 +219,7 @@
           </td>
 
           <td>
-            @if($umkm->status_aktif == 'aktif')
+            @if($umkm->status_umkm == 'aktif')
             <span class="badge-custom badge-aktif">Aktif</span>
             @else
             <span class="badge-custom badge-tidak-aktif">Tidak Aktif</span>
