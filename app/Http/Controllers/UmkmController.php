@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Umkm;
 use App\Models\Kelurahan;
@@ -62,8 +64,9 @@ class UmkmController extends Controller
       $link_foto_asli = $data[7];
       $link_foto_direct = $this->convertDriveLink($link_foto_asli);
 
-      // Simpan ke database (Gunakan updateOrCreate agar tidak ada data ganda)
-      Umkm::updateOrCreate(
+      // updateOrCreate: Cari data. Jika ada, Timpali/Update. Jika tidak ada, buat baru.
+      // firstOrCreate: Cari data. Jika ada, Abaikan/Biarkan saja. Jika tidak ada, buat baru.
+      Umkm::firstOrCreate(
         [
           // Patokan data unik (Misal dari Timestamp form atau ID khusus di Spreadsheet)
           'spreadsheet_row_id' => $data[0]
@@ -78,8 +81,8 @@ class UmkmController extends Controller
           'foto' => $link_foto_direct,
           // Status default 'menunggu' dan 'aktif' otomatis terisi oleh database, 
           // tapi jika ingin dipertegas, bisa ditulis di sini:
-          'status_verif' => 'menunggu',
-          'status_umkm' => 'aktif',
+          // 'status_verif' => 'menunggu',
+          // 'status_umkm' => 'aktif',
         ]
       );
       $row_number++;
@@ -151,7 +154,15 @@ class UmkmController extends Controller
    */
   public function edit(string $id)
   {
-    //
+    // Ambil data UMKM berdasarkan ID, sertakan juga relasi kelurahan & kategori
+    $umkm = Umkm::with(['kelurahan', 'kategori'])->findOrFail($id);
+
+    // Ambil data Kelurahan dan Kategori untuk dropdown
+    $kelurahans = Kelurahan::orderBy('nama_kelurahan', 'asc')->get();
+    $kategoris = Kategori::orderBy('kategori_umkm', 'asc')->get();
+
+    // Tampilkan halaman edit dan kirim datanya
+    return view('admin.umkm.edit', compact('umkm', 'kelurahans', 'kategoris'));
   }
 
   /**
@@ -159,7 +170,59 @@ class UmkmController extends Controller
    */
   public function update(Request $request, string $id)
   {
-    //
+    // Cari data UMKM
+    $umkm = Umkm::findOrFail($id);
+
+    // Validasi input (Sertakan validasi untuk 'new_foto')
+    $request->validate([
+      'nama' => 'required|string|max:255',
+      'kontak' => 'required|string|max:20',
+      'kategori_id' => 'required|exists:kategori,id',
+      'kelurahan_id' => 'required|exists:kelurahan,id',
+      'alamat' => 'required|string',
+      'titik_maps' => 'required|url',
+      // Validasi foto baru (nullable karena boleh kosong jika tidak diganti)
+      'new_foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' // maks 2MB
+    ]);
+
+    // LOGIKA PENANGANAN FOTO BARU
+    if ($request->hasFile('new_foto')) {
+      // 1. Upload foto baru ke public/uploads/fotos/
+      $file = $request->file('new_foto');
+      // Membuat nama file unik: ID_UMKM-Nama-Acak.ekstensi
+      $filename = $umkm->id . '-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+      $file->move(public_path('uploads/umkm/'), $filename);
+
+      // 2. Hapus foto lama JIKA foto lama tersebut adalah file lokal (bukan GDrive)
+      // Kita anggap foto lokal adalah file di 'uploads/fotos/'
+      if (!str_contains($umkm->foto, 'drive.google.com') && $umkm->foto != 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan') {
+        // Trik: dapatkan nama file dari path lokal
+        $old_filename = basename($umkm->foto);
+        if (file_exists(public_path('uploads/umkm/' . $old_filename))) {
+          unlink(public_path('uploads/umkm/' . $old_filename));
+        }
+      }
+
+      // 3. Update path foto baru di database
+      $foto_path = asset('uploads/umkm/' . $filename);
+    } else {
+      // Gunakan foto lama jika tidak ada file baru diunggah
+      $foto_path = $umkm->foto;
+    }
+
+    // Perbarui data ke database
+    $umkm->update([
+      'nama' => $request->nama,
+      'alamat' => $request->alamat,
+      'titik_maps' => $request->titik_maps,
+      'kontak' => $request->kontak,
+      'kelurahan_id' => $request->kelurahan_id,
+      'kategori_id' => $request->kategori_id,
+      'foto' => $foto_path, // Path foto yang sudah diproses di atas
+    ]);
+
+    // Kembali ke halaman tabel dengan pesan sukses
+    return redirect()->route('umkm.index')->with('success', 'Data UMKM "' . $umkm->nama . '" berhasil diperbarui!');
   }
 
   /**

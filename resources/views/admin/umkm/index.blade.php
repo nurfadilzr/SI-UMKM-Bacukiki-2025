@@ -97,17 +97,17 @@
 
   /* Variasi Badge dari Color Tokens */
   .badge-disetujui {
-    background-color: var(--color-green-light);
+    background-color: var(--color-green-300);
     color: var(--color-green);
   }
 
   .badge-menunggu {
-    background-color: var(--color-orange-light);
+    background-color: var(--color-orange-200);
     color: var(--color-orange);
   }
 
   .badge-ditolak {
-    background-color: #E5E7EB;
+    background-color: var(--color-gray-200);
     color: var(--color-gray);
   }
 
@@ -241,7 +241,7 @@
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 13px;">
                   <li>
                     <a class="dropdown-item d-flex" href="{{ route('umkm.verifikasi', $umkm->id) }}"> Verifikasi Data </a>
-                    <a class="dropdown-item d-flex" href="{{ route('umkm.verifikasi', $umkm->id) }}"> Edit Data </a>
+                    <a class="dropdown-item d-flex" href="{{ route('umkm.edit', $umkm->id) }}"> Edit Data </a>
                     <a class="dropdown-item d-flex" href="{{ route('umkm.verifikasi', $umkm->id) }}"> Ubah Status UMKM </a>
                   </li>
                 </ul>

@@ -26,21 +26,26 @@
 
       /* Turunan Warna (Opacity/Lightness untuk Background Badge dll) */
       --color-green-light: rgba(65, 100, 74, 0.15);
+      --color-green-300: #B3C1B7;
       --color-green-800: #54745C;
       /* Untuk badge disetujui */
       --color-orange-light: rgba(209, 122, 34, 0.15);
+      --color-orange-200: #F1D7BD;
+
       --color-blue-light: #BBC4D4;
+      --color-blue-200: #BBC4D4;
       --color-blue-600: #5F769A;
       --color-blue-700: #49628C;
-      --color-blue-200: #BBC4D4;
 
       /* blue 200 */
       --color-gray-light: #F3F4F6;
       --color-gray-50: #ECECEC;
-      /* Untuk badge menunggu / Background */
+      --color-gray-200: #C6C6C6;
       --color-gray-500: #8C8C8C;
       --color-gray-600: #797979;
       --color-gray-700: #666666;
+
+      --color-black-50: #E6E6E6;
 
       /* grey 500 */
       --color-bg-main: #FAFAFA;

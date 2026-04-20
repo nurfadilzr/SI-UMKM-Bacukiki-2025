@@ -25,6 +25,10 @@ Route::get('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'verifikasi'])
 // Route BARU untuk menyimpan/memperbarui data verifikasi
 Route::put('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'updateVerifikasi'])->name('umkm.updateVerifikasi');
 
+// Route untuk menampilkan halaman edit
+Route::get('/admin/umkm/{id}/edit', [UmkmController::class, 'edit'])->name('umkm.edit');
+// Route BARU untuk menyimpan/memperbarui data hasil editan
+Route::put('/admin/umkm/{id}/update', [UmkmController::class, 'update'])->name('umkm.update');
 
 
 // git add . 

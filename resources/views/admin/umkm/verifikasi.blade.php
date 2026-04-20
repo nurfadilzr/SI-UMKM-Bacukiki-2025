@@ -146,7 +146,7 @@
   }
 
   .form-control-readonly {
-    background-color: #F3F4F6;
+    background-color: var(--color-gray-50);
     border: 1px solid transparent;
     border-radius: 6px;
     padding: 10px 14px;
