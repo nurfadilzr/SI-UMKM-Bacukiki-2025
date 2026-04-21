@@ -254,7 +254,7 @@
   }
 </style>
 
-<form action="{{ route('umkm.updateVerifikasi', $umkm->id) }}" method="POST" id="form-verifikasi">
+<form action="{{ route('umkm.updateVerifikasi', $umkm->id) }}" method="POST" id="form-verifikasi" enctype="multipart/form-data">
   @csrf
   @method('PUT')
   <div class="verif-card">
@@ -291,43 +291,60 @@
     </div>
 
     <div id="content-step-1">
-      <p class="info-text mb-4">Silakan cek kesesuaian data UMKM di bawah. Apabila ada data yang tidak sesuai, harap lakukan perbaikan data pada menu Edit Data UMKM.</p>
+      <p class="info-text mb-4">Silakan cek kesesuaian data UMKM di bawah. Anda dapat langsung mengedit data jika terdapat ketidaksesuaian.</p>
+
+      @if ($errors->any())
+      <div class="alert alert-danger" style="border-radius: 8px; font-size: 13px; border:none; background-color:rgba(211,47,47,0.1); color:#D32F2F">
+        <strong>Gagal Menyimpan Data!</strong> Periksa kembali pengisian Anda.
+        <ul class="mb-0 mt-1">
+          @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+        </ul>
+      </div>
+      @endif
+
       <div class="row g-4 mb-4">
         <div class="col-lg-4">
-          <div class="foto-preview-container">
-            <div class="foto-overlay">Pratinjau Foto UMKM</div>
-            <img src="{{ $umkm->foto }}" alt="Foto UMKM {{ $umkm->nama }}" onerror="this.src='https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan'">
+          <div class="foto-edit-container" id="foto-preview-box" style="position:relative; width:100%; height:100%; min-height:280px; border-radius:8px; overflow:hidden; cursor:pointer;">
+            <div class="foto-overlay-edit" style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.7); color:white; padding:10px 8px; text-align:center; font-size:13px; font-weight:500;">Tekan untuk mengganti foto</div>
+            <img src="{{ $umkm->foto }}" id="foto-preview-img" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan'">
           </div>
+          <input type="file" name="new_foto" id="input-new-foto" style="display: none;" accept="image/jpeg,image/png,image/jpg">
         </div>
+
         <div class="col-lg-8">
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label-custom">Nama UMKM</label>
-              <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+              <input type="text" name="nama" class="form-control-custom" value="{{ old('nama', $umkm->nama) }}" required>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kontak UMKM</label>
-              <input type="text" class="form-control-readonly" value="{{ $umkm->kontak }}" readonly>
+              <input type="text" name="kontak" class="form-control-custom" value="{{ old('kontak', $umkm->kontak) }}" required>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kategori UMKM</label>
-              <input type="text" class="form-control-readonly" value="{{ $umkm->kategori ? $umkm->kategori->kategori_umkm : '-' }}" readonly>
+              <select name="kategori_id" class="form-select-custom" required>
+                @foreach($kategoris as $kategori)
+                <option value="{{ $kategori->id }}" {{ old('kategori_id', $umkm->kategori_id) == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
+                @endforeach
+              </select>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kelurahan UMKM</label>
-              <input type="text" class="form-control-readonly" value="{{ $umkm->kelurahan ? $umkm->kelurahan->nama_kelurahan : '-' }}" readonly>
+              <select name="kelurahan_id" class="form-select-custom" required>
+                @foreach($kelurahans as $kelurahan)
+                <option value="{{ $kelurahan->id }}" {{ old('kelurahan_id', $umkm->kelurahan_id) == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
+                @endforeach
+              </select>
             </div>
             <div class="col-12">
               <label class="form-label-custom">Alamat UMKM</label>
-              <input type="text" class="form-control-readonly" value="{{ $umkm->alamat }}" readonly>
-            </div>
-            <div class="col-12">
-              <label class="form-label-custom">Titik Lokasi UMKM</label>
-              <input type="text" class="form-control-readonly" value="{{ $umkm->titik_maps }}" readonly>
+              <input type="text" name="alamat" class="form-control-custom" value="{{ old('alamat', $umkm->alamat) }}" required>
             </div>
           </div>
         </div>
       </div>
+
       <div class="d-flex justify-content-end gap-2 mt-4">
         <a href="{{ route('umkm.index') }}" class="btn btn-batal text-decoration-none">Batal</a>
         <button type="button" class="btn btn-selanjutnya" onclick="goToStep(2)">Selanjutnya</button>
@@ -459,6 +476,27 @@
         stepDiv.classList.add('step-active');
       }
     }
+  }
+
+  // FUNGSI GANTI FOTO (Tambahkan di bawah script goToStep)
+  const fotoPreviewBox = document.getElementById('foto-preview-box');
+  const inputNewFoto = document.getElementById('input-new-foto');
+  const fotoPreviewImg = document.getElementById('foto-preview-img');
+
+  if (fotoPreviewBox) {
+    fotoPreviewBox.addEventListener('click', function() {
+      inputNewFoto.click();
+    });
+    inputNewFoto.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file && file.type.match('image.*')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          fotoPreviewImg.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    });
   }
 </script>
 @endsection

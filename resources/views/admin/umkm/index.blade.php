@@ -135,6 +135,44 @@
     background-color: var(--color-gray-light);
     color: var(--color-black);
   }
+
+  /* === STYLING MODAL HAPUS === */
+  .modal-backdrop.show {
+    opacity: 0.3 !important;
+    /* Membuat latar belakang gelap 30% */
+  }
+
+  .btn-modal-batal {
+    background-color: white;
+    color: var(--color-gray);
+    border: 1.5px solid var(--color-gray-500);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.1s;
+  }
+
+  .btn-modal-batal:hover {
+    background-color: var(--color-gray-50);
+    border: 1.5px solid var(--color-gray-500);
+  }
+
+  .btn-modal-hapus {
+    background-color: var(--color-orange);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-modal-hapus:hover {
+    opacity: 0.9;
+    color: white;
+  }
 </style>
 
 <h2 class="page-title">Manajemen Verifikasi Data</h2>
@@ -228,22 +266,33 @@
 
           <td class="text-center">
             <div class="d-flex justify-content-center align-items-center gap-1">
-              <form action="{{ route('umkm.destroy', $umkm->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="m-0 p-0">
+              <!-- <form action="{{ route('umkm.destroy', $umkm->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="m-0 p-0">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn-action" title="Hapus"><iconify-icon icon="lucide:trash-2"></iconify-icon></button>
-              </form>
+              </form> -->
+              <button type="button" class="btn-action" title="Hapus" data-bs-toggle="modal" data-bs-target="#deleteModal" data-umkm-id="{{ $umkm->id }}" data-umkm-nama="{{ $umkm->nama }}">
+                <iconify-icon icon="lucide:trash-2"></iconify-icon>
+              </button>
 
               <div class="dropdown m-0 p-0">
                 <button class="btn-action" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <iconify-icon icon="lucide:more-vertical"></iconify-icon>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius: 8px; font-family: 'Lato', sans-serif; font-size: 13px;">
+                  @if($umkm->status_verif == 'menunggu')
                   <li>
-                    <a class="dropdown-item d-flex" href="{{ route('umkm.verifikasi', $umkm->id) }}"> Verifikasi Data </a>
-                    <a class="dropdown-item d-flex" href="{{ route('umkm.edit', $umkm->id) }}"> Edit Data </a>
-                    <a class="dropdown-item d-flex" href="{{ route('umkm.verifikasi', $umkm->id) }}"> Ubah Status UMKM </a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('umkm.verifikasi', $umkm->id) }}">
+                      Verifikasi Data
+                    </a>
                   </li>
+                  @else
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('umkm.edit', $umkm->id) }}">
+                      Edit Data
+                    </a>
+                  </li>
+                  @endif
                 </ul>
               </div>
             </div>
@@ -268,4 +317,63 @@
   </div>
 
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);">
+
+      <div class="modal-header border-0 pb-0 mt-2 mx-2">
+        <h5 class="modal-title" id="deleteModalLabel" style="font-weight: 700; color: var(--color-black); font-size: 18px;">Hapus Data UMKM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body border-0 pt-3 pb-4 mx-2">
+        <p style="font-size: 14px; color: var(--color-black); margin-bottom: 12px;">
+          Apakah Anda yakin ingin menghapus data UMKM <strong id="modal-nama-umkm">"Nama UMKM"</strong>?
+        </p>
+        <div class="d-flex align-items-center gap-2" style="font-size: 12px; color: #9CA3AF;">
+          <iconify-icon icon="lucide:alert-triangle" style="color: var(--color-orange); font-size: 16px;"></iconify-icon>
+          <span>Anda tidak bisa mengembalikan data yang sudah dihapus.</span>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 pt-0 mx-2 mb-2 d-flex justify-content-end gap-2">
+        <form id="formDeleteData" method="POST" action="" class="m-0 p-0">
+          @csrf
+          @method('DELETE')
+          <button type="submit" class="btn-modal-hapus">Hapus</button>
+        </form>
+
+        <button type="button" class="btn-modal-batal" data-bs-dismiss="modal">Batal</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deleteModal');
+
+    if (deleteModal) {
+      deleteModal.addEventListener('show.bs.modal', function(event) {
+        // Menangkap tombol tong sampah yang baru saja diklik
+        const button = event.relatedTarget;
+
+        // Mengambil ID dan Nama dari atribut data-* tombol tersebut
+        const umkmId = button.getAttribute('data-umkm-id');
+        const umkmNama = button.getAttribute('data-umkm-nama');
+
+        // Mengganti teks nama UMKM di dalam modal
+        const modalTextNama = deleteModal.querySelector('#modal-nama-umkm');
+        modalTextNama.textContent = '"' + umkmNama + '"';
+
+        // Mengubah URL 'action' pada form hapus agar sesuai dengan ID yang dipilih
+        // Pastikan URL dasar ini sesuai dengan route laravel kamu
+        const formDelete = deleteModal.querySelector('#formDeleteData');
+        formDelete.action = "{{ url('/admin/umkm') }}/" + umkmId;
+      });
+    }
+  });
+</script>
 @endsection
