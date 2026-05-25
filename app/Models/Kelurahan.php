@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Kelurahan extends Model
 {
   protected $table = 'kelurahan';
-  
+
   public function umkm()
   {
-    return $this->hasMany(Umkm::class);
+    return $this->hasMany(Umkm::class, 'id_umkm');
   }
 }

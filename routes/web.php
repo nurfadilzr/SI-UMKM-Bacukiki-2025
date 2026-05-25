@@ -30,6 +30,11 @@ Route::get('/admin/umkm/{id}/edit', [UmkmController::class, 'edit'])->name('umkm
 // Route BARU untuk menyimpan/memperbarui data hasil editan
 Route::put('/admin/umkm/{id}/update', [UmkmController::class, 'update'])->name('umkm.update');
 
+// Route tambah data manual
+Route::get('/admin/umkm/create', [UmkmController::class, 'create'])->name('umkm.create');
+Route::put('/admin/umkm/create', [UmkmController::class, 'store'])->name('umkm.store');
+
+
 
 // git add . 
 // git commit -m ""

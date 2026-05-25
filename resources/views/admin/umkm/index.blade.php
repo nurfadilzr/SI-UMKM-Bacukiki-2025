@@ -61,6 +61,60 @@
     color: #FFFFFF;
   }
 
+  /* === STYLING TOMBOL PILIHAN TAMBAH DATA (MODAL) === */
+  .btn-choice {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background-color: #FFFFFF;
+    color: var(--color-black);
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    text-align: left;
+  }
+
+  .btn-choice:hover {
+    border-color: var(--color-green);
+    background-color: var(--color-green-light);
+  }
+
+  .btn-choice .icon-box {
+    background-color: var(--color-gray-light);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--color-gray);
+    transition: all 0.2s;
+  }
+
+  .btn-choice:hover .icon-box {
+    background-color: #FFFFFF;
+    color: var(--color-green);
+  }
+
+  .btn-choice .text-box {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btn-choice .title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-black);
+    margin-bottom: 2px;
+  }
+
+  .btn-choice .subtitle {
+    font-size: 12px;
+    color: #9CA3AF;
+  }
+
   /* Styling Tabel Dasar */
   .custom-table th {
     font-weight: 500;
@@ -147,7 +201,7 @@
     color: var(--color-gray);
     border: 1.5px solid var(--color-gray-500);
     border-radius: 6px;
-    padding: 8px 16px;
+    padding: 8px 12px;
     font-size: 14px;
     font-weight: 500;
     transition: all 0.1s;
@@ -220,9 +274,9 @@
   </form>
 
   <div class="d-flex justify-content-end mb-3">
-    <a href="{{ route('umkm.import.form') }}" class="btn-primary-custom text-decoration-none">
+    <button type="button" class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#modalTambahData">
       <iconify-icon icon="lucide:plus" style="font-size: 16px;"></iconify-icon> Tambah UMKM
-    </a>
+    </button>
   </div>
 
   <div class="table-responsive">
@@ -323,7 +377,7 @@
     <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);">
 
       <div class="modal-header border-0 pb-0 mt-2 mx-2">
-        <h5 class="modal-title" id="deleteModalLabel" style="font-weight: 700; color: var(--color-black); font-size: 18px;">Hapus Data UMKM</h5>
+        <h5 class="modal-title" id="deleteModalLabel" style="font-weight: 600; color: var(--color-black); font-size: 18px;">Hapus Data UMKM</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -347,6 +401,46 @@
         <button type="button" class="btn-modal-batal" data-bs-dismiss="modal">Batal</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="modalTambahDataLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);">
+
+      <div class="modal-header border-0 pb-0 mt-2 mx-2">
+        <h5 class="modal-title" id="modalTambahDataLabel" style="font-weight: 700; color: var(--color-black); font-size: 18px;">Pilih Metode Tambah Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body border-0 pt-3 pb-4 mx-2">
+
+        <div class="d-flex flex-column gap-3">
+
+          <a href="{{ route('umkm.import.form') }}" class="btn-choice">
+            <div class="icon-box">
+              <iconify-icon icon="lucide:file-spreadsheet"></iconify-icon>
+            </div>
+            <div class="text-box">
+              <span class="title">Import dari Spreadsheet</span>
+              <span class="subtitle">Tambahkan banyak data sekaligus menggunakan file CSV.</span>
+            </div>
+          </a>
+
+          <a href="{{ route('umkm.create') }}" class="btn-choice">
+            <div class="icon-box">
+              <iconify-icon icon="lucide:keyboard"></iconify-icon>
+            </div>
+            <div class="text-box">
+              <span class="title">Input Data Manual</span>
+              <span class="subtitle">Masukkan data UMKM baru satu per satu melalui formulir.</span>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
     </div>
   </div>
 </div>

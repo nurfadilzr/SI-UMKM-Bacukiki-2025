@@ -15,20 +15,27 @@ class Umkm extends Model
     'foto',
     'status_verif',
     'status_umkm',
+    'catatan_penolakan',
     'latitude',
     'longitude',
-    'spreadsheet_row_id', // <- Jangan lupa masukkan ini
-    'kelurahan_id',
-    'kategori_id'
+    'spreadsheet_row_id',
+    'id_admin',
+    'id_kelurahan',
+    'id_kategori'
   ];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'id_admin');
+  }
 
   public function kelurahan()
   {
-    return $this->belongsTo(Kelurahan::class);
+    return $this->belongsTo(Kelurahan::class, 'id_kelurahan');
   }
 
   public function kategori()
   {
-    return $this->belongsTo(Kategori::class);
+    return $this->belongsTo(Kategori::class, 'id_kategori');
   }
 }

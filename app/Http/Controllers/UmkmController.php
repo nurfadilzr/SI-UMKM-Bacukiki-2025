@@ -49,7 +49,6 @@ class UmkmController extends Controller
 
     while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
       // Asumsi urutan kolom CSV (Sesuaikan dengan file Excel/Spreadsheet-mu):
-      // 0: Timestamp/Row ID, 1: Nama UMKM, 2: Alamat, 3: Kontak, 4: Titik Maps, 5: Nama Kelurahan, 6: Nama Kategori, 7: Link Foto
       // 0: Timestamp/Row ID, 1: Nama UMKM, 2: Alamat, 3: Kelurahan, 4: Titik Maps, 5: Kategori, 6: WA, 7: Foto
 
       // Cari ID Kelurahan berdasarkan nama yang diketik di form
@@ -128,17 +127,66 @@ class UmkmController extends Controller
   /**
    * Show the form for creating a new resource.
    */
+  // 8. Menampilkan Halaman Input Manual (Tahap 1)
   public function create()
   {
-    //
+    // Ambil data Kelurahan dan Kategori untuk dropdown
+    $kelurahans = Kelurahan::orderBy('nama_kelurahan', 'asc')->get();
+    $kategoris = Kategori::orderBy('kategori_umkm', 'asc')->get();
+
+    // Tampilkan halaman create dan kirim datanya
+    return view('admin.umkm.create', compact('kelurahans', 'kategoris'));
   }
 
   /**
    * Store a newly created resource in storage.
    */
+  // 9. Menyimpan Data UMKM Baru (Hasil Input Manual Tahap 1)
   public function store(Request $request)
   {
-    //
+    // Validasi input (Sertakan validasi wajib untuk 'new_foto')
+    $request->validate([
+      'nama' => 'required|string|max:255',
+      'kontak' => 'required|string|max:20',
+      'kategori_id' => 'required|exists:kategori,id',
+      'kelurahan_id' => 'required|exists:kelurahan,id',
+      'alamat' => 'required|string',
+      'titik_maps' => 'required|url',
+      // Validasi foto baru (wajib diisi untuk data baru)
+      'new_foto' => 'required|image|mimes:jpeg,png,jpg|max:2048' // maks 2MB
+    ]);
+
+    // LOGIKA PENANGANAN FOTO BARU
+    if ($request->hasFile('new_foto')) {
+      // 1. Upload foto baru ke public/uploads/umkm/
+      $file = $request->file('new_foto');
+      // Membuat nama file unik: ID_UMKM_BARU-Nama-Acak.ekstensi
+      // Karena ID UMKM baru belum ada, kita gunakan string acak saja
+      $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+      $file->move(public_path('uploads/umkm/'), $filename);
+
+      // 2. Tentukan path foto baru di database
+      $foto_path = asset('uploads/umkm/' . $filename);
+    } else {
+      // Ini seharusnya tidak terjadi karena validasi 'required' di atas
+      $foto_path = 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan';
+    }
+
+    // Perbarui data ke database
+    $umkm = Umkm::create([
+      'nama' => $request->nama,
+      'alamat' => $request->alamat,
+      'titik_maps' => $request->titik_maps,
+      'kontak' => $request->kontak,
+      'kelurahan_id' => $request->kelurahan_id,
+      'kategori_id' => $request->kategori_id,
+      'foto' => $foto_path, // Path foto yang sudah diproses di atas
+      // Untuk data baru, status verif dan status umkm 
+      // akan mengikuti default 'menunggu' dan 'aktif' dari database
+    ]);
+
+    // Kembali ke halaman tabel dengan pesan sukses
+    return redirect()->route('umkm.index')->with('success', 'Data UMKM "' . $umkm->nama . '" berhasil ditambahkan secara manual!');
   }
 
   /**

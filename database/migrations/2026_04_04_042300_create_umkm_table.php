@@ -13,25 +13,27 @@ return new class extends Migration
   {
     Schema::create('umkm', function (Blueprint $table) {
       $table->id();
-      $table->string('nama', 150);
-      $table->text('alamat');
+      $table->string('nama', 255);
+      $table->string('alamat', 255);   // ganti varchar
       $table->string('titik_maps', 255);
       $table->string('kontak', 20);
       $table->string('foto', 255);
 
-      $table->enum('status_verif', ['disetujui', 'menunggu', 'ditolak'])->default('menunggu');
-      $table->enum('status_umkm', ['aktif', 'tidak'])->default('aktif');
-
-      $table->decimal('latitude', 10, 7)->nullable();
-      $table->decimal('longitude', 10, 7)->nullable();
+      $table->decimal('latitude', 8, 6)->nullable();   // (8,6) - 8 digit, 6 blkng koma
+      $table->decimal('longitude', 9, 6)->nullable();  // (9,6) - 9 digit, 6 blkng koma
       $table->index(['latitude', 'longitude']);
 
       $table->string('spreadsheet_row_id')->unique()->nullable();
 
-      $table->foreignId('kelurahan_id')->constrained('kelurahan')->cascadeOnDelete();
-      $table->foreignId('kategori_id')->constrained('kategori')->cascadeOnDelete();
-      $table->index('kelurahan_id');
-      $table->index('kategori_id');
+      $table->enum('status_verif', ['disetujui', 'menunggu', 'ditolak'])->default('menunggu');
+      $table->enum('status_umkm', ['aktif', 'tidak'])->default('aktif');
+      $table->string('catatan_penolakan', 255)->nullable();
+
+      $table->foreignId('id_admin')->constrained('users')->cascadeOnDelete();
+      $table->foreignId('id_kategori')->constrained('kategori')->cascadeOnDelete();
+      $table->foreignId('id_kelurahan')->constrained('kelurahan')->cascadeOnDelete();
+      $table->index('id_kelurahan');
+      $table->index('id_kategori');
 
       $table->timestamps();
     });
