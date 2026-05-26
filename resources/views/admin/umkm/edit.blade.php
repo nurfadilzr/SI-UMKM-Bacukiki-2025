@@ -43,8 +43,8 @@
     background: none;
     border: none;
     padding: 8px 16px;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     color: var(--color-gray-500);
     border-radius: 8px;
     display: flex;
@@ -113,20 +113,44 @@
   }
 
   .form-label-custom {
-    font-size: 12px;
+    display: block;
+    font-size: 13px;
     font-weight: 500;
     color: var(--color-black);
     margin-bottom: 6px;
   }
 
-  .form-control-custom,
-  .form-select-custom {
+  .form-control-custom {
     border-radius: 6px;
     border: 1px solid #9CA3AF;
     font-size: 13px;
     color: var(--color-black);
     padding: 10px 14px;
     width: 100%;
+  }
+
+  .form-select-custom {
+    display: block;
+    width: 100%;
+    /* Ini kunci agar selebar input lainnya */
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--color-black);
+    background-color: #FFFFFF;
+    border: 1px solid #9CA3AF;
+    border-radius: 6px;
+
+    /* Menghilangkan panah dropdown jadul bawaan browser */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Menggantinya dengan panah custom yang lebih modern */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px 10px;
+    transition: border-color 0.2s;
   }
 
   .form-control-custom:focus,
@@ -146,6 +170,17 @@
     font-size: 13px;
     color: var(--color-black);
     cursor: pointer;
+  }
+
+  .form-control-readonly {
+    background-color: var(--color-gray-50);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--color-gray-700);
+    width: 100%;
+    pointer-events: none;
   }
 
   /* === BUTTON STYLING === */
@@ -182,9 +217,9 @@
   }
 
   .btn-maps {
-    background-color: #E2E8F0;
+    background-color: var(--color-blue-200);
     color: var(--color-blue);
-    border: 1px solid var(--color-blue);
+    border: 1.5px solid var(--color-blue);
     border-radius: 6px;
     padding: 8px 16px;
     font-size: 12px;
@@ -193,6 +228,12 @@
     align-items: center;
     gap: 6px;
     text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .btn-maps:hover {
+    background-color: #CBD5E1;
+    color: var(--color-blue);
   }
 </style>
 
@@ -213,22 +254,10 @@
     @endif
 
     <div class="edit-tabs">
-      <button type="button" class="tab-btn active" onclick="switchTab('tab-1', this)">
-        <!-- <iconify-icon icon="lucide:file-text"></iconify-icon>  -->
-        Informasi Dasar
-      </button>
-      <button type="button" class="tab-btn" onclick="switchTab('tab-2', this)">
-        <!-- <iconify-icon icon="lucide:map-pin"></iconify-icon>  -->
-        Titik Koordinat
-      </button>
-      <button type="button" class="tab-btn" onclick="switchTab('tab-3', this)">
-        <!-- <iconify-icon icon="lucide:sliders-horizontal"></iconify-icon>  -->
-        Status Verifikasi
-      </button>
-      <button type="button" class="tab-btn" onclick="switchTab('tab-4', this)">
-        <!-- <iconify-icon icon="lucide:sliders-horizontal"></iconify-icon>  -->
-        Status UMKM
-      </button>
+      <button type="button" class="tab-btn active" onclick="switchTab('tab-1', this)">Informasi Dasar</button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-2', this)">Titik Koordinat</button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-3', this)">Status Verifikasi</button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab-4', this)">Status UMKM</button>
     </div>
 
     <div id="tab-1" class="form-section active">
@@ -253,17 +282,17 @@
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kategori UMKM</label>
-              <select name="kategori_id" class="form-select-custom" required>
+              <select name="id_kategori" class="form-select-custom" required>
                 @foreach($kategoris as $kategori)
-                <option value="{{ $kategori->id }}" {{ old('kategori_id', $umkm->kategori_id) == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
+                <option value="{{ $kategori->id }}" {{ old('id_kategori', $umkm->id_kategori) == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
                 @endforeach
               </select>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kelurahan UMKM</label>
-              <select name="kelurahan_id" class="form-select-custom" required>
+              <select name="id_kelurahan" class="form-select-custom" required>
                 @foreach($kelurahans as $kelurahan)
-                <option value="{{ $kelurahan->id }}" {{ old('kelurahan_id', $umkm->kelurahan_id) == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
+                <option value="{{ $kelurahan->id }}" {{ old('id_kelurahan', $umkm->id_kelurahan) == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
                 @endforeach
               </select>
             </div>
@@ -271,32 +300,35 @@
               <label class="form-label-custom">Alamat UMKM</label>
               <input type="text" name="alamat" class="form-control-custom" value="{{ old('alamat', $umkm->alamat) }}" required>
             </div>
+            <div class="col-12">
+              <label class="form-label-custom">Titik Lokasi UMKM</label>
+              <input type="url" name="titik_maps" class="form-control-custom" value="{{ old('titik_maps', $umkm->titik_maps) }}" required>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div id="tab-2" class="form-section">
+      <div class="mb-3" style="max-width: 350px;">
+        <label class="form-label-custom">Nama UMKM</label>
+        <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+      </div>
       <div class="mb-4">
-        <div class="mb-3">
-          <a href="{{ $umkm->titik_maps }}" target="_blank" class="btn-maps m-0">
-            <iconify-icon icon="lucide:external-link" style="font-size: 14px;"></iconify-icon> Buka Link Maps Saat Ini
-          </a>
-        </div>
-
-        <label class="form-label-custom mb-2">Link Titik Lokasi UMKM (Google Maps)</label>
-
-        <input type="url" name="titik_maps" class="form-control-custom" value="{{ old('titik_maps', $umkm->titik_maps) }}" required>
+        <label class="form-label-custom">Titik Lokasi UMKM</label>
+        <a href="{{ $umkm->titik_maps }}" target="_blank" class="btn btn-maps">
+          <iconify-icon icon="lucide:map-pin" style="font-size: 16px;"></iconify-icon> Buka di Google Maps
+        </a>
       </div>
 
       <div class="row g-4 mb-4">
         <div class="col-md-6">
           <label class="form-label-custom">Latitude (Lintang)</label>
-          <input type="text" name="latitude" class="form-control-custom" placeholder="contoh: -5.123456" value="{{ old('latitude', $umkm->latitude) }}">
+          <input type="text" name="latitude" class="form-control-custom" value="{{ old('latitude', $umkm->latitude) }}">
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Longitude (Bujur)</label>
-          <input type="text" name="longitude" class="form-control-custom" placeholder="contoh: 119.123456" value="{{ old('longitude', $umkm->longitude) }}">
+          <input type="text" name="longitude" class="form-control-custom" value="{{ old('longitude', $umkm->longitude) }}">
         </div>
       </div>
     </div>
@@ -304,7 +336,11 @@
     <div id="tab-3" class="form-section">
       <div class="row g-5 mb-4">
         <div class="col-md-6">
-          <label class="form-label-custom mb-3" style="font-size: 14px; font-weight: 500;">Ubah Status Verifikasi</label>
+          <div class="mb-3" style="max-width: 350px;">
+            <label class="form-label-custom">Nama UMKM</label>
+            <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+          </div>
+          <label class="form-label-custom mb-2" style="font-size: 13px; font-weight: 500;">Ubah Status Verifikasi</label>
           <div class="form-check mb-2">
             <input class="form-check-input" type="radio" name="status_verif" id="verif_disetujui" value="disetujui" {{ old('status_verif', $umkm->status_verif) == 'disetujui' ? 'checked' : '' }} required>
             <label class="form-check-label" for="verif_disetujui">Disetujui</label>
@@ -324,7 +360,11 @@
     <div id="tab-4" class="form-section">
       <div class="row g-5 mb-4">
         <div class="col-md-6">
-          <label class="form-label-custom mb-3" style="font-size: 14px; font-weight: 500;">Ubah Status UMKM</label>
+          <div class="mb-3" style="max-width: 350px;">
+            <label class="form-label-custom">Nama UMKM</label>
+            <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+          </div>
+          <label class="form-label-custom mb-2" style="font-size: 13px; font-weight: 500;">Ubah Status UMKM</label>
           <div class="form-check mb-2">
             <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ old('status_umkm', $umkm->status_umkm) == 'aktif' ? 'checked' : '' }} required>
             <label class="form-check-label" for="aktif_ya">Aktif</label>

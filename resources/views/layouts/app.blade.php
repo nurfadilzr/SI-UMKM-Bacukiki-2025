@@ -28,7 +28,6 @@
       --color-green-light: rgba(65, 100, 74, 0.15);
       --color-green-300: #B3C1B7;
       --color-green-800: #54745C;
-      /* Untuk badge disetujui */
       --color-orange-light: rgba(209, 122, 34, 0.15);
       --color-orange-200: #F1D7BD;
 

@@ -139,10 +139,44 @@
   }
 
   .form-label-custom {
+    display: block;
     font-size: 13px;
     font-weight: 500;
     color: var(--color-black);
     margin-bottom: 6px;
+  }
+
+  /* Memaksa dropdown selebar 100% dan menyeragamkan bentuknya dengan input teks */
+  .form-select-custom {
+    display: block;
+    width: 100%;
+    /* Ini kunci agar selebar input lainnya */
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--color-black);
+    background-color: #FFFFFF;
+    border: 1px solid #9CA3AF;
+    border-radius: 6px;
+
+    /* Menghilangkan panah dropdown jadul bawaan browser */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Menggantinya dengan panah custom yang lebih modern */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px 10px;
+    transition: border-color 0.2s;
+  }
+
+  /* Efek menyala hijau saat dropdown diklik */
+  .form-select-custom:focus,
+  .form-control-custom:focus {
+    border-color: var(--color-green);
+    box-shadow: 0 0 0 0.15rem var(--color-green-light);
+    outline: none;
   }
 
   .form-control-readonly {
@@ -323,23 +357,27 @@
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kategori UMKM</label>
-              <select name="kategori_id" class="form-select-custom" required>
+              <select name="id_kategori" class="form-select-custom" required>
                 @foreach($kategoris as $kategori)
-                <option value="{{ $kategori->id }}" {{ old('kategori_id', $umkm->kategori_id) == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
+                <option value="{{ $kategori->id }}" {{ old('id_kategori', $umkm->id_kategori) == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
                 @endforeach
               </select>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kelurahan UMKM</label>
-              <select name="kelurahan_id" class="form-select-custom" required>
+              <select name="id_kelurahan" class="form-select-custom" required>
                 @foreach($kelurahans as $kelurahan)
-                <option value="{{ $kelurahan->id }}" {{ old('kelurahan_id', $umkm->kelurahan_id) == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
+                <option value="{{ $kelurahan->id }}" {{ old('id_kelurahan', $umkm->id_kelurahan) == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
                 @endforeach
               </select>
             </div>
             <div class="col-12">
               <label class="form-label-custom">Alamat UMKM</label>
               <input type="text" name="alamat" class="form-control-custom" value="{{ old('alamat', $umkm->alamat) }}" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label-custom">Titik Lokasi UMKM</label>
+              <input type="url" name="titik_maps" class="form-control-custom" value="{{ old('titik_maps', $umkm->titik_maps) }}" required>
             </div>
           </div>
         </div>
@@ -359,8 +397,8 @@
         </a>
       </div>
       <div class="mb-4">
-        <label class="form-label-custom">Titik Lokasi UMKM</label><br>
-        <a href="{{ $umkm->titik_maps }}" target="_blank" class="btn btn-maps mt-1">
+        <label class="form-label-custom">Titik Lokasi UMKM</label>
+        <a href="{{ $umkm->titik_maps }}" target="_blank" class="btn btn-maps">
           <iconify-icon icon="lucide:map-pin" style="font-size: 16px;"></iconify-icon> Buka di Google Maps
         </a>
       </div>

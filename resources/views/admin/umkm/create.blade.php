@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+<!-- HALAMAN INPUT DATA MANUAL -->
+
 @section('content')
 <style>
   /* === STYLING CARD UTAMA === */
@@ -279,19 +281,19 @@
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kategori UMKM</label>
-              <select name="kategori_id" class="form-select-custom">
+              <select name="id_kategori" class="form-select-custom">
                 <option value="" disabled selected>Pilih Kategori UMKM</option>
                 @foreach($kategoris as $kategori)
-                <option value="{{ $kategori->id }}" {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
+                <option value="{{ $kategori->id }}" {{ old('id_kategori') == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
                 @endforeach
               </select>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kelurahan UMKM</label>
-              <select name="kelurahan_id" class="form-select-custom">
+              <select name="id_kelurahan" class="form-select-custom">
                 <option value="" disabled selected>Pilih Kelurahan UMKM</option>
                 @foreach($kelurahans as $kelurahan)
-                <option value="{{ $kelurahan->id }}" {{ old('kelurahan_id') == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
+                <option value="{{ $kelurahan->id }}" {{ old('id_kelurahan') == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
                 @endforeach
               </select>
             </div>

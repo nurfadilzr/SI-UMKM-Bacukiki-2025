@@ -1,16 +1,15 @@
 @extends('layouts.app')
 
+<!-- HALAMAN MANAJEMEN VERIF DATA -->
+
 @section('content')
 <style>
   /* Styling Khusus Halaman Tabel (Disesuaikan ke skala 90%) */
   .page-title {
     font-weight: 700;
-    /* Bold */
     font-size: 22px;
-    /* Diperkecil dari 26px */
     color: var(--color-black);
     margin-bottom: 24px;
-    /* Margin diperkecil dari 32px */
   }
 
   /* Container Card Tabel */
@@ -19,24 +18,62 @@
     border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 20px;
-    /* Padding diperkecil dari 24px */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.02);
   }
 
-  /* Styling Input Search & Select */
-  .form-control,
-  .form-select {
-    border-radius: 6px;
-    border: 1.5px solid var(--color-grey-500);
-    font-size: 13px;
-    color: var(--color-gray);
-    font-weight: 400;
-    padding: 8px 8px;
-    box-shadow: none !important;
+  /* Trik agar border ikon dan border input menyala bersamaan saat diklik */
+  .custom-search-group:focus-within .search-icon-span,
+  .custom-search-group:focus-within .search-input-custom {
+    border-color: var(--color-green) !important;
   }
 
-  .form-control::placeholder {
+  .custom-search-group:focus-within {
+    box-shadow: 0 0 0 3px rgba(65, 100, 74, 0.15);
+    /* Efek glow hijau */
+    border-radius: 8px;
+  }
+
+  /* Ikon Kaca Pembesar di Kiri */
+  .search-icon-span {
+    border: 1.5px solid #E5E7EB;
+    /* Border abu-abu */
+    border-right: none !important;
+    /* Hilangkan border kanan agar menyatu dengan input */
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 10px 14px;
+    background-color: #FFFFFF;
     color: #9CA3AF;
+    transition: border-color 0.2s ease;
+  }
+
+  /* Kolom Ketik Search */
+  .search-input-custom {
+    border: 1.5px solid #E5E7EB;
+    border-left: none !important;
+    /* Hilangkan border kiri agar menyatu dengan ikon */
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-size: 14px;
+    box-shadow: none !important;
+    /* Menghilangkan efek glow biru bawaan Bootstrap */
+    transition: border-color 0.2s ease;
+  }
+
+  /* === STYLING UNTUK DROPDOWN === */
+  .filter-select-custom {
+    border: 1.5px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 10px 36px 10px 16px;
+    color: var(--color-gray);
+    box-shadow: none !important;
+    transition: all 0.2s ease;
+  }
+
+  .filter-select-custom:focus {
+    border-color: var(--color-green) !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
   }
 
   /* Tombol Utama (Blue) */
@@ -240,7 +277,7 @@
 
 <div class="table-container">
 
-  <form action="{{ route('umkm.index') }}" method="GET">
+  <!-- <form action="{{ route('umkm.index') }}" method="GET">
     <div class="row mb-3 align-items-center">
 
       <div class="col-md-4">
@@ -270,6 +307,40 @@
           <option value="tidak" {{ request('status_umkm') == 'tidak' ? 'selected' : '' }}>Tidak Aktif</option>
         </select>
       </div>
+    </div>
+  </form> -->
+
+  <form action="{{ route('umkm.index') }}" method="GET">
+    <div class="row mb-3 align-items-center">
+
+      <div class="col-md-4">
+        <div class="input-group custom-search-group">
+          <span class="input-group-text search-icon-span">
+            <iconify-icon icon="lucide:search" style="font-size: 16px;"></iconify-icon>
+          </span>
+          <input type="text" name="search" class="form-control ps-0 search-input-custom" placeholder="Cari UMKM" value="{{ request('search') }}">
+        </div>
+      </div>
+
+      <div class="col-md-2"></div>
+
+      <div class="col-md-3">
+        <select name="status_verif" class="form-select filter-select-custom" onchange="this.form.submit()">
+          <option value="">Status Verifikasi</option>
+          <option value="menunggu" {{ request('status_verif') == 'menunggu' ? 'selected' : '' }}>Menunggu</option>
+          <option value="disetujui" {{ request('status_verif') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+          <option value="ditolak" {{ request('status_verif') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <select name="status_umkm" class="form-select filter-select-custom" onchange="this.form.submit()">
+          <option value="">Status UMKM</option>
+          <option value="aktif" {{ request('status_umkm') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+          <option value="tidak" {{ request('status_umkm') == 'tidak' ? 'selected' : '' }}>Tidak Aktif</option>
+        </select>
+      </div>
+
     </div>
   </form>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Umkm;
@@ -53,11 +54,11 @@ class UmkmController extends Controller
 
       // Cari ID Kelurahan berdasarkan nama yang diketik di form
       $kelurahan = Kelurahan::where('nama_kelurahan', $data[3])->first();
-      $kelurahan_id = $kelurahan ? $kelurahan->id : null;
+      $id_kelurahan = $kelurahan ? $kelurahan->id : null;
 
       // Cari ID Kategori berdasarkan nama yang diketik di form
       $kategori = Kategori::where('kategori_umkm', $data[5])->first();
-      $kategori_id = $kategori ? $kategori->id : null;
+      $id_kategori = $kategori ? $kategori->id : null;
 
       // Proses link foto
       $link_foto_asli = $data[7];
@@ -75,9 +76,12 @@ class UmkmController extends Controller
           'alamat' => $data[2],
           'titik_maps' => $data[4],
           'kontak' => $data[6],
-          'kelurahan_id' => $kelurahan_id,
-          'kategori_id' => $kategori_id,
+          'id_kelurahan' => $id_kelurahan,
+          'id_kategori' => $id_kategori,
           'foto' => $link_foto_direct,
+          // Mengambil ID admin yang sedang login. 
+          // Jika karena alasan tertentu auth kosong (misal saat testing), beri nilai default 1.
+          'id_admin' => Auth::id() ?? 1,
           // Status default 'menunggu' dan 'aktif' otomatis terisi oleh database, 
           // tapi jika ingin dipertegas, bisa ditulis di sini:
           // 'status_verif' => 'menunggu',
@@ -148,8 +152,8 @@ class UmkmController extends Controller
     $request->validate([
       'nama' => 'required|string|max:255',
       'kontak' => 'required|string|max:20',
-      'kategori_id' => 'required|exists:kategori,id',
-      'kelurahan_id' => 'required|exists:kelurahan,id',
+      'id_kategori' => 'required|exists:kategori,id',
+      'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
       // Validasi foto baru (wajib diisi untuk data baru)
@@ -178,8 +182,8 @@ class UmkmController extends Controller
       'alamat' => $request->alamat,
       'titik_maps' => $request->titik_maps,
       'kontak' => $request->kontak,
-      'kelurahan_id' => $request->kelurahan_id,
-      'kategori_id' => $request->kategori_id,
+      'id_kelurahan' => $request->id_kelurahan,
+      'id_kategori' => $request->id_kategori,
       'foto' => $foto_path, // Path foto yang sudah diproses di atas
       // Untuk data baru, status verif dan status umkm 
       // akan mengikuti default 'menunggu' dan 'aktif' dari database
@@ -222,8 +226,8 @@ class UmkmController extends Controller
     $request->validate([
       'nama' => 'required|string|max:255',
       'kontak' => 'required|string|max:20',
-      'kategori_id' => 'required|exists:kategori,id',
-      'kelurahan_id' => 'required|exists:kelurahan,id',
+      'id_kategori' => 'required|exists:kategori,id',
+      'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
       'new_foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -256,8 +260,9 @@ class UmkmController extends Controller
       'alamat' => $request->alamat,
       'titik_maps' => $request->titik_maps,
       'kontak' => $request->kontak,
-      'kelurahan_id' => $request->kelurahan_id,
-      'kategori_id' => $request->kategori_id,
+      'id_kelurahan' => $request->id_kelurahan,
+      'id_kategori' => $request->id_kategori,
+      'id_admin' => Auth::id() ?? 1,
       'latitude' => $request->latitude,
       'longitude' => $request->longitude,
       'status_verif' => $request->status_verif,
@@ -289,12 +294,6 @@ class UmkmController extends Controller
     $kategoris = Kategori::orderBy('kategori_umkm', 'asc')->get();
 
     return view('admin.umkm.verifikasi', compact('umkm', 'kelurahans', 'kategoris'));
-
-    // // Ambil data UMKM berdasarkan ID, sertakan juga relasi kelurahan & kategori
-    // $umkm = Umkm::with(['kelurahan', 'kategori'])->findOrFail($id);
-
-    // // Tampilkan halaman verifikasi dan kirim datanya
-    // return view('admin.umkm.verifikasi', compact('umkm'));
   }
 
   // 7. Menyimpan Proses Verifikasi (Tahap Akhir)
@@ -306,8 +305,8 @@ class UmkmController extends Controller
     $request->validate([
       'nama' => 'required|string|max:255',
       'kontak' => 'required|string|max:20',
-      'kategori_id' => 'required|exists:kategori,id',
-      'kelurahan_id' => 'required|exists:kelurahan,id',
+      'id_kategori' => 'required|exists:kategori,id',
+      'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
       'new_foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -340,8 +339,8 @@ class UmkmController extends Controller
       'alamat' => $request->alamat,
       'titik_maps' => $request->titik_maps,
       'kontak' => $request->kontak,
-      'kelurahan_id' => $request->kelurahan_id,
-      'kategori_id' => $request->kategori_id,
+      'id_kelurahan' => $request->id_kelurahan,
+      'id_kategori' => $request->id_kategori,
       'latitude' => $request->latitude,
       'longitude' => $request->longitude,
       'status_verif' => $request->status_verif,
@@ -350,27 +349,5 @@ class UmkmController extends Controller
     ]);
 
     return redirect()->route('umkm.index')->with('success', 'Data UMKM "' . $umkm->nama . '" berhasil diverifikasi dan disimpan!');
-
-    // // Cari data UMKM
-    // $umkm = Umkm::findOrFail($id);
-
-    // // Validasi input (Latitude/Longitude boleh kosong, tapi Status wajib diisi)
-    // $request->validate([
-    //   'latitude' => 'nullable|numeric',
-    //   'longitude' => 'nullable|numeric',
-    //   'status_verif' => 'required|in:disetujui,menunggu,ditolak',
-    //   'status_umkm' => 'required|in:aktif,tidak'
-    // ]);
-
-    // // Perbarui data ke database
-    // $umkm->update([
-    //   'latitude' => $request->latitude,
-    //   'longitude' => $request->longitude,
-    //   'status_verif' => $request->status_verif,
-    //   'status_umkm' => $request->status_umkm
-    // ]);
-
-    // // Kembali ke halaman tabel dengan pesan sukses
-    // return redirect()->route('umkm.index')->with('success', 'Data UMKM "' . $umkm->nama . '" berhasil diverifikasi dan diperbarui!');
   }
 }
