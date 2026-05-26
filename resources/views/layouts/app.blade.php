@@ -108,7 +108,6 @@
     .sidebar-subtitle {
       color: var(--color-gray);
       font-size: 11px;
-      /* Diperkecil dari 12px */
       font-weight: 400;
     }
 
@@ -120,7 +119,6 @@
     .nav-link-custom {
       color: var(--color-green);
       padding: 8px 10px;
-      /* Padding menu dirapatkan */
       border-radius: 5px;
       margin-bottom: 6px;
       display: flex;
@@ -129,13 +127,11 @@
       text-decoration: none;
       font-weight: 500;
       font-size: 12px;
-      /* Diperkecil dari 13px */
       transition: all 0.2s ease-in-out;
     }
 
     .nav-link-custom iconify-icon {
       font-size: 18px;
-      /* Ikon diperkecil dari 20px */
     }
 
     .nav-link-custom:hover {
@@ -197,11 +193,26 @@
     </div>
 
     <nav class="nav-menu">
-      <a href="#" class="nav-link-custom"><iconify-icon icon="lucide:layout-dashboard"></iconify-icon> Dashboard</a>
-      <a href="#" class="nav-link-custom"><iconify-icon icon="lucide:list"></iconify-icon> Daftar UMKM</a>
-      <a href="{{ route('umkm.index') }}" class="nav-link-custom active"><iconify-icon icon="lucide:shield-check"></iconify-icon> Verifikasi Data</a>
-      <a href="#" class="nav-link-custom"><iconify-icon icon="lucide:map-pin"></iconify-icon> Peta Sebaran</a>
-      <a href="#" class="nav-link-custom"><iconify-icon icon="lucide:tags"></iconify-icon> Tambah Kategori</a>
+      <a href="#"
+        class="nav-link-custom {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <iconify-icon icon="lucide:layout-dashboard"></iconify-icon> Dashboard
+      </a>
+      <a href="{{ route('umkm.daftar') }}"
+        class="nav-link-custom {{ request()->routeIs('umkm.daftar') ? 'active' : '' }}">
+        <iconify-icon icon="lucide:list"></iconify-icon> Daftar UMKM
+      </a>
+      <a href="{{ route('umkm.index') }}"
+        class="nav-link-custom {{ request()->routeIs('umkm.index', 'umkm.edit') ? 'active' : '' }}">
+        <iconify-icon icon="lucide:shield-check"></iconify-icon> Verifikasi Data
+      </a>
+      <a href="#"
+        class="nav-link-custom {{ request()->routeIs('') ? 'active' : '' }}">
+        <iconify-icon icon="lucide:map-pin"></iconify-icon> Peta Sebaran
+      </a>
+      <a href="#"
+        class="nav-link-custom {{ request()->routeIs('') ? 'active' : '' }}">
+        <iconify-icon icon="lucide:tags"></iconify-icon> Tambah Kategori
+      </a>
     </nav>
 
     <div class="sidebar-footer">

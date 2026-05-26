@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UmkmController;
+use App\Http\Controllers\DaftarController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,6 +34,9 @@ Route::put('/admin/umkm/{id}/update', [UmkmController::class, 'update'])->name('
 // Route tambah data manual
 Route::get('/admin/umkm/create', [UmkmController::class, 'create'])->name('umkm.create');
 Route::put('/admin/umkm/create', [UmkmController::class, 'store'])->name('umkm.store');
+
+// Route daftar umkm (card)
+Route::get('/admin/daftar-umkm', [DaftarController::class, 'index'])->name('umkm.daftar');
 
 
 

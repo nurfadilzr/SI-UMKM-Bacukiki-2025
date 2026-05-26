@@ -453,34 +453,32 @@
           <button type="button" class="btn btn-selanjutnya" id="btn-next-step-3" onclick="goToStep(4)">Selanjutnya</button>
         </div>
       </div>
+    </div>
 
-      <div id="content-step-4" style="display: none;">
-        <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
+    <div id="content-step-4" style="display: none;">
+      <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
 
-        <div class="mb-3" style="max-width: 350px;">
-          <label class="form-label-custom">Nama UMKM</label>
-          <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+      <div class="mb-3" style="max-width: 350px;">
+        <label class="form-label-custom">Nama UMKM</label>
+        <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label-custom mb-2">Status UMKM</label>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ $umkm->status_umkm == 'aktif' ? 'checked' : '' }} required>
+          <label class="form-check-label" for="aktif_ya">Aktif</label>
         </div>
-
-        <div class="mb-4">
-          <label class="form-label-custom mb-2">Status UMKM</label>
-
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ $umkm->status_umkm == 'aktif' ? 'checked' : '' }} required>
-            <label class="form-check-label" for="aktif_ya">Aktif</label>
-          </div>
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ $umkm->status_umkm == 'tidak' ? 'checked' : '' }} required>
-            <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
-          </div>
-        </div>
-
-        <div class="d-flex justify-content-end gap-2 mt-5">
-          <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
-          <button type="submit" class="btn btn-selanjutnya">Simpan</button>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ $umkm->status_umkm == 'tidak' ? 'checked' : '' }} required>
+          <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
         </div>
       </div>
 
+      <div class="d-flex justify-content-end gap-2 mt-5">
+        <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
+        <button type="submit" class="btn btn-selanjutnya">Simpan</button>
+      </div>
     </div>
 </form>
 

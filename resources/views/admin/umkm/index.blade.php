@@ -554,10 +554,12 @@ $nomor_hp = '62' . substr($nomor_hp, 1);
 }
 
 // 3. Siapkan Draf Pesan
-$pesan = "Halo, kami dari Admin Data UMKM.\n\n";
-$pesan .= "Mohon maaf, pendaftaran data untuk UMKM *{$wa_data['nama']}* saat ini belum dapat kami setujui.\n\n";
-$pesan .= "*Alasan Penolakan:*\n_{$wa_data['alasan']}_\n\n";
-$pesan .= "Silakan perbaiki data Anda dan lakukan pengajuan ulang. Terima kasih.";
+$pesan = "Halo, kami dari Admin SI Data UMKM Kecamatan Bacukiki.\n\n";
+$pesan .= "Mohon maaf, pendaftaran data untuk UMKM *{$wa_data['nama']}* saat ini belum dapat kami setujui.\n";
+$pesan .= "*Alasan Penolakan:*{$wa_data['alasan']}\n\n";
+$pesan .= "Silakan perbaiki data Anda dan lakukan pengajuan ulang melalui tautan berikut:\n";
+$pesan .= "https://forms.gle/Bu7sdaRdWGAXTXUn6\n\n";
+$pesan .= "Terima kasih.";
 
 // 4. Link Enkripsi
 $link_wa = "https://wa.me/" . $nomor_hp . "?text=" . urlencode($pesan);
@@ -572,8 +574,8 @@ $link_wa = "https://wa.me/" . $nomor_hp . "?text=" . urlencode($pesan);
           <iconify-icon icon="lucide:check-circle-2" style="font-size: 64px; color: var(--color-green);"></iconify-icon>
         </div>
 
-        <h4 class="mb-2" style="font-weight: 700; color: var(--color-black);">Verifikasi Selesai</h4>
-        <p class="mb-4" style="color: #64748B; font-size: 14px;">Data UMKM <strong>{{ $wa_data['nama'] }}</strong> telah disimpan dengan status Ditolak. Silakan hubungi pemilik UMKM untuk memberitahukan alasan penolakan.</p>
+        <h4 class="mb-2" style="font-weight: 700; color: var(--color-gray);">Verifikasi Selesai</h4>
+        <p class="mb-4" style="color: var(--color-gray-700); font-size: 14px;">Data UMKM <strong>{{ $wa_data['nama'] }}</strong> telah disimpan dengan status Ditolak. Silakan hubungi pemilik UMKM untuk memberitahukan alasan penolakan.</p>
 
         <div class="d-flex justify-content-center gap-3">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 500;">Tutup</button>
