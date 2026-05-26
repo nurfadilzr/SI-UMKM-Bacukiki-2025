@@ -256,7 +256,7 @@
     <div class="edit-tabs">
       <button type="button" class="tab-btn active" onclick="switchTab('tab-1', this)">Informasi Dasar</button>
       <button type="button" class="tab-btn" onclick="switchTab('tab-2', this)">Titik Koordinat</button>
-      <button type="button" class="tab-btn" onclick="switchTab('tab-3', this)">Status Verifikasi</button>
+      <!-- <button type="button" class="tab-btn" onclick="switchTab('tab-3', this)">Status Verifikasi</button> -->
       <button type="button" class="tab-btn" onclick="switchTab('tab-4', this)">Status UMKM</button>
     </div>
 
@@ -333,7 +333,7 @@
       </div>
     </div>
 
-    <div id="tab-3" class="form-section">
+    <!-- <div id="tab-3" class="form-section">
       <div class="row g-5 mb-4">
         <div class="col-md-6">
           <div class="mb-3" style="max-width: 350px;">
@@ -355,7 +355,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div id="tab-4" class="form-section">
       <div class="row g-5 mb-4">

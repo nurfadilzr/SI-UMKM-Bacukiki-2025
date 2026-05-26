@@ -233,7 +233,7 @@ class UmkmController extends Controller
       'new_foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
       'latitude' => 'nullable|numeric',
       'longitude' => 'nullable|numeric',
-      'status_verif' => 'required|in:disetujui,menunggu,ditolak',
+      // 'status_verif' => 'required|in:disetujui,menunggu,ditolak',
       'status_umkm' => 'required|in:aktif,tidak'
     ]);
 
@@ -265,7 +265,7 @@ class UmkmController extends Controller
       'id_admin' => Auth::id() ?? 1,
       'latitude' => $request->latitude,
       'longitude' => $request->longitude,
-      'status_verif' => $request->status_verif,
+      // 'status_verif' => $request->status_verif,
       'status_umkm' => $request->status_umkm,
       'foto' => $foto_path,
     ]);
@@ -313,8 +313,17 @@ class UmkmController extends Controller
       'latitude' => 'nullable|numeric',
       'longitude' => 'nullable|numeric',
       'status_verif' => 'required|in:disetujui,menunggu,ditolak',
-      'status_umkm' => 'required|in:aktif,tidak'
+      'status_umkm' => 'required|in:aktif,tidak',
+      'catatan_penolakan' => 'required_if:status_verif,ditolak|nullable|string'
     ]);
+
+    // Ambil status bawaan dari form
+    $final_status_umkm = $request->status_umkm;
+
+    // Jika ditolak, "Begal" statusnya dan paksa jadi 'tidak'
+    if ($request->status_verif === 'ditolak') {
+      $final_status_umkm = 'tidak';
+    }
 
     // LOGIKA PENANGANAN FOTO BARU
     if ($request->hasFile('new_foto')) {
@@ -344,10 +353,24 @@ class UmkmController extends Controller
       'latitude' => $request->latitude,
       'longitude' => $request->longitude,
       'status_verif' => $request->status_verif,
-      'status_umkm' => $request->status_umkm,
+      'status_umkm' => $final_status_umkm,
       'foto' => $foto_path,
     ]);
 
-    return redirect()->route('umkm.index')->with('success', 'Data UMKM "' . $umkm->nama . '" berhasil diverifikasi dan disimpan!');
+    // Cek apakah data ini baru saja ditolak
+    if ($request->status_verif === 'ditolak') {
+      // Redirect dengan membawa data khusus (wa_rejected)
+      return redirect()->route('umkm.index')
+        ->with('success', 'Verifikasi selesai! Data UMKM berhasil ditolak.')
+        ->with('wa_rejected', [
+          'nama' => $umkm->nama,
+          'kontak' => $umkm->kontak,
+          'alasan' => $request->catatan_penolakan
+        ]);
+    }
+
+    // Jika disetujui / menunggu, redirect biasa
+    return redirect()->route('umkm.index')
+      ->with('success', 'Data UMKM "' . $umkm->nama . '"  telah diverifikasi.');
   }
 }

@@ -428,7 +428,6 @@
 
       <div class="mb-4">
         <label class="form-label-custom mb-2">Status Verifikasi Data UMKM</label>
-
         <div class="form-check mb-2">
           <input class="form-check-input" type="radio" name="status_verif" id="verif_disetujui" value="disetujui" {{ $umkm->status_verif == 'disetujui' ? 'checked' : '' }} required>
           <label class="form-check-label" for="verif_disetujui">Disetujui</label>
@@ -443,40 +442,46 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-end gap-2 mt-5">
-        <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
-        <button type="button" class="btn btn-selanjutnya" onclick="goToStep(4)">Selanjutnya</button>
-      </div>
-    </div>
-
-    <div id="content-step-4" style="display: none;">
-      <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
-
-      <div class="mb-3" style="max-width: 350px;">
-        <label class="form-label-custom">Nama UMKM</label>
-        <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label-custom mb-2">Status UMKM</label>
-
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ $umkm->status_umkm == 'aktif' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="aktif_ya">Aktif</label>
-        </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ $umkm->status_umkm == 'tidak' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
-        </div>
+      <div id="box-catatan" class="mt-4" style="display: none; background-color: #FEF2F2; border: 1px solid #FCA5A5; padding: 16px; border-radius: 8px;">
+        <label class="form-label-custom text-danger mb-2">Alasan Penolakan <span class="text-danger">*</span></label>
+        <textarea name="catatan_penolakan" id="input-catatan" class="form-control-custom" rows="3" placeholder="Tuliskan secara jelas mengapa data UMKM ini ditolak..."></textarea>
       </div>
 
       <div class="d-flex justify-content-end gap-2 mt-5">
-        <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
-        <button type="submit" class="btn btn-selanjutnya">Simpan</button>
+        <div class="d-flex justify-content-end gap-2 mt-5">
+          <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
+          <button type="button" class="btn btn-selanjutnya" id="btn-next-step-3" onclick="goToStep(4)">Selanjutnya</button>
+        </div>
       </div>
-    </div>
 
-  </div>
+      <div id="content-step-4" style="display: none;">
+        <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
+
+        <div class="mb-3" style="max-width: 350px;">
+          <label class="form-label-custom">Nama UMKM</label>
+          <input type="text" class="form-control-readonly" value="{{ $umkm->nama }}" readonly>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-custom mb-2">Status UMKM</label>
+
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ $umkm->status_umkm == 'aktif' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="aktif_ya">Aktif</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ $umkm->status_umkm == 'tidak' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-5">
+          <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
+          <button type="submit" class="btn btn-selanjutnya">Simpan</button>
+        </div>
+      </div>
+
+    </div>
 </form>
 
 <script>
@@ -534,6 +539,53 @@
         }
         reader.readAsDataURL(file);
       }
+    });
+
+    // ==========================================
+    // LOGIKA DINAMIS TAHAP 3 (JIKA DITOLAK = LANGSUNG SIMPAN)
+    // ==========================================
+    const radiosVerif = document.querySelectorAll('input[name="status_verif"]');
+    const btnNextStep3 = document.getElementById('btn-next-step-3');
+    const formVerifikasi = document.getElementById('form-verifikasi');
+    const stepper4 = document.getElementById('stepper-4');
+    const boxCatatan = document.getElementById('box-catatan');
+    const inputCatatan = document.getElementById('input-catatan');
+
+    function perbaruiTombolStep3() {
+      const radioTerpilih = document.querySelector('input[name="status_verif"]:checked');
+
+      if (radioTerpilih && radioTerpilih.value === 'ditolak') {
+        // JIKA DITOLAK
+        btnNextStep3.innerHTML = 'Simpan & Tolak';
+        btnNextStep3.classList.add('bg-danger');
+        btnNextStep3.onclick = function() {
+          formVerifikasi.submit();
+        };
+        stepper4.style.opacity = '0.4';
+        boxCatatan.style.display = 'block';
+        inputCatatan.setAttribute('required', 'required');
+
+      } else {
+        // JIKA DISETUJUI / MENUNGGU
+        btnNextStep3.innerHTML = 'Selanjutnya';
+        btnNextStep3.classList.remove('bg-danger');
+        btnNextStep3.onclick = function() {
+          goToStep(4);
+        };
+        stepper4.style.opacity = '1';
+        boxCatatan.style.display = 'none';
+        inputCatatan.removeAttribute('required');
+        inputCatatan.value = '';
+      }
+    }
+
+    // 1. Jalankan sekali saat halaman pertama kali dimuat (berjaga-jaga jika ada old() value)
+    perbaruiTombolStep3();
+
+    // 2. Pasang 'telinga' (listener) ke setiap pilihan radio. 
+    // Setiap kali pengguna klik pilihan yang berbeda, jalankan fungsinya.
+    radiosVerif.forEach(radio => {
+      radio.addEventListener('change', perbaruiTombolStep3);
     });
   }
 </script>

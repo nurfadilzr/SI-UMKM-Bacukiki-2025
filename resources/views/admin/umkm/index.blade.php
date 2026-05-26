@@ -541,4 +541,58 @@
     }
   });
 </script>
+
+@if(session('wa_rejected'))
+@php
+// 1. Ambil data yang dibawa dari Controller
+$wa_data = session('wa_rejected');
+
+// 2. Format Nomor HP (Ubah 08... jadi 628...)
+$nomor_hp = preg_replace('/[^0-9]/', '', $wa_data['kontak']);
+if (str_starts_with($nomor_hp, '0')) {
+$nomor_hp = '62' . substr($nomor_hp, 1);
+}
+
+// 3. Siapkan Draf Pesan
+$pesan = "Halo, kami dari Admin Data UMKM.\n\n";
+$pesan .= "Mohon maaf, pendaftaran data untuk UMKM *{$wa_data['nama']}* saat ini belum dapat kami setujui.\n\n";
+$pesan .= "*Alasan Penolakan:*\n_{$wa_data['alasan']}_\n\n";
+$pesan .= "Silakan perbaiki data Anda dan lakukan pengajuan ulang. Terima kasih.";
+
+// 4. Link Enkripsi
+$link_wa = "https://wa.me/" . $nomor_hp . "?text=" . urlencode($pesan);
+@endphp
+
+<div class="modal fade" id="waSuccessModal" tabindex="-1" aria-labelledby="waSuccessModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 12px; border: none;">
+      <div class="modal-body text-center p-5">
+
+        <div class="mb-4">
+          <iconify-icon icon="lucide:check-circle-2" style="font-size: 64px; color: var(--color-green);"></iconify-icon>
+        </div>
+
+        <h4 class="mb-2" style="font-weight: 700; color: var(--color-black);">Verifikasi Selesai</h4>
+        <p class="mb-4" style="color: #64748B; font-size: 14px;">Data UMKM <strong>{{ $wa_data['nama'] }}</strong> telah disimpan dengan status Ditolak. Silakan hubungi pemilik UMKM untuk memberitahukan alasan penolakan.</p>
+
+        <div class="d-flex justify-content-center gap-3">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 500;">Tutup</button>
+
+          <a href="{{ $link_wa }}" target="_blank" class="btn btn-success d-flex align-items-center gap-2" style="border-radius: 8px; font-weight: 500; background-color: #25D366; border: none;">
+            <iconify-icon icon="lucide:message-circle" style="font-size: 18px;"></iconify-icon>
+            Kirim Pesan WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var waModal = new bootstrap.Modal(document.getElementById('waSuccessModal'));
+    waModal.show();
+  });
+</script>
+@endif
 @endsection
