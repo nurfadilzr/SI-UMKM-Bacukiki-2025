@@ -82,24 +82,29 @@
   /* === STYLING UMKM CARD === */
   .umkm-card {
     background: #FFFFFF;
-    border: 1px solid #E5E7EB;
+    border: none;
+    box-shadow: 0px 8px 24px rgba(149, 157, 165, 0.2);
     border-radius: 16px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     height: 100%;
-    /* Agar tinggi card sama dalam satu baris */
+    width: 100%;
+    max-width: 280px;
+    /* Batas maksimal lebar card (Bisa diubah: 280px, 300px, 320px) */
+    margin: 0 auto;
   }
 
   .umkm-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0px 14px 28px rgba(149, 157, 165, 0.3);
   }
 
   .img-wrapper {
     width: 100%;
-    height: 180px;
+    height: 200px;
     /* Tinggi mutlak untuk menyeragamkan semua gambar */
     overflow: hidden;
     background-color: #F3F4F6;
@@ -109,7 +114,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Ini kuncinya: memotong gambar agar pas tanpa distorsi */
+    /* memotong gambar agar pas tanpa distorsi */
   }
 
   .card-body-custom {
@@ -128,7 +133,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* ... jika nama terlalu panjang */
+    /* jika nama terlalu panjang */
   }
 
   .badge-group {
@@ -182,13 +187,11 @@
 
   .btn-maps {
     background-color: var(--color-blue);
-    /* Warna Navy Maps */
     color: #FFFFFF;
   }
 
   .btn-kontak {
     background-color: var(--color-green);
-    /* Warna Hijau Gelap Kontak */
     color: #FFFFFF;
   }
 </style>
@@ -239,22 +242,8 @@
           </div>
 
           <div class="btn-group-custom">
-            <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">
-              Maps
-            </a>
-
-            @php
-            // Logika Pembersihan & Format Nomor WhatsApp
-            $nomor_hp = preg_replace('/[^0-9]/', '', $umkm->kontak);
-            if (str_starts_with($nomor_hp, '0')) {
-            $nomor_hp = '62' . substr($nomor_hp, 1);
-            }
-            $link_wa = "https://wa.me/" . $nomor_hp;
-            @endphp
-
-            <a href="{{ $link_wa }}" target="_blank" class="btn-card btn-kontak">
-              Kontak
-            </a>
+            <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">Maps</a>
+            <a href="https://wa.me/{{ $umkm->kontak }}" target="_blank" class="btn-card btn-kontak">Kontak</a>
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Umkm;
 use App\Models\Kelurahan;
 use App\Models\Kategori;
+use Intervention\Image\Laravel\Facades\Image;
 
 class UmkmController extends Controller
 {
@@ -60,6 +61,13 @@ class UmkmController extends Controller
       $kategori = Kategori::where('kategori_umkm', $data[5])->first();
       $id_kategori = $kategori ? $kategori->id : null;
 
+      // bersihkan nomor wa
+      $kontak_raw = $data[6];
+      $kontak_bersih = preg_replace('/[^0-9]/', '', $kontak_raw);
+      if (str_starts_with($kontak_bersih, '0')) {
+        $kontak_bersih = '62' . substr($kontak_bersih, 1);
+      }
+
       // Proses link foto
       $link_foto_asli = $data[7];
       $link_foto_direct = $this->convertDriveLink($link_foto_asli);
@@ -75,7 +83,7 @@ class UmkmController extends Controller
           'nama' => $data[1],
           'alamat' => $data[2],
           'titik_maps' => $data[4],
-          'kontak' => $data[6],
+          'kontak' => $kontak_bersih,
           'id_kelurahan' => $id_kelurahan,
           'id_kategori' => $id_kategori,
           'foto' => $link_foto_direct,
@@ -96,9 +104,7 @@ class UmkmController extends Controller
     return redirect()->back()->with('success', 'Data UMKM berhasil di-import dan sedang menunggu verifikasi!');
   }
 
-  /**
-   * Display a listing of the resource.
-   */
+  // 4. menampilkan tabel data umkm
   public function index(Request $request)
   {
     // Mulai query dengan mengambil relasinya juga agar query database lebih efisien
@@ -128,9 +134,6 @@ class UmkmController extends Controller
     // return view('umkm.index', compact('data'));
   }
 
-  /**
-   * Show the form for creating a new resource.
-   */
   // 8. Menampilkan Halaman Input Manual (Tahap 1)
   public function create()
   {
@@ -142,9 +145,6 @@ class UmkmController extends Controller
     return view('admin.umkm.create', compact('kelurahans', 'kategoris'));
   }
 
-  /**
-   * Store a newly created resource in storage.
-   */
   // 9. Menyimpan Data UMKM Baru (Hasil Input Manual Tahap 1)
   public function store(Request $request)
   {
@@ -156,20 +156,58 @@ class UmkmController extends Controller
       'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
-      // Validasi foto baru (wajib diisi untuk data baru)
-      'new_foto' => 'required|image|mimes:jpeg,png,jpg|max:2048' // maks 2MB
+      'new_foto' => 'required|image|mimes:jpeg,png,jpg|max:10240' // maks 2MB
     ]);
 
-    // LOGIKA PENANGANAN FOTO BARU
-    if ($request->hasFile('new_foto')) {
-      // 1. Upload foto baru ke public/uploads/umkm/
-      $file = $request->file('new_foto');
-      // Membuat nama file unik: ID_UMKM_BARU-Nama-Acak.ekstensi
-      // Karena ID UMKM baru belum ada, kita gunakan string acak saja
-      $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
-      $file->move(public_path('uploads/umkm/'), $filename);
+    // Bersihkan nomor wa
+    $kontak_bersih = preg_replace('/[^0-9]/', '', $request->kontak);
+    if (str_starts_with($kontak_bersih, '0')) {
+      $kontak_bersih = '62' . substr($kontak_bersih, 1);
+    }
 
-      // 2. Tentukan path foto baru di database
+    // LOGIKA PENANGANAN FOTO BARU
+    // if ($request->hasFile('new_foto')) {
+    //   // 1. Upload foto baru ke public/uploads/umkm/
+    //   $file = $request->file('new_foto');
+    //   // Membuat nama file unik: ID_UMKM_BARU-Nama-Acak.ekstensi
+    //   // Karena ID UMKM baru belum ada, kita gunakan string acak saja
+    //   $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+    //   $file->move(public_path('uploads/umkm/'), $filename);
+
+    //   // 2. Tentukan path foto baru di database
+    //   $foto_path = asset('uploads/umkm/' . $filename);
+    // } else {
+    //   // Ini seharusnya tidak terjadi karena validasi 'required' di atas
+    //   $foto_path = 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan';
+    // }
+
+    if ($request->hasFile('new_foto')) {
+      // 1. Ambil file dari request
+      $file = $request->file('new_foto');
+
+      // Membuat nama file unik (tetap sama seperti kodemu)
+      $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+
+      // 🔴 Tentukan lokasi penyimpanan fisik absolut di server untuk Intervention
+      $destinationPath = public_path('uploads/umkm/' . $filename);
+
+      // 2. Baca gambar menggunakan Intervention Image
+      $gambar = Image::read($file->getRealPath());
+
+      // 3. Logika Kompresi Otomatis (Jika ukuran file asli di atas 2 MB / 2097152 bytes)
+      if ($file->getSize() > 2097152) {
+        // Pangkas resolusi secara proporsional jika terlalu lebar (misal maks lebar 1000px)
+        // Pada Versi 3, kita bisa pakai fungsi scale() agar otomatis menjaga aspect ratio
+        $gambar->scale(width: 1000);
+
+        // Simpan ke folder public dengan menurunkan kualitas ke 75% (mengompres size)
+        $gambar->save($destinationPath, 75);
+      } else {
+        // Jika ukuran aslinya sudah di bawah 2 MB, simpan dengan kualitas tinggi (95%)
+        $gambar->save($destinationPath, 95);
+      }
+
+      // 4. Tentukan path foto untuk disimpan ke database (tetap pakai asset() seperti kodemu)
       $foto_path = asset('uploads/umkm/' . $filename);
     } else {
       // Ini seharusnya tidak terjadi karena validasi 'required' di atas
@@ -181,7 +219,7 @@ class UmkmController extends Controller
       'nama' => $request->nama,
       'alamat' => $request->alamat,
       'titik_maps' => $request->titik_maps,
-      'kontak' => $request->kontak,
+      'kontak' => $kontak_bersih,
       'id_kelurahan' => $request->id_kelurahan,
       'id_kategori' => $request->id_kategori,
       'foto' => $foto_path, // Path foto yang sudah diproses di atas
@@ -201,9 +239,7 @@ class UmkmController extends Controller
     //
   }
 
-  /**
-   * Show the form for editing the specified resource.
-   */
+  // menampilkan halaman edit dengan data yg sesuai
   public function edit(string $id)
   {
     // Ambil data UMKM berdasarkan ID, sertakan juga relasi kelurahan & kategori
@@ -230,36 +266,91 @@ class UmkmController extends Controller
       'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
-      'new_foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+      'new_foto' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
       'latitude' => 'nullable|numeric',
       'longitude' => 'nullable|numeric',
       // 'status_verif' => 'required|in:disetujui,menunggu,ditolak',
       'status_umkm' => 'required|in:aktif,tidak'
     ]);
 
-    // LOGIKA PENANGANAN FOTO BARU
-    if ($request->hasFile('new_foto')) {
-      $file = $request->file('new_foto');
-      $filename = $umkm->id . '-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
-      $file->move(public_path('uploads/umkm/'), $filename);
+    // Bersihkan nomor wa
+    $kontak_bersih = preg_replace('/[^0-9]/', '', $request->kontak);
+    if (str_starts_with($kontak_bersih, '0')) {
+      $kontak_bersih = '62' . substr($kontak_bersih, 1);
+    }
 
-      if (!str_contains($umkm->foto, 'drive.google.com') && $umkm->foto != 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan') {
-        $old_filename = basename($umkm->foto);
-        if (file_exists(public_path('uploads/umkm/' . $old_filename))) {
-          unlink(public_path('uploads/umkm/' . $old_filename));
-        }
+    // LOGIKA PENANGANAN FOTO BARU
+    // if ($request->hasFile('new_foto')) {
+    //   // 1. Upload foto baru ke public/uploads/umkm/
+    //   $file = $request->file('new_foto');
+    //   // Membuat nama file unik: ID_UMKM_BARU-Nama-Acak.ekstensi
+    //   // Karena ID UMKM baru belum ada, kita gunakan string acak saja
+    //   $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+    //   $file->move(public_path('uploads/umkm/'), $filename);
+
+    //   // 2. Tentukan path foto baru di database
+    //   $foto_path = asset('uploads/umkm/' . $filename);
+    // } else {
+    //   // Ini seharusnya tidak terjadi karena validasi 'required' di atas
+    //   $foto_path = 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan';
+    // }
+
+    if ($request->hasFile('new_foto')) {
+      // 1. Ambil file dari request
+      $file = $request->file('new_foto');
+
+      // Membuat nama file unik (tetap sama seperti kodemu)
+      $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+
+      // 🔴 Tentukan lokasi penyimpanan fisik absolut di server untuk Intervention
+      $destinationPath = public_path('uploads/umkm/' . $filename);
+
+      // 2. Baca gambar menggunakan Intervention Image
+      $gambar = Image::read($file->getRealPath());
+
+      // 3. Logika Kompresi Otomatis (Jika ukuran file asli di atas 2 MB / 2097152 bytes)
+      if ($file->getSize() > 2097152) {
+        // Pangkas resolusi secara proporsional jika terlalu lebar (misal maks lebar 1000px)
+        // Pada Versi 3, kita bisa pakai fungsi scale() agar otomatis menjaga aspect ratio
+        $gambar->scale(width: 1000);
+
+        // Simpan ke folder public dengan menurunkan kualitas ke 75% (mengompres size)
+        $gambar->save($destinationPath, 75);
+      } else {
+        // Jika ukuran aslinya sudah di bawah 2 MB, simpan dengan kualitas tinggi (95%)
+        $gambar->save($destinationPath, 95);
       }
+
+      // 4. Tentukan path foto untuk disimpan ke database (tetap pakai asset() seperti kodemu)
       $foto_path = asset('uploads/umkm/' . $filename);
     } else {
-      $foto_path = $umkm->foto;
+      // Ini seharusnya tidak terjadi karena validasi 'required' di atas
+      $foto_path = 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan';
     }
+
+    // LOGIKA PENANGANAN FOTO BARU
+    // if ($request->hasFile('new_foto')) {
+    //   $file = $request->file('new_foto');
+    //   $filename = $umkm->id . '-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
+    //   $file->move(public_path('uploads/umkm/'), $filename);
+
+    //   if (!str_contains($umkm->foto, 'drive.google.com') && $umkm->foto != 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan') {
+    //     $old_filename = basename($umkm->foto);
+    //     if (file_exists(public_path('uploads/umkm/' . $old_filename))) {
+    //       unlink(public_path('uploads/umkm/' . $old_filename));
+    //     }
+    //   }
+    //   $foto_path = asset('uploads/umkm/' . $filename);
+    // } else {
+    //   $foto_path = $umkm->foto;
+    // }
 
     // Perbarui SEMUA data ke database
     $umkm->update([
       'nama' => $request->nama,
       'alamat' => $request->alamat,
       'titik_maps' => $request->titik_maps,
-      'kontak' => $request->kontak,
+      'kontak' => $kontak_bersih,
       'id_kelurahan' => $request->id_kelurahan,
       'id_kategori' => $request->id_kategori,
       'id_admin' => Auth::id() ?? 1,
@@ -274,9 +365,7 @@ class UmkmController extends Controller
   }
 
 
-  /**
-   * Remove the specified resource from storage.
-   */
+  // menghapus data umkm
   public function destroy(string $id)
   {
     $umkm = Umkm::findOrFail($id);
