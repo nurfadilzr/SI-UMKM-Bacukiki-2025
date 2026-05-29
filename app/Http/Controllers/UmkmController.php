@@ -188,7 +188,7 @@ class UmkmController extends Controller
       // Membuat nama file unik (tetap sama seperti kodemu)
       $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
 
-      // 🔴 Tentukan lokasi penyimpanan fisik absolut di server untuk Intervention
+      // Tentukan lokasi penyimpanan fisik absolut di server untuk Intervention
       $destinationPath = public_path('uploads/umkm/' . $filename);
 
       // 2. Baca gambar menggunakan Intervention Image
@@ -223,6 +223,9 @@ class UmkmController extends Controller
       'id_kelurahan' => $request->id_kelurahan,
       'id_kategori' => $request->id_kategori,
       'foto' => $foto_path, // Path foto yang sudah diproses di atas
+      'id_admin' => Auth::id() ?? 1,
+      'status_verif' => $request->status_verif ?? 'disetujui',
+      'status_umkm'  => $request->status_umkm ?? 'aktif',
       // Untuk data baru, status verif dan status umkm 
       // akan mengikuti default 'menunggu' dan 'aktif' dari database
     ]);
@@ -302,7 +305,7 @@ class UmkmController extends Controller
       // Membuat nama file unik (tetap sama seperti kodemu)
       $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
 
-      // 🔴 Tentukan lokasi penyimpanan fisik absolut di server untuk Intervention
+      // Tentukan lokasi penyimpanan fisik absolut di server untuk Intervention
       $destinationPath = public_path('uploads/umkm/' . $filename);
 
       // 2. Baca gambar menggunakan Intervention Image

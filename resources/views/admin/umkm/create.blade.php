@@ -149,7 +149,7 @@
   }
 
   .form-label-custom {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--color-black);
     margin-bottom: 6px;
@@ -178,48 +178,55 @@
   }
 
   /* Radio Buttons */
-  .form-check-input:checked {
-    background-color: var(--color-green);
-    border-color: var(--color-green);
-  }
-
   .form-check-label {
     font-size: 13px;
     color: var(--color-black);
     cursor: pointer;
   }
 
+  /* Mengubah warna saat radio button dipilih */
+  .form-check-input:checked {
+    background-color: var(--color-green) !important;
+    border-color: var(--color-green) !important;
+  }
+
+  /* Mengubah warna bayangan (glow) saat radio button diklik/fokus */
+  .form-check-input:focus {
+    border-color: var(--color-green) !important;
+    box-shadow: 0 0 0 0.25rem rgba(65, 109, 80, 0.25) !important;
+  }
+
   /* === BUTTON STYLING === */
   .btn-batal {
     background-color: white;
     color: var(--color-gray);
-    border: 1px solid var(--color-border);
+    border: 1.5px solid var(--color-gray-500);
     border-radius: 6px;
-    padding: 8px 20px;
-    font-size: 13px;
+    padding: 8px 16px;
+    font-size: 14px;
     font-weight: 500;
-    transition: all 0.2s;
-    text-decoration: none;
+    transition: all 0.1s;
   }
 
   .btn-batal:hover {
-    background-color: #F3F4F6;
-    color: var(--color-black);
+    background-color: var(--color-gray-50);
+    border: 1.5px solid var(--color-gray-500);
   }
 
   .btn-selanjutnya {
-    background-color: var(--color-green);
+    background-color: var(--color-green-800);
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 8px 20px;
-    font-size: 13px;
+    padding: 8px 14px;
+    font-size: 14px;
     font-weight: 500;
     transition: all 0.2s;
   }
 
   .btn-selanjutnya:hover {
-    opacity: 0.9;
+    color: white;
+    background-color: var(--color-green);
   }
 </style>
 
@@ -266,22 +273,22 @@
             <div class="foto-overlay-edit">Tekan untuk menambahkan foto</div>
             <img src="https://via.placeholder.com/800x600?text=Upload+Foto+UMKM" id="foto-preview-img">
           </div>
-          <input type="file" name="new_foto" id="input-new-foto" style="display: none;" accept="image/jpeg,image/png,image/jpg">
+          <input type="file" name="new_foto" id="input-new-foto" style="display: none;" accept="image/jpeg,image/png,image/jpg" required>
         </div>
 
         <div class="col-lg-8">
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label-custom">Nama UMKM</label>
-              <input type="text" name="nama" class="form-control-custom" placeholder="Masukkan nama UMKM" value="{{ old('nama') }}">
+              <input type="text" name="nama" class="form-control-custom" placeholder="Masukkan nama UMKM" value="{{ old('nama') }}" required>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kontak UMKM</label>
-              <input type="text" name="kontak" class="form-control-custom" placeholder="Masukkan kontak UMKM" value="{{ old('kontak') }}">
+              <input type="text" name="kontak" class="form-control-custom" placeholder="Masukkan kontak UMKM" value="{{ old('kontak') }}" required>
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kategori UMKM</label>
-              <select name="id_kategori" class="form-select-custom">
+              <select name="id_kategori" class="form-select-custom" required>
                 <option value="" disabled selected>Pilih Kategori UMKM</option>
                 @foreach($kategoris as $kategori)
                 <option value="{{ $kategori->id }}" {{ old('id_kategori') == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
@@ -290,7 +297,7 @@
             </div>
             <div class="col-md-6">
               <label class="form-label-custom">Kelurahan UMKM</label>
-              <select name="id_kelurahan" class="form-select-custom">
+              <select name="id_kelurahan" class="form-select-custom" required>
                 <option value="" disabled selected>Pilih Kelurahan UMKM</option>
                 @foreach($kelurahans as $kelurahan)
                 <option value="{{ $kelurahan->id }}" {{ old('id_kelurahan') == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
@@ -299,18 +306,19 @@
             </div>
             <div class="col-12">
               <label class="form-label-custom">Alamat UMKM</label>
-              <input type="text" name="alamat" class="form-control-custom" placeholder="Masukkan alamat UMKM" value="{{ old('alamat') }}">
+              <input type="text" name="alamat" class="form-control-custom" placeholder="Masukkan alamat UMKM" value="{{ old('alamat') }}" required>
             </div>
             <div class="col-12">
               <label class="form-label-custom">Link Titik Lokasi UMKM (Google Maps)</label>
-              <input type="url" name="titik_maps" class="form-control-custom" placeholder="Masukkan link titik lokasi UMKM" value="{{ old('titik_maps') }}">
+              <input type="url" name="titik_maps" class="form-control-custom" placeholder="Masukkan link titik lokasi UMKM" value="{{ old('titik_maps') }}" required>
             </div>
           </div>
         </div>
       </div>
       <div class="d-flex justify-content-end gap-2 mt-4">
         <a href="{{ route('umkm.index') }}" class="btn btn-batal">Batal</a>
-        <button type="button" class="btn btn-selanjutnya" onclick="goToStep(2)">Selanjutnya</button>
+        <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(2)">Selanjutnya</button> -->
+        <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(1, 2)">Selanjutnya</button>
       </div>
     </div>
 
@@ -319,16 +327,17 @@
       <div class="row g-4 mb-4">
         <div class="col-md-6">
           <label class="form-label-custom">Latitude</label>
-          <input type="text" name="latitude" class="form-control-custom" placeholder="Masukkan latitude (lintang)" value="{{ old('latitude') }}">
+          <input type="text" name="latitude" class="form-control-custom" placeholder="Masukkan latitude (lintang)" value="{{ old('latitude') }}" required>
         </div>
         <div class="col-md-6">
           <label class="form-label-custom">Longitude</label>
-          <input type="text" name="longitude" class="form-control-custom" placeholder="Masukkan longitude (bujur)" value="{{ old('longitude') }}">
+          <input type="text" name="longitude" class="form-control-custom" placeholder="Masukkan longitude (bujur)" value="{{ old('longitude') }}" required>
         </div>
       </div>
       <div class="d-flex justify-content-end gap-2 mt-5">
         <button type="button" class="btn btn-batal" onclick="goToStep(1)">Sebelumnya</button>
-        <button type="button" class="btn btn-selanjutnya" onclick="goToStep(3)">Selanjutnya</button>
+        <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(3)">Selanjutnya</button> -->
+        <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(2, 3)">Selanjutnya</button>
       </div>
     </div>
 
@@ -337,21 +346,22 @@
       <div class="mb-4">
         <label class="form-label-custom mb-2">Status Verifikasi Data UMKM</label>
         <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_verif" id="verif_disetujui" value="disetujui" {{ old('status_verif') == 'disetujui' ? 'checked' : '' }}>
+          <input class="form-check-input" type="radio" name="status_verif" id="verif_disetujui" value="disetujui" {{ old('status_verif') == 'disetujui' ? 'checked' : '' }} required>
           <label class="form-check-label" for="verif_disetujui">Disetujui</label>
         </div>
         <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_verif" id="verif_menunggu" value="menunggu" {{ old('status_verif', 'menunggu') == 'menunggu' ? 'checked' : '' }}>
+          <input class="form-check-input" type="radio" name="status_verif" id="verif_menunggu" value="menunggu" {{ old('status_verif', 'menunggu') == 'menunggu' ? 'checked' : '' }} required>
           <label class="form-check-label" for="verif_menunggu">Menunggu</label>
         </div>
         <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_verif" id="verif_ditolak" value="ditolak" {{ old('status_verif') == 'ditolak' ? 'checked' : '' }}>
+          <input class="form-check-input" type="radio" name="status_verif" id="verif_ditolak" value="ditolak" {{ old('status_verif') == 'ditolak' ? 'checked' : '' }} required>
           <label class="form-check-label" for="verif_ditolak">Ditolak</label>
         </div>
       </div>
       <div class="d-flex justify-content-end gap-2 mt-5">
         <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
-        <button type="button" class="btn btn-selanjutnya" onclick="goToStep(4)">Selanjutnya</button>
+        <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(4)">Selanjutnya</button> -->
+        <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(3, 4)">Selanjutnya</button>
       </div>
     </div>
 
@@ -360,11 +370,11 @@
       <div class="mb-4">
         <label class="form-label-custom mb-2">Status UMKM</label>
         <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ old('status_umkm', 'aktif') == 'aktif' ? 'checked' : '' }}>
+          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ old('status_umkm', 'aktif') == 'aktif' ? 'checked' : '' }} required>
           <label class="form-check-label" for="aktif_ya">Aktif</label>
         </div>
         <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ old('status_umkm') == 'tidak' ? 'checked' : '' }}>
+          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ old('status_umkm') == 'tidak' ? 'checked' : '' }} required>
           <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
         </div>
       </div>
@@ -431,5 +441,138 @@
       }
     });
   }
+
+  // Fungsi untuk memvalidasi sebelum pindah tahap
+  // function validasiDanLanjut(stepSekarang, stepTujuan) {
+  //   // 1. Ambil kotak area step saat ini (misal: content-step-1)
+  //   const areaStep = document.getElementById('content-step-' + stepSekarang);
+
+  //   // 2. Cari semua input/select yang memiliki atribut 'required' di dalam tahap tersebut
+  //   const fieldWajib = areaStep.querySelectorAll('input[required], select[required], textarea[required]');
+
+  //   let semuaValid = true;
+
+  //   // 3. Cek satu per satu
+  //   fieldWajib.forEach(field => {
+  //     if (field.value.trim() === '') {
+  //       // JIKA KOSONG: Gagalkan validasi dan ubah border jadi merah
+  //       semuaValid = false;
+  //       field.style.borderColor = 'var(--color-orange)'; // Warna merah
+  //       // field.style.backgroundColor = 'var(--color-orange-50)'; // Background merah sangat muda (opsional)
+  //     } else {
+  //       // JIKA TERISI: Kembalikan warna border ke normal
+  //       field.style.borderColor = '#E5E7EB';
+  //       field.style.backgroundColor = '#FFFFFF';
+  //     }
+  //   });
+
+  //   // 4. Keputusan Akhir
+  //   if (semuaValid) {
+  //     // Jika tidak ada yang kosong, silakan pindah ke tahap berikutnya
+  //     goToStep(stepTujuan);
+  //   } else {
+  //     // (Opsional) Tampilkan peringatan jika ingin lebih tegas
+  //     // alert('Terdapat data yang belum diisi. Silakan lengkapi kotak berwarna merah.');
+  //   }
+  // }
+
+  // Fungsi untuk memvalidasi sebelum pindah tahap
+  function validasiDanLanjut(stepSekarang, stepTujuan) {
+    const areaStep = document.getElementById('content-step-' + stepSekarang);
+    const fieldWajib = areaStep.querySelectorAll('input[required], select[required], textarea[required]');
+
+    let semuaValid = true;
+
+    fieldWajib.forEach(field => {
+      // Tentukan target yang akan diwarnai (Khusus foto, targetkan kotak pembungkusnya)
+      const isFoto = field.type === 'file';
+      const targetVisual = isFoto ? document.getElementById('foto-preview-box') : field;
+
+      // Cari lokasi tempat teks error akan disisipkan
+      const tempatPesan = isFoto ? targetVisual : field;
+      let errorText = tempatPesan.parentNode.querySelector('.pesan-error-wajib');
+
+      if (field.value.trim() === '') {
+        // ==========================================
+        // JIKA KOSONG: Gagal validasi
+        // ==========================================
+        semuaValid = false;
+
+        // 1. Ubah warna border & background (Warna Oranye/Merah Bata)
+        targetVisual.style.borderColor = '#D17A22';
+        // targetVisual.style.backgroundColor = '#FFFBEB';
+
+        // 2. Buat dan munculkan teks *Wajib diisi jika belum ada
+        if (!errorText) {
+          errorText = document.createElement('small');
+          errorText.className = 'pesan-error-wajib';
+          errorText.style.cssText = 'color: #D17A22; font-size: 12px; margin-top: 4px; display: block; font-weight: 500;';
+          errorText.innerText = '*Wajib diisi';
+
+          // Sisipkan tepat di bawah elemen target
+          tempatPesan.parentNode.insertBefore(errorText, tempatPesan.nextSibling);
+        }
+      } else {
+        // ==========================================
+        // JIKA TERISI: Kembalikan ke normal
+        // ==========================================
+        targetVisual.style.borderColor = '#E5E7EB'; // Warna border abu-abu standar
+        targetVisual.style.backgroundColor = isFoto ? 'transparent' : '#FFFFFF';
+
+        // Hapus teks error
+        if (errorText) {
+          errorText.remove();
+        }
+      }
+    });
+
+    // Keputusan akhir untuk pindah step
+    if (semuaValid) {
+      goToStep(stepTujuan);
+    }
+  }
+
+  // ==========================================
+  // BONUS UX: Hilangkan error seketika saat diketik/diisi
+  // ==========================================
+  document.addEventListener('DOMContentLoaded', function() {
+    const semuaFieldWajib = document.querySelectorAll('input[required], select[required], textarea[required]');
+
+    semuaFieldWajib.forEach(field => {
+      // Gunakan event 'change' untuk file/select, 'input' untuk teks
+      const eventType = (field.type === 'file' || field.tagName === 'SELECT') ? 'change' : 'input';
+
+      field.addEventListener(eventType, function() {
+        if (this.value.trim() !== '') {
+          const isFoto = this.type === 'file';
+          const targetVisual = isFoto ? document.getElementById('foto-preview-box') : this;
+          const tempatPesan = isFoto ? targetVisual : this;
+
+          // Kembalikan warna ke normal
+          targetVisual.style.borderColor = '#E5E7EB';
+          targetVisual.style.backgroundColor = isFoto ? 'transparent' : '#FFFFFF';
+
+          // Hapus teks error jika ada
+          const errorText = tempatPesan.parentNode.querySelector('.pesan-error-wajib');
+          if (errorText) errorText.remove();
+        }
+      });
+    });
+  });
+  // ==========================================
+  // BONUS UX: Hilangkan warna merah secara otomatis saat user mulai mengetik
+  // ==========================================
+  // document.addEventListener('DOMContentLoaded', function() {
+  //   const semuaFieldWajib = document.querySelectorAll('input[required], select[required], textarea[required]');
+
+  //   semuaFieldWajib.forEach(field => {
+  //     field.addEventListener('input', function() {
+  //       if (this.value.trim() !== '') {
+  //         this.style.borderColor = '#E5E7EB'; // Kembali normal
+  //         this.style.backgroundColor = '#FFFFFF';
+  //       }
+  //     });
+  //   });
+  // });
 </script>
 @endsection

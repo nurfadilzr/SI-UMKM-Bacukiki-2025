@@ -29,6 +29,7 @@
       --color-green-300: #B3C1B7;
       --color-green-800: #54745C;
       --color-orange-light: rgba(209, 122, 34, 0.15);
+      --color-orange-50: #FAF2E9;
       --color-orange-200: #F1D7BD;
 
       --color-blue-light: #BBC4D4;
@@ -36,7 +37,6 @@
       --color-blue-600: #5F769A;
       --color-blue-700: #49628C;
 
-      /* blue 200 */
       --color-gray-light: #F3F4F6;
       --color-gray-50: #ECECEC;
       --color-gray-200: #C6C6C6;
@@ -45,8 +45,6 @@
       --color-gray-700: #666666;
 
       --color-black-50: #E6E6E6;
-
-      /* grey 500 */
       --color-bg-main: #FAFAFA;
       /* Background Konten Utama */
       --color-border: #E5E7EB;
@@ -205,8 +203,8 @@
         class="nav-link-custom {{ request()->routeIs('umkm.index', 'umkm.edit') ? 'active' : '' }}">
         <iconify-icon icon="lucide:shield-check"></iconify-icon> Verifikasi Data
       </a>
-      <a href="#"
-        class="nav-link-custom {{ request()->routeIs('') ? 'active' : '' }}">
+      <a href="{{ route('umkm.peta') }}"
+        class="nav-link-custom {{ request()->routeIs('umkm.peta') ? 'active' : '' }}">
         <iconify-icon icon="lucide:map-pin"></iconify-icon> Peta Sebaran
       </a>
       <a href="#"

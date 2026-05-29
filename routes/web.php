@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UmkmController;
 use App\Http\Controllers\DaftarController;
+use App\Http\Controllers\PetaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,9 +13,9 @@ Route::get('/tes', function () {
 });
 
 // Rute untuk menampilkan halaman form import
-Route::get('/admin/umkm/import', [UmkmController::class, 'showImportForm'])->name('umkm.import.form');
+Route::get('/admin/import', [UmkmController::class, 'showImportForm'])->name('umkm.import.form');
 // Rute untuk memproses file CSV yang diupload
-Route::post('/admin/umkm/import', [UmkmController::class, 'processImport'])->name('umkm.import.process');
+Route::post('/admin/import', [UmkmController::class, 'processImport'])->name('umkm.import.process');
 
 // Rute untuk menampilkan halaman tabel UMKM
 Route::get('/admin/umkm', [UmkmController::class, 'index'])->name('umkm.index');
@@ -32,11 +33,14 @@ Route::get('/admin/umkm/{id}/edit', [UmkmController::class, 'edit'])->name('umkm
 Route::put('/admin/umkm/{id}/update', [UmkmController::class, 'update'])->name('umkm.update');
 
 // Route tambah data manual
-Route::get('/admin/umkm/create', [UmkmController::class, 'create'])->name('umkm.create');
-Route::put('/admin/umkm/create', [UmkmController::class, 'store'])->name('umkm.store');
+Route::get('/admin/tambah-umkm', [UmkmController::class, 'create'])->name('umkm.create');
+Route::post('/admin/tambah-umkm', [UmkmController::class, 'store'])->name('umkm.store');
 
 // Route daftar umkm (card)
 Route::get('/admin/daftar-umkm', [DaftarController::class, 'index'])->name('umkm.daftar');
+
+// Route tampilkan peta sebaran
+Route::get('/admin/peta-sebaran', [PetaController::class, 'petaSebaran'])->name('umkm.peta');
 
 
 
