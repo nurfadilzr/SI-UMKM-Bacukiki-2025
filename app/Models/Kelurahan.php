@@ -10,6 +10,6 @@ class Kelurahan extends Model
 
   public function umkm()
   {
-    return $this->hasMany(Umkm::class, 'id_umkm');
+    return $this->hasMany(Umkm::class, 'id_kelurahan');
   }
 }

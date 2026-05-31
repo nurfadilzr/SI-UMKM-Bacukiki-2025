@@ -33,6 +33,7 @@
     border-radius: 4px;
     padding: 8px 12px;
     font-size: 14px;
+    border: none;
   }
 
   .btn-tambah:hover {
@@ -107,10 +108,10 @@
     transition: all 0.2s;
   }
 
-  /* .btn-hapus:hover {
+  .btn-hapus:hover {
     opacity: 0.9;
     color: white;
-  } */
+  }
 </style>
 
 <div class="container-fluid">
@@ -175,13 +176,14 @@
                 <td>{{ $kategori->kategori_umkm }}</td>
                 <td>{{ $kategori->umkm_count }}</td>
                 <td>
-                  <button class="btn btn-sm btn-light border-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $kategori->id }}" style="background: transparent;">
-                    <iconify-icon icon="lucide:edit" style="font-size: 18px; color: var(--color-gray-700);"></iconify-icon>
-                  </button>
-
-                  <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalDelete{{ $kategori->id }}" style="background: transparent;">
-                    <iconify-icon icon="lucide:trash-2" style="font-size: 18px; color: var(--color-gray-700);"></iconify-icon>
-                  </button>
+                  <div class="d-flex" style="margin-left: -10px;">
+                    <button class="btn btn-sm btn-light border-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $kategori->id }}" style="background: transparent;">
+                      <iconify-icon icon="lucide:edit" style="font-size: 18px; color: var(--color-gray);"></iconify-icon>
+                    </button>
+                    <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalDelete{{ $kategori->id }}" style="background: transparent;">
+                      <iconify-icon icon="lucide:trash-2" style="font-size: 18px; color: var(--color-gray);"></iconify-icon>
+                    </button>
+                  </div>
                 </td>
               </tr>
 

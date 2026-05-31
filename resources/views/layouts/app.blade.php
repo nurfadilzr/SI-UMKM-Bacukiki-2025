@@ -28,6 +28,7 @@
       --color-green-light: rgba(65, 100, 74, 0.15);
       --color-green-300: #B3C1B7;
       --color-green-800: #54745C;
+
       --color-orange-light: rgba(209, 122, 34, 0.15);
       --color-orange-50: #FAF2E9;
       --color-orange-200: #F1D7BD;
@@ -169,12 +170,9 @@
     /* === STYLING KONTEN UTAMA (Disesuaikan ke 90%) === */
     .main-content {
       margin-left: 180px;
-      /* Mengikuti lebar sidebar baru */
       flex-grow: 1;
       padding: 24px 28px;
-      /* Padding dikurangi sedikit agar lebih padat */
       width: calc(100% - 180px);
-      /* Mengikuti lebar sidebar baru */
     }
   </style>
 </head>
@@ -191,7 +189,7 @@
     </div>
 
     <nav class="nav-menu">
-      <a href="#"
+      <a href="{{ route('dashboard') }}"
         class="nav-link-custom {{ request()->routeIs('dashboard') ? 'active' : '' }}">
         <iconify-icon icon="lucide:layout-dashboard"></iconify-icon> Dashboard
       </a>
@@ -214,7 +212,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <a href="#" class="nav-link-custom btn-book"><iconify-icon icon="lucide:book-open"></iconify-icon> Manual Book</a>
+      <a href="https://docs.google.com/document/d/1JmJYP7vHWA6wmZHJ9xqZ2lJ_ZzdvJuNGbdQ9m4TZb0o/edit?usp=sharing" target="_blank" class="nav-link-custom btn-book"><iconify-icon icon="lucide:book-open"></iconify-icon> Manual Book</a>
       <a href="#" class="nav-link-custom btn-keluar"><iconify-icon icon="lucide:log-out"></iconify-icon> Keluar</a>
     </div>
   </aside>

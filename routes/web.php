@@ -5,6 +5,7 @@ use App\Http\Controllers\UmkmController;
 use App\Http\Controllers\DaftarController;
 use App\Http\Controllers\PetaController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +49,8 @@ Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kateg
 Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
 Route::put('/admin/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
 
