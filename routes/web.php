@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UmkmController;
 use App\Http\Controllers\DaftarController;
 use App\Http\Controllers\PetaController;
+use App\Http\Controllers\KategoriController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,6 +42,12 @@ Route::get('/admin/daftar-umkm', [DaftarController::class, 'index'])->name('umkm
 
 // Route tampilkan peta sebaran
 Route::get('/admin/peta-sebaran', [PetaController::class, 'petaSebaran'])->name('umkm.peta');
+
+// 🌟 ROUTE KHUSUS MANAJEMEN KATEGORI 🌟
+Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+Route::put('/admin/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
 
 

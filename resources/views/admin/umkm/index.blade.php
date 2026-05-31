@@ -159,17 +159,13 @@
     background-color: var(--color-gray-light);
     border-bottom: 1px solid var(--color-border);
     padding: 12px 14px;
-    /* Padding dirapatkan dari 16px */
     font-size: 13px;
-    /* Diperkecil dari 14px */
   }
 
   .custom-table td {
     padding: 12px 14px;
-    /* Padding dirapatkan dari 16px */
     vertical-align: middle;
     font-size: 13px;
-    /* Diperkecil dari 14px */
     color: var(--color-gray);
     font-weight: 400;
     border-bottom: 1px solid var(--color-border);
@@ -178,11 +174,9 @@
   /* Styling Badge Status */
   .badge-custom {
     padding: 4px 10px;
-    /* Padding dirapatkan dari 6px 12px */
     border-radius: 6px;
     font-weight: 500;
     font-size: 12px;
-    /* Diperkecil dari 13px */
     display: inline-block;
   }
 

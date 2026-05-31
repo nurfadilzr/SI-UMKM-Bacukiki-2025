@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Kategori extends Model
 {
   protected $table = 'kategori';
+  protected $fillable = [
+    'kategori_umkm',
+    'id_admin'
+  ];
 
   public function user()
   {
@@ -15,6 +19,6 @@ class Kategori extends Model
 
   public function umkm()
   {
-    return $this->hasMany(Umkm::class, 'id_umkm');
+    return $this->hasMany(Umkm::class, 'id_kategori');
   }
 }

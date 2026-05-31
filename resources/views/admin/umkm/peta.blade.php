@@ -77,7 +77,7 @@
       <div class="card" style="border-radius: 16px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 12px;">
         <div id="map" style="height: 550px; border-radius: 12px; z-index: 1;"></div>
 
-        <div class="d-flex justify-content-center align-items-center gap-4 mt-3 flex-wrap" style="font-size: 14px;">
+        <div class="d-flex justify-content-center align-items-center mt-3 flex-nowrap" style="font-size: 13px; gap: 16px; white-space: nowrap; overflow-x: auto; padding-bottom: 5px;">
           <span style="font-size: 14px;">Keterangan:</span>
           <span class="d-flex align-items-center gap-1">
             <iconify-icon icon="fa-solid:map-marker-alt" style="color: var(--color-green); font-size: 18px;"></iconify-icon> UMKM Galung Maloang

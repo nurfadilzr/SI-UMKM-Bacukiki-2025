@@ -207,8 +207,8 @@
         class="nav-link-custom {{ request()->routeIs('umkm.peta') ? 'active' : '' }}">
         <iconify-icon icon="lucide:map-pin"></iconify-icon> Peta Sebaran
       </a>
-      <a href="#"
-        class="nav-link-custom {{ request()->routeIs('') ? 'active' : '' }}">
+      <a href="{{ route('kategori.index') }}"
+        class="nav-link-custom {{ request()->routeIs('kategori.index') ? 'active' : '' }}">
         <iconify-icon icon="lucide:tags"></iconify-icon> Tambah Kategori
       </a>
     </nav>
