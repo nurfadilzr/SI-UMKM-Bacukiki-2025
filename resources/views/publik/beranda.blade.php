@@ -265,9 +265,9 @@
     </a>
     <div class="collapse navbar-collapse justify-content-end">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="#">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Daftar UMKM</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Peta Sebaran</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ route('beranda') }}">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('daftar') }}">Daftar UMKM</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('peta') }}">Peta Sebaran</a></li>
       </ul>
     </div>
   </nav>
@@ -348,7 +348,7 @@
       </div>
       @endforeach
     </div>
-    <div class="text-center">
+    <div class="text-center" style="margin-top: 40px;">
       <a href="#" class="btn-more">Lihat Lebih Banyak</a>
     </div>
   </section>
@@ -414,8 +414,6 @@
 
     </div>
   </section>
-
-
 
   <footer>
     <div class="container d-flex align-items-center justify-content-center">

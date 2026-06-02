@@ -56,6 +56,8 @@ Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('das
 
 
 Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
+Route::get('/daftar-umkm', [BerandaController::class, 'daftar'])->name('daftar');
+Route::get('/peta-sebaran', [BerandaController::class, 'peta'])->name('peta');
 
 
 

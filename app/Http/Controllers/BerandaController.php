@@ -44,4 +44,29 @@ class BerandaController extends Controller
       'umkmMaps'
     ));
   }
+
+  public function daftar()
+  {
+    // Mengambil data UMKM yang disetujui
+    // Gunakan paginate() agar halaman tidak berat jika data mencapai ratusan
+    $umkms = Umkm::with(['kategori', 'kelurahan'])
+      ->where('status_verif', 'disetujui')
+      ->latest()
+      ->paginate(12);
+
+    return view('publik.daftar', compact('umkms'));
+  }
+
+  public function peta()
+  {
+    // Mengambil semua data UMKM yang disetujui dan memiliki koordinat
+    $umkmMaps = Umkm::with(['kategori', 'kelurahan'])
+      ->where('status_verif', 'disetujui')
+      ->whereNotNull('latitude')
+      ->whereNotNull('longitude')
+      ->get();
+
+    // Mengirim data ke file view public/peta.blade.php
+    return view('publik.peta', compact('umkmMaps'));
+  }
 }
