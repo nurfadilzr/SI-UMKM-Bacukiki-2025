@@ -30,7 +30,7 @@ class DaftarController extends Controller
       $query->where('id_kelurahan', $kelurahan);
     }
 
-    $umkms = $query->paginate(12); // Menampilkan 12 Card per halaman
+    $umkms = $query->oldest()->paginate(12); // Menampilkan 12 Card terlama per halaman
 
     // Ambil data untuk dropdown filter
     $kategoris = Kategori::orderBy('kategori_umkm', 'asc')->get();

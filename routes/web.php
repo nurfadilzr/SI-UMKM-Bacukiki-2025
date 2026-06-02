@@ -6,6 +6,7 @@ use App\Http\Controllers\DaftarController;
 use App\Http\Controllers\PetaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BerandaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,13 +45,21 @@ Route::get('/admin/daftar-umkm', [DaftarController::class, 'index'])->name('umkm
 // Route tampilkan peta sebaran
 Route::get('/admin/peta-sebaran', [PetaController::class, 'petaSebaran'])->name('umkm.peta');
 
-// 🌟 ROUTE KHUSUS MANAJEMEN KATEGORI 🌟
+// ROUTE KHUSUS MANAJEMEN KATEGORI 
 Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
 Route::put('/admin/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
 Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
+// Route untuk dashboard
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
+
+
+
+
 
 
 
@@ -63,3 +72,6 @@ Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('das
 // klo loading lama
 // di .env, SESSION_DRIVER=file
 // hapus semua file di folder bootstrap-cache kecuali .gitignore
+
+
+// login, public page, mobile version

@@ -125,8 +125,8 @@ class UmkmController extends Controller
       $query->where('status_umkm', $request->status_umkm);
     }
 
-    // Ambil datanya, urutkan dari yang terbaru, dan batasi 10 data per halaman (Pagination)
-    $umkms = $query->latest()->paginate(10);
+    // Ambil datanya, urutkan dari yang terlama, dan batasi 10 data per halaman (Pagination)
+    $umkms = $query->oldest()->paginate(10);
 
     return view('admin.umkm.index', compact('umkms'));
 

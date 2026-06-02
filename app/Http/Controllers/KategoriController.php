@@ -25,7 +25,7 @@ class KategoriController extends Controller
 		}
 
 		// 4. Urutkan berdasarkan data terbaru dimasukkan
-		$kategoris = $query->latest()->get();
+		$kategoris = $query->oldest()->get();
 
 		// 5. Lempar data ke halaman blade
 		return view('admin.umkm.kategori', compact('kategoris'));
