@@ -17,29 +17,9 @@
       background-color: #ECEFED;
     }
 
-    .text-green {
-      color: #41644A;
-    }
-
-    .bg-green {
-      background-color: #41644A;
-    }
-
-    .bg-light-green {
-      background-color: #E8F0EA;
-    }
-
-    .bg-orange-soft {
-      background-color: #FEEED7;
-    }
-
-    .text-orange {
-      color: #D97706;
-    }
-
     /* Navbar */
     .navbar {
-      padding: 15px 50px;
+      padding: 15px 10px;
       background-color: #ECEFED;
     }
 
@@ -47,20 +27,22 @@
       color: #41644A;
       font-weight: 500;
       margin-left: 40px;
-      /* Mengatur jarak antar menu */
-      padding-left: 0 !important;
-      /* Memaksa batas kiri pas dengan huruf */
       padding-right: 0 !important;
-      /* Memaksa batas kanan pas dengan huruf */
       padding-bottom: 1px;
-      /* Mengatur jarak vertikal antara teks dan garis */
     }
 
     .nav-link.active {
       color: #41644A !important;
       font-weight: 700;
       border-bottom: 3px solid #41644A;
+    }
 
+    @media (min-width: 992px) {
+      .nav-link {
+        margin-left: 30px;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
     }
 
     /* Hero Section */
@@ -114,6 +96,48 @@
       font-weight: 500;
       color: #1B3B6F;
       margin-bottom: 0;
+    }
+
+    /* Separator Responsif untuk Summary Card */
+    .summary-divider {
+      border-bottom: 1px solid #dee2e6;
+      /* Garis horizontal pembatas di HP */
+      margin-bottom: 25px;
+      /* Jarak luar bawah di HP */
+      padding-bottom: 25px;
+      /* Jarak dalam bawah di HP */
+    }
+
+    /* Jika layar sebesar tablet/laptop (min 768px), ubah perilakunya */
+    @media (min-width: 768px) {
+      .summary-divider {
+        border-bottom: none;
+        /* Hilangkan garis horizontal */
+        border-right: 1px solid #dee2e6;
+        /* Ubah menjadi garis vertikal di kanan */
+        margin-bottom: 0;
+        /* Kembalikan jarak ke normal */
+        padding-bottom: 0;
+      }
+    }
+
+    /* Kartu UMKM Horizontal Scroll KHUSUS Mobile */
+    @media (max-width: 767px) {
+      .mobile-horizontal-scroll {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 15px;
+        /* Memberi ruang untuk scrollbar */
+        scroll-snap-type: x mandatory;
+      }
+
+      .mobile-horizontal-scroll>div {
+        flex: 0 0 85%;
+        /* Lebar kartu di HP 85% layar */
+        scroll-snap-align: center;
+      }
     }
 
     /* === STYLING UMKM CARD === */
@@ -255,31 +279,36 @@
 
 <body>
 
-  <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="40" class="me-2">
-      <div>
-        <div style="font-weight: 600; font-size: 16px; line-height: 1;">SI Data UMKM</div>
-        <div style="font-size: 12px; color: #000;">Kecamatan Bacukiki</div>
+  <nav class="navbar navbar-expand-lg sticky-top bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ route('beranda') }}">
+        <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="40" class="me-2">
+        <div>
+          <div style="font-weight: 600; font-size: 16px; line-height: 1;">SI Data UMKM</div>
+          <div style="font-size: 12px; color: #000;">Kecamatan Bacukiki</div>
+        </div>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end text-center text-lg-end mt-3 mt-lg-0" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link active d-inline-block" href="{{ route('beranda') }}">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link d-inline-block" href="{{ route('daftar') }}">Daftar UMKM</a></li>
+          <li class="nav-item"><a class="nav-link d-inline-block" href="{{ route('peta') }}">Peta Sebaran</a></li>
+        </ul>
       </div>
-    </a>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="{{ route('beranda') }}">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('daftar') }}">Daftar UMKM</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('peta') }}">Peta Sebaran</a></li>
-      </ul>
     </div>
   </nav>
 
   <section class="hero-section">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-6 text-center text-md-start mb-5 mb-md-0">
           <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 600; color: #41644A;">Ayo Majukan UMKM Kita</p>
           <h1 class="font-weight-bold mb-3" style="color: #000; font-weight: 700;">Dukung Digitalisasi dan Pengembangan UMKM Lokal</h1>
-          <p class="mb-4" style="color: #000; font-weight: 500; font-size: 14px;">Jelajahi data UMKM di setiap kelurahan,<br> lihat persebarannya, dan dukung pertumbuhan<br> ekonomi kreatif berbasis data.</p>
-          <a href="#" class="btn-custom">Lihat Daftar UMKM</a>
+          <p class="mb-4" style="max-width: 450px; color: #000; font-weight: 500; font-size: 14px;">Jelajahi data UMKM di setiap kelurahan, <br> lihat persebarannya, dan dukung pertumbuhan<br> ekonomi kreatif berbasis data.</p>
+          <a href="{{ route('daftar') }}" class="btn-custom">Lihat Daftar UMKM</a>
         </div>
         <div class="col-md-6 text-center">
           <img src="{{ asset('images/hero_image.png') }}" alt="Ilustrasi UMKM" class="img-fluid" style="max-height: 320px;">
@@ -291,19 +320,19 @@
   <div class="container">
     <div class="summary-card">
       <div class="row text-center">
-        <div class="col-md-4 border-end">
+        <div class="col-md-4 summary-divider">
           <p class="teks-satu">{{ $totalUmkm }}</p>
           <p class="teks-dua">Total UMKM</p>
           <p class="teks-tiga">Terdapat banyak usaha yang telah terdaftar dan terverifikasi.</p>
         </div>
-        <div class="col-md-4 border-end">
+        <div class="col-md-4 summary-divider">
           <p class="teks-satu">{{ $totalKelurahan }}</p>
           <p class="teks-dua">Jumlah Kelurahan</p>
           <p class="teks-tiga">Galung Maloang, Lemoe, Lompoe, dan Watang Bacukiki.</p>
         </div>
         <div class="col-md-4">
           <p class="teks-satu">{{ $totalKategori }}</p>
-          <p class="teks-dua">Jumlah Kategori UMKM</p>
+          <p class="teks-dua">Jumlah Kategori</p>
           <p class="teks-tiga">Retail, Jasa, Makanan (Kuliner), dan Kerajinan Tangan.</p>
         </div>
       </div>
@@ -311,63 +340,51 @@
   </div>
 
   <section class="container py-5 mt-4">
-    <div class="text-center mb-5">
+    <div class="text-center mb-4">
       <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 600; color: #41644A;">DAFTAR UMKM</p>
-      <h4 class="font-weight-bold mb-3" style="color: #000; font-weight: 700;">Berbagai Kategori Dari Setiap Kelurahan,<br>UMKM Bacukiki Semakin Terdepan</h4>
+      <h4 style="color: #000; font-weight: 700;">Berbagai Kategori Dari Setiap Kelurahan, UMKM Bacukiki Semakin Terdepan</h4>
     </div>
 
-    <div class="row g-4 mb-4">
+    <div class="row g-1 mb-4 mobile-horizontal-scroll">
       @foreach($umkmTerbaru as $umkm)
       <div class="col-md-4">
-        <!-- Hapus p-3 dari sini, tambahkan h-100 dan d-flex flex-column agar tinggi seragam -->
-        <div class="umkm-card w-100 d-flex flex-column" style="border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: white; transition: 0.3s;">
-
-          <!-- Gambar sekarang nempel ke ujung atas tanpa padding -->
+        <div class="umkm-card h-100 d-flex flex-column" style="border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s;">
           <img src="{{ $umkm->foto ? $umkm->foto : 'https://via.placeholder.com/400x300?text=Tidak+Ada+Foto' }}" style="height: 200px; width: 100%; object-fit: cover;" alt="Foto Usaha">
-
-          <!-- Konten Teks & Tombol dibungkus di dalam div ini dengan padding (p-4) -->
           <div class="p-3 d-flex flex-column flex-grow-1">
-
             <h5 class="umkm-title">{{ $umkm->nama }}</h5>
-
-            <!-- Badges (Kategori & Kelurahan) dengan padding px-3 py-1 agar lebih lonjong -->
             <div class="d-flex gap-2 mb-4">
               <span class="badge-kategori">{{ $umkm->kategori->kategori_umkm ?? '-' }}</span>
-              <!-- Ubah warna background badge kelurahan agar mirip desain admin -->
               <span class="badge-kelurahan">{{ $umkm->kelurahan->nama_kelurahan ?? '-' }}</span>
             </div>
-
-            <!-- Tombol dibungkus d-flex dan diberi mt-auto agar selalu terdorong ke bawah -->
             <div class="btn-group-custom">
               <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">Maps</a>
               <a href="https://wa.me/{{ $umkm->kontak }}" target="_blank" class="btn-card btn-kontak">Kontak</a>
             </div>
-
           </div>
         </div>
       </div>
       @endforeach
     </div>
-    <div class="text-center" style="margin-top: 40px;">
-      <a href="#" class="btn-more">Lihat Lebih Banyak</a>
+    <div class="text-center mt-4">
+      <a href="{{ route('daftar') }}" class="btn-more">Lihat Semua</a>
     </div>
   </section>
 
-  <section class="bg-light-green py-5 mt-5">
+  <section class="bg-light-green py-5">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-md-5">
+        <div class="col-md-5 pe-md-5 text-center text-md-start mb-4 mb-md-0">
           <h4 style="font-size: 20px; font-weight: 600; color: #41644A; margin-bottom: 10px;">Jumlah UMKM tiap Kelurahan</h4>
-          <p style="font-size: 14px; font-weight: 500; color: #000">Data berikut menunjukkan persebaran jumlah UMKM di setiap kelurahan di Kecamatan Bacukiki sebagai gambaran potensi ekonomi lokal.</p>
+          <p style="font-size: 14px; font-weight: 500; color: #000">Data berikut menunjukkan persebaran jumlah UMKM<br> di setiap kelurahan di Kecamatan Bacukiki sebagai<br> gambaran potensi ekonomi lokal.</p>
         </div>
 
-        <div class="col-md-5 offset-md-2">
-          <div class="row g-4">
+        <div class="col-md-6 offset-md-1 px-4 px-md-0">
+          <div class="row g-3 g-md-4">
             @foreach($kelurahans as $kelurahan)
             <div class="col-6">
-              <div class="card" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.06); background-color: #F6E4D3; padding: 12px 16px; width: 100%">
-                <h1 style="font-size: 40px; font-weight: 700; margin-bottom: 0px; color: #D17A22;">{{ $kelurahan->umkm_count }}</h1>
-                <div style="font-weight: 500; font-size: 20px; color: #D17A22;">{{ $kelurahan->nama_kelurahan }}</div>
+              <div class="card p-3 p-md-4 h-100 mx-auto" style="border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.06); max-width: 220px; background-color: #F6E4D3; padding: 12px 16px; width: 100%;">
+                <h1 class="mb-1 mb-md-2" style="font-size: 36px; font-weight: 600; margin-bottom: 0px; color: #D17A22;">{{ $kelurahan->umkm_count }}</h1>
+                <div style="font-weight: 500; font-size: 18px; color: #D17A22;">{{ $kelurahan->nama_kelurahan }}</div>
               </div>
             </div>
             @endforeach
@@ -378,15 +395,23 @@
   </section>
 
   <section class="container py-5 mt-4 mb-5">
-    <div class="row align-items-center">
+    <div class="row align-items-start">
 
-      <div class="col-lg-7 col-md-6 mb-4 mb-md-0">
+      <div class="col-lg-5 col-md-6 order-1 order-md-2 text-center text-md-end ps-lg-5 mb-4 mb-md-0">
+        <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 700; color: #41644A;">PETA SEBARAN</p>
+        <h4 class="font-weight-bold" style="color: #000; font-weight: 700; font-size: 28px;">Peta Sebaran UMKM</h4>
+        <p class="text-muted ms-md-auto mx-auto mx-md-0" style="font-size: 16px; line-height: 1.6; max-width: 400px;">
+          Marker berbeda warna menunjukkan lokasi UMKM berdasarkan kelurahan. Data yang ditampilkan telah melalui proses verifikasi oleh admin kecamatan.
+        </p>
+      </div>
+
+      <div class="col-lg-7 col-md-6 order-2 order-md-1">
         <div class="bg-white p-2 rounded shadow-sm" style="border: 1px solid #eaeaea;">
-
-          <div id="map-preview" class="rounded" style="height: 400px; z-index: 1;"></div>
+          <div id="map-preview" class="rounded bg-light d-flex align-items-center justify-content-center" style="height: 400px; z-index: 1;">
+          </div>
 
           <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-3 mb-2" style="font-size: 12px; color: #444;">
-            <span class="font-weight-bold" style="color: #111;">Keterangan:</span>
+            <span class="font-weight-bold d-none d-sm-inline" style="color: #111;">Keterangan:</span>
             <div class="d-flex align-items-center">
               <iconify-icon icon="mdi:map-marker" style="color: #41644A; font-size: 18px;"></iconify-icon> UMKM Galung Maloang
             </div>
@@ -400,24 +425,15 @@
               <iconify-icon icon="mdi:map-marker" style="color: #404040; font-size: 18px;"></iconify-icon> UMKM Watang Bacukiki
             </div>
           </div>
-
         </div>
-      </div>
-
-      <div class="col-lg-5 col-md-6 text-md-end text-center ps-lg-5">
-        <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 700; color: #41644A;">PETA SEBARAN</p>
-        <h4 class="font-weight-bold" style="color: #000; font-weight: 700; font-size: 28px;">Peta Sebaran UMKM</h4>
-        <p class="text-muted ms-md-auto" style="font-size: 16px; line-height: 1.5; max-width: 400px;">
-          Marker berbeda warna menunjukkan lokasi UMKM berdasarkan kelurahan. Data yang ditampilkan telah melalui proses verifikasi oleh admin kecamatan.
-        </p>
       </div>
 
     </div>
   </section>
 
   <footer>
-    <div class="container d-flex align-items-center justify-content-center">
-      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="50" class="me-3">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-start text-center text-md-start">
+      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="50" class="me-md-3 mb-3 mb-md-0">
       <div>
         <h3 class="mb-1" style="font-size: 18px; font-weight: 700;">Kecamatan Bacukiki</h3>
         <p class="mb-0" style="font-size: 12px; font-weight: 500;">Jl. Jend. M. Yusuf Kelurahan Galung Maloang, Kecamatan Bacukiki, Kota Parepare, Provinsi Sulawesi Selatan</p>
@@ -426,7 +442,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -515,6 +530,7 @@
       });
     })
   </script>
+
 </body>
 
 </html>

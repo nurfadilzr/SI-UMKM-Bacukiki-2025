@@ -55,6 +55,7 @@ Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->n
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
+// Route publik tanpa login
 Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/daftar-umkm', [BerandaController::class, 'daftar'])->name('daftar');
 Route::get('/peta-sebaran', [BerandaController::class, 'peta'])->name('peta');

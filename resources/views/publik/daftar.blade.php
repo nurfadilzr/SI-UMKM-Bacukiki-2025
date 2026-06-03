@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beranda - SI Data UMKM Kecamatan Bacukiki</title>
+  <title>Daftar UMKM - SI Data UMKM Kecamatan Bacukiki</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -15,11 +15,14 @@
       font-family: 'Lato', sans-serif;
       color: #333;
       background-color: #ECEFED;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     /* Navbar */
     .navbar {
-      padding: 15px 50px;
+      padding: 15px 10px;
       background-color: #ECEFED;
     }
 
@@ -27,20 +30,22 @@
       color: #41644A;
       font-weight: 500;
       margin-left: 40px;
-      /* Mengatur jarak antar menu */
-      padding-left: 0 !important;
-      /* Memaksa batas kiri pas dengan huruf */
       padding-right: 0 !important;
-      /* Memaksa batas kanan pas dengan huruf */
       padding-bottom: 1px;
-      /* Mengatur jarak vertikal antara teks dan garis */
     }
 
     .nav-link.active {
       color: #41644A !important;
       font-weight: 700;
       border-bottom: 3px solid #41644A;
+    }
 
+    @media (min-width: 992px) {
+      .nav-link {
+        margin-left: 30px;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
     }
 
     /* === STYLING UMKM CARD === */
@@ -97,6 +102,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      /* jika nama terlalu panjang */
     }
 
     .badge-group {
@@ -158,79 +164,97 @@
       color: #FFFFFF;
     }
 
+    .btn-more {
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      background-color: #8C8C8C;
+      border: none;
+      padding: 12px 16px;
+      color: #000;
+      text-decoration: none;
+    }
+
     /* Footer */
     footer {
       background-color: #404040;
       color: white;
       padding: 30px 0;
       font-size: 14px;
+      margin-top: auto;
     }
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg sticky-top shadow-sm">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="40" class="me-2">
-      <div>
-        <div style="font-weight: 600; font-size: 16px; line-height: 1;">SI Data UMKM</div>
-        <div style="font-size: 12px; color: #000;">Kecamatan Bacukiki</div>
+  <nav class="navbar navbar-expand-lg sticky-top bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ route('beranda') }}">
+        <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="40" class="me-2">
+        <div>
+          <div style="font-weight: 600; font-size: 16px; line-height: 1;">SI Data UMKM</div>
+          <div style="font-size: 12px; color: #000;">Kecamatan Bacukiki</div>
+        </div>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end text-center text-lg-end mt-3 mt-lg-0" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link d-inline-block" href="{{ route('beranda') }}">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link active d-inline-block" href="{{ route('daftar') }}">Daftar UMKM</a></li>
+          <li class="nav-item"><a class="nav-link d-inline-block" href="{{ route('peta') }}">Peta Sebaran</a></li>
+        </ul>
       </div>
-    </a>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="{{ route('beranda') }}">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{ route('daftar') }}">Daftar UMKM</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('peta') }}">Peta Sebaran</a></li>
-      </ul>
     </div>
   </nav>
 
-  <section class="container py-4 mt-4">
-    <div class="text-center mb-5">
-      <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 600; color: #41644A;">DAFTAR UMKM</p>
-      <h4 class="font-weight-bold mb-3" style="color: #000; font-weight: 700;">Berbagai Kategori Dari Setiap Kelurahan,<br>UMKM Bacukiki Semakin Terdepan</h4>
-    </div>
+  <section class="container py-4 mt-3 text-center">
+    <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 600; color: #41644A;">DAFTAR UMKM</p>
+    <h2 class="font-weight-bold mx-auto mb-4" style="color: #111; max-width: 600px; line-height: 1.3; font-weight: 600;">
+      Berbagai Kategori Dari Setiap Kelurahan, UMKM Bacukiki Semakin Terdepan
+    </h2>
+  </section>
 
-    <div class="row g-4 mb-4">
+  <section class="container mb-5 pb-5 px-4 px-md-2">
+    <div class="row g-5">
+
       @foreach($umkms as $umkm)
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <!-- Hapus p-3 dari sini, tambahkan h-100 dan d-flex flex-column agar tinggi seragam -->
-        <div class="umkm-card w-100 d-flex flex-column" style="border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: white; transition: 0.3s;">
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="h-100 d-flex flex-column" style="border: 1px solid #eee; border-radius: 16px; overflow: hidden; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
 
-          <!-- Gambar sekarang nempel ke ujung atas tanpa padding -->
-          <img src="{{ $umkm->foto ? $umkm->foto : 'https://via.placeholder.com/400x300?text=Tidak+Ada+Foto' }}" style="height: 200px; width: 100%; object-fit: cover;" alt="Foto Usaha">
+          <div style="aspect-ratio: 4/3; width: 100%; overflow: hidden;">
+            <img src="{{ $umkm->foto ? $umkm->foto : 'https://via.placeholder.com/400x300?text=Tidak+Ada+Foto' }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Foto Usaha">
+          </div>
 
-          <!-- Konten Teks & Tombol dibungkus di dalam div ini dengan padding (p-4) -->
           <div class="p-3 d-flex flex-column flex-grow-1">
-
             <h5 class="umkm-title">{{ $umkm->nama }}</h5>
 
-            <!-- Badges (Kategori & Kelurahan) dengan padding px-3 py-1 agar lebih lonjong -->
-            <div class="d-flex gap-2 mb-4">
+            <div class="d-flex flex-wrap gap-2 mb-4">
               <span class="badge-kategori">{{ $umkm->kategori->kategori_umkm ?? '-' }}</span>
-              <!-- Ubah warna background badge kelurahan agar mirip desain admin -->
               <span class="badge-kelurahan">{{ $umkm->kelurahan->nama_kelurahan ?? '-' }}</span>
             </div>
 
-            <!-- Tombol dibungkus d-flex dan diberi mt-auto agar selalu terdorong ke bawah -->
             <div class="btn-group-custom">
               <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">Maps</a>
               <a href="https://wa.me/{{ $umkm->kontak }}" target="_blank" class="btn-card btn-kontak">Kontak</a>
             </div>
-
           </div>
         </div>
       </div>
       @endforeach
+
+    </div>
+
+    <div class="d-flex justify-content-center mt-5">
+      {{ $umkms->links('pagination::bootstrap-5') }}
     </div>
   </section>
 
-
   <footer>
-    <div class="container d-flex align-items-center justify-content-center">
-      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="50" class="me-3">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-start text-center text-md-start">
+      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="50" class="me-md-3 mb-3 mb-md-0">
       <div>
         <h3 class="mb-1" style="font-size: 18px; font-weight: 700;">Kecamatan Bacukiki</h3>
         <p class="mb-0" style="font-size: 12px; font-weight: 500;">Jl. Jend. M. Yusuf Kelurahan Galung Maloang, Kecamatan Bacukiki, Kota Parepare, Provinsi Sulawesi Selatan</p>
@@ -238,7 +262,7 @@
     </div>
   </footer>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

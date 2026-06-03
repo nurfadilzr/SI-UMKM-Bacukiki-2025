@@ -30,7 +30,7 @@
   .custom-search-group:focus-within {
     box-shadow: 0 0 0 3px rgba(65, 100, 74, 0.15);
     /* Efek glow hijau */
-    border-radius: 8px;
+    border-radius: 6px;
   }
 
   /* Ikon Kaca Pembesar di Kiri */
@@ -39,8 +39,8 @@
     /* Border abu-abu */
     border-right: none !important;
     /* Hilangkan border kanan agar menyatu dengan input */
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
     padding: 10px 14px;
     background-color: #FFFFFF;
     color: #9CA3AF;
@@ -52,8 +52,8 @@
     border: 1.5px solid #E5E7EB;
     border-left: none !important;
     /* Hilangkan border kiri agar menyatu dengan ikon */
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     font-size: 14px;
     box-shadow: none !important;
     /* Menghilangkan efek glow biru bawaan Bootstrap */
@@ -63,9 +63,9 @@
   /* === STYLING UNTUK DROPDOWN === */
   .filter-select-custom {
     border: 1.5px solid #E5E7EB;
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 14px;
-    padding: 10px 36px 10px 16px;
+    padding: 10px 14px;
     color: var(--color-gray);
     box-shadow: none !important;
     transition: all 0.2s ease;
@@ -73,7 +73,7 @@
 
   .filter-select-custom:focus {
     border-color: var(--color-green) !important;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+    box-shadow: 0 0 0 3px rgba(65, 100, 74, 0.15) !important;
   }
 
   /* Tombol Utama (Blue) */
@@ -574,7 +574,7 @@ $link_wa = "https://wa.me/" . $nomor_hp . "?text=" . urlencode($pesan);
         <div class="d-flex justify-content-center gap-3">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 500;">Tutup</button>
 
-          <a href="{{ $link_wa }}" target="_blank" class="btn btn-success d-flex align-items-center gap-2" style="border-radius: 8px; font-weight: 500; background-color: #25D366; border: none;">
+          <a href="{{ $link_wa }}" target="_blank" class="btn btn-success d-flex align-items-center gap-2" style="border-radius: 8px; font-weight: 500; background-color: #41644A; border: none;">
             <iconify-icon icon="lucide:message-circle" style="font-size: 18px;"></iconify-icon>
             Kirim Pesan WhatsApp
           </a>

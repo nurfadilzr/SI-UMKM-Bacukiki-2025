@@ -108,7 +108,7 @@
 
           <h4 id="dtl-nama" style="font-weight: 700; font-size: 22px; color: #111; margin-bottom: 14px;">Nama UMKM</h4>
 
-          <div class="mb-4" style="display: flex; gap: 8px;">
+          <div class="mb-3" style="display: flex; gap: 8px;">
             <span id="dtl-kategori" class="badge-kategori">Kategori</span>
             <span id="dtl-kelurahan" class="badge-kelurahan">Kelurahan</span>
           </div>

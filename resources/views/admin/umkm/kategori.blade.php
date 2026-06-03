@@ -65,6 +65,26 @@
     border-bottom: 1px solid var(--color-border);
   }
 
+  .btn-action-icon {
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: #404040;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    background: transparent;
+  }
+
+  .btn-action-icon:hover {
+    background-color: #ECECEC;
+    /* Warna kotak abu-abu terang */
+    color: #111;
+    /* Ikon menjadi sedikit lebih gelap agar kontras */
+  }
+
   .btn-batal {
     background-color: white;
     color: var(--color-gray);
@@ -162,7 +182,7 @@
         </div>
 
         <div class="table-responsive">
-          <table class="table custom-table table-hover align-middle">
+          <table class="table custom-table align-middle">
             <thead style="background-color: #F8FAFC;">
               <tr>
                 <th>Jenis Kategori</th>
@@ -177,10 +197,10 @@
                 <td>{{ $kategori->umkm_count }}</td>
                 <td>
                   <div class="d-flex" style="margin-left: -10px;">
-                    <button class="btn btn-sm btn-light border-0 me-1" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $kategori->id }}" style="background: transparent;">
+                    <button class="btn-action-icon" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $kategori->id }}">
                       <iconify-icon icon="lucide:edit" style="font-size: 18px; color: var(--color-gray);"></iconify-icon>
                     </button>
-                    <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalDelete{{ $kategori->id }}" style="background: transparent;">
+                    <button class="btn-action-icon" data-bs-toggle="modal" data-bs-target="#modalDelete{{ $kategori->id }}">
                       <iconify-icon icon="lucide:trash-2" style="font-size: 18px; color: var(--color-gray);"></iconify-icon>
                     </button>
                   </div>
