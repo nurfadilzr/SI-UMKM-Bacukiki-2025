@@ -37,6 +37,7 @@
     display: flex;
     gap: 8px;
     margin-top: auto;
+    width: 100%;
   }
 
   .btn-card {
@@ -64,6 +65,7 @@
   .btn-kontak {
     background-color: var(--color-green);
     color: #FFFFFF;
+
   }
 </style>
 
@@ -73,60 +75,63 @@
   <h3 class="page-title">Peta Sebaran UMKM</h3>
 
   <div class="row">
-    <div class="col-md-8">
-      <div class="card" style="border-radius: 16px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 12px;">
-        <div id="map" style="height: 550px; border-radius: 12px; z-index: 1;"></div>
 
-        <div class="d-flex justify-content-center align-items-center mt-3 flex-nowrap" style="font-size: 13px; gap: 16px; white-space: nowrap; overflow-x: auto; padding-bottom: 5px;">
-          <span style="font-size: 14px;">Keterangan:</span>
-          <span class="d-flex align-items-center gap-1">
-            <iconify-icon icon="fa-solid:map-marker-alt" style="color: var(--color-green); font-size: 18px;"></iconify-icon> UMKM Galung Maloang
-          </span>
-          <span class="d-flex align-items-center gap-1">
-            <iconify-icon icon="fa-solid:map-marker-alt" style="color: var(--color-blue); font-size: 18px;"></iconify-icon> UMKM Lompoe
-          </span>
-          <span class="d-flex align-items-center gap-1">
-            <iconify-icon icon="fa-solid:map-marker-alt" style="color: var(--color-orange); font-size: 18px;"></iconify-icon> UMKM Lemoe
-          </span>
-          <span class="d-flex align-items-center gap-1">
-            <iconify-icon icon="fa-solid:map-marker-alt" style="color: var(--color-gray); font-size: 18px;"></iconify-icon> UMKM Watang Bacukiki
-          </span>
+    <div class="col-xl-7 mb-4 mb-xl-0">
+      <div class="bg-white p-2 p-md-3 shadow-sm mx-auto w-100" style="border-radius: 16px; min-width: 480px; max-width: 500px;">
+
+        <div id="map-preview" style="height: 60vh; min-height: 450px; max-height: 550px; z-index: 1; border-radius: 12px;"></div>
+
+        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 gap-md-3 mt-2 mb-1" style="font-size: 10px; color: #444;">
+          <span class="font-weight-bold d-none d-sm-inline" style="color: #111;">Keterangan:</span>
+          <div class="d-flex align-items-center">
+            <iconify-icon icon="mdi:map-marker" style="color: #41644A; font-size: 18px;"></iconify-icon> <span class="d-none d-sm-inline">Galung Maloang</span><span class="d-inline d-sm-none">G. Maloang</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <iconify-icon icon="mdi:map-marker" style="color: #1B3B6F; font-size: 18px;"></iconify-icon> Lompoe
+          </div>
+          <div class="d-flex align-items-center">
+            <iconify-icon icon="mdi:map-marker" style="color: #D17A22; font-size: 18px;"></iconify-icon> Lemoe
+          </div>
+          <div class="d-flex align-items-center">
+            <iconify-icon icon="mdi:map-marker" style="color: #404040; font-size: 18px;"></iconify-icon> <span class="d-none d-sm-inline">Watang Bacukiki</span><span class="d-inline d-sm-none">W. Bacukiki</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="card p-4" style="border-radius: 16px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <div class="col-xl-5 ps-xl-5">
+      <div class="bg-white p-3 shadow-sm text-center mx-auto ms-lg-auto" style="border-radius: 16px; min-width: 350px; max-width: 400px; width: 100%;">
+        <h5 class="mb-3" style="color: #333; font-weight: 600; font-size: 18px;">Detail UMKM</h5>
+        <hr style="border-color: #ddd;">
 
-        <h5 class="text-center mb-3 pb-2" style="border-bottom: 1px solid #E5E7EB; font-size: 16px;">Detail UMKM</h5>
-
-        <div id="detail-kosong" class="text-center mt-4 mb-4 text-muted" style="font-style: italic; font-size: 14px;">
-          Klik salah satu marker untuk melihat detail umkm
+        <div id="detail-kosong" class="py-3 w-100">
+          <p class="text-muted fst-italic mb-0" style="font-size: 14px;">
+            Klik salah satu marker untuk melihat detail umkm
+          </p>
         </div>
 
-        <div id="detail-isi" style="display: none; flex-direction: column;">
+        <div id="detail-isi" style="display: none; flex-direction: column; width: 100%;" class="text-start fade-in px-2 pb-2">
+          <h4 id="dtl-nama" style="font-weight: 700; font-size: 22px; color: #000; margin-bottom: 14px;">Nama UMKM</h4>
 
-          <h4 id="dtl-nama" style="font-weight: 700; font-size: 22px; color: #111; margin-bottom: 14px;">Nama UMKM</h4>
-
-          <div class="mb-3" style="display: flex; gap: 8px;">
+          <div class="d-flex gap-2 justify-content-start mb-3" style="display: flex; flex-wrap: wrap;">
             <span id="dtl-kategori" class="badge-kategori">Kategori</span>
             <span id="dtl-kelurahan" class="badge-kelurahan">Kelurahan</span>
           </div>
 
-          <p class="text-dark mb-4 d-flex align-items-start gap-2" style="font-size: 15px;">
-            <iconify-icon icon="fa6-solid:location-dot" style="font-size: 18px; margin-top: 3px; color: #111;"></iconify-icon>
-            <span id="dtl-alamat">Alamat UMKM</span>
+          <p class="text-dark mb-3 d-flex align-items-start gap-2" style="font-size: 15px; width: 100%;">
+            <iconify-icon icon="fa6-solid:location-dot" style="font-size: 18px; margin-top: 3px; color: #000;"></iconify-icon>
+            <span id="dtl-alamat" style="flex: 1;">Alamat UMKM</span>
           </p>
 
-          <div class="btn-group-custom">
+          <div class="btn-group-custom w-100">
             <a href="#" id="dtl-btn-maps" target="_blank" class="btn-card btn-maps">Maps</a>
             <a href="#" id="dtl-btn-kontak" target="_blank" class="btn-card btn-kontak">Kontak</a>
           </div>
         </div>
-
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -141,7 +146,7 @@
     const dataUmkm = @json($umkms);
 
     // 2. Inisialisasi Peta (Koordinat tengah Kecamatan Bacukiki)
-    const map = L.map('map').setView([-4.0200, 119.6500], 13);
+    const map = L.map('map-preview').setView([-4.0200, 119.6500], 13);
 
     // 3. Pasang Tile Layer (Peta Dasarnya dari OpenStreetMap)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -236,6 +241,9 @@
         // Sembunyikan teks default, Munculkan isi detail
         document.getElementById('detail-kosong').style.display = 'none';
         document.getElementById('detail-isi').style.display = 'flex';
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 100);
 
         // Ganti isi teks HTML
         document.getElementById('dtl-nama').innerText = umkm.nama;

@@ -8,6 +8,7 @@
     font-weight: 700;
     color: var(--color-black);
     margin-bottom: 24px;
+    /* padding: 8px 12px; */
   }
 
   .filter-container {
@@ -80,6 +81,23 @@
   }
 
   /* === STYLING UMKM CARD === */
+  .umkm-grid-container {
+    /* display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 260px));
+    gap: 24px; */
+    /* Jarak antar kartu statis tidak berubah */
+    justify-content: start;
+    display: flex;
+    flex-wrap: wrap;
+    /* Izinkan kartu turun ke bawah JIKA tidak muat */
+    gap: 24px;
+
+    /* RUMUS MAKSIMAL 4 KARTU: 
+       (260px * 4 kartu) + (24px * 3 jarak) = 1112px 
+       Ini mencegah masuknya kartu ke-5 jika layar ditarik sangat lebar */
+    max-width: 1112px;
+  }
+
   .umkm-card {
     background: #FFFFFF;
     border: none;
@@ -91,9 +109,9 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     height: 100%;
     width: 100%;
-    max-width: 280px;
-    /* Batas maksimal lebar card (Bisa diubah: 280px, 300px, 320px) */
-    margin: 0 auto;
+    flex: 0 0 260px;
+    width: 260px;
+    height: 100%;
   }
 
   .umkm-card:hover {
@@ -194,6 +212,71 @@
     background-color: var(--color-green);
     color: #FFFFFF;
   }
+
+  /* =========================================
+     === CSS RESPONSIVE KHUSUS MOBILE ===
+     ========================================= */
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* 1. Ubah container agar membungkus ke bawah (wrap) dan posisinya di tengah */
+    .filter-container {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      /* Mematikan scroll horizontal */
+      padding-bottom: 0;
+    }
+
+    /* 2. Search bar mengambil lebar penuh (100%) di baris pertama */
+    .search-wrapper {
+      flex: 1 1 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+
+    /* 3. Dropdown group juga mengambil sisa lebar penuh di baris kedua */
+    .dropdown-group {
+      display: flex;
+      flex-wrap: nowrap;
+      /* Pertahankan sejajar di HP */
+      justify-content: center;
+      width: 100%;
+      gap: 10px;
+    }
+
+    /* 4. Kedua dropdown membagi sisa ruang secara adil (50:50) */
+    .filter-select-custom {
+      flex: 1;
+      /* Perintah agar lebarnya seimbang */
+      min-width: 0;
+      /* Mencegah elemen keluar batas layar jika terlalu kecil */
+      font-size: 13px;
+      padding: 8px 28px 8px 12px;
+      background-position: right 8px center;
+    }
+
+    .umkm-grid-container {
+      justify-content: center;
+    }
+
+    /* Kartu UMKM memanjang penuh di layar HP */
+    .umkm-card {
+      max-width: 260px;
+      margin: 0 auto;
+      flex: 0 0 100%;
+      /* Kartu bisa menyesuaikan jika layar HP sangat sempit */
+    }
+
+    /* Menurunkan tinggi gambar sedikit agar proporsional di HP */
+    .img-wrapper {
+      height: 180px;
+    }
+  }
 </style>
 
 <div>
@@ -205,51 +288,57 @@
         <iconify-icon icon="lucide:search" class="search-icon"></iconify-icon>
         <input type="text" name="search" class="search-input-custom" placeholder="Cari UMKM..." value="{{ request('search') }}">
       </div>
-
       <div class="dropdown-group">
-        <select name="kategori" class="filter-select-custom" onchange="this.form.submit()">
-          <option value="">Semua Kategori</option>
-          @foreach($kategoris as $kat)
-          <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>{{ $kat->kategori_umkm }}</option>
-          @endforeach
-        </select>
-
-        <select name="kelurahan" class="filter-select-custom" onchange="this.form.submit()">
-          <option value="">Semua Kelurahan</option>
-          @foreach($kelurahans as $kel)
-          <option value="{{ $kel->id }}" {{ request('kelurahan') == $kel->id ? 'selected' : '' }}>{{ $kel->nama_kelurahan }}</option>
-          @endforeach
-        </select>
+        <div class="dropdown" style="flex: 1; min-width: 0;">
+          <button class="btn filter-select-custom w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: none; padding-right: 12px;">
+            <span id="label-kategori" class="text-truncate">Semua Kategori</span>
+            <iconify-icon icon="lucide:chevron-down" style="color: #9CA3AF; min-width: 16px;"></iconify-icon>
+          </button>
+          <ul class="dropdown-menu w-100 shadow-sm" style="border-radius: 8px; font-size: 13px; border: 1px solid #E5E7EB; padding: 8px 0;">
+            <li><a class="dropdown-item py-2" href="#" onclick="applyFilter('kategori', '', 'Semua Kategori')">Semua Kategori</a></li>
+            @foreach($kategoris as $kat)
+            <li><a class="dropdown-item py-2" href="#" onclick="applyFilter('kategori', '{{ $kat->id }}', '{{ $kat->kategori_umkm }}')">{{ $kat->kategori_umkm }}</a></li>
+            @endforeach
+          </ul>
+          <input type="hidden" name="kategori" id="input-kategori" value="{{ request('kategori') }}">
+        </div>
+        <div class="dropdown" style="flex: 1; min-width: 0;">
+          <button class="btn filter-select-custom w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-image: none; padding-right: 12px;">
+            <span id="label-kelurahan" class="text-truncate">Semua Kelurahan</span>
+            <iconify-icon icon="lucide:chevron-down" style="color: #9CA3AF; min-width: 16px;"></iconify-icon>
+          </button>
+          <ul class="dropdown-menu w-100 shadow-sm" style="border-radius: 8px; font-size: 13px; border: 1px solid #E5E7EB; padding: 8px 0;">
+            <li><a class="dropdown-item py-2" href="#" onclick="applyFilter('kelurahan', '', 'Semua Kelurahan')">Semua Kelurahan</a></li>
+            @foreach($kelurahans as $kel)
+            <li><a class="dropdown-item py-2" href="#" onclick="applyFilter('kelurahan', '{{ $kel->id }}', '{{ $kel->nama_kelurahan }}')">{{ $kel->nama_kelurahan }}</a></li>
+            @endforeach
+          </ul>
+          <input type="hidden" name="kelurahan" id="input-kelurahan" value="{{ request('kelurahan') }}">
+        </div>
       </div>
     </div>
   </form>
 
-  <div class="row g-4">
+  <div class="umkm-grid-container mt-2">
     @forelse($umkms as $umkm)
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="umkm-card">
-
-        <div class="img-wrapper">
-          <img src="{{ $umkm->foto ? $umkm->foto : 'https://via.placeholder.com/400x300?text=Tidak+Ada+Foto' }}" alt="Foto {{ $umkm->nama }}">
+    <div class="umkm-card">
+      <div class="img-wrapper">
+        <img src="{{ $umkm->foto ? $umkm->foto : 'https://via.placeholder.com/400x300?text=Tidak+Ada+Foto' }}" alt="Foto {{ $umkm->nama }}">
+      </div>
+      <div class="card-body-custom">
+        <h4 class="umkm-title" title="{{ $umkm->nama }}">{{ $umkm->nama }}</h4>
+        <div class="badge-group">
+          <span class="badge-kategori">{{ $umkm->kategori->kategori_umkm ?? 'Tanpa Kategori' }}</span>
+          <span class="badge-kelurahan">{{ $umkm->kelurahan->nama_kelurahan ?? 'Tanpa Kelurahan' }}</span>
         </div>
-
-        <div class="card-body-custom">
-          <h4 class="umkm-title" title="{{ $umkm->nama }}">{{ $umkm->nama }}</h4>
-
-          <div class="badge-group">
-            <span class="badge-kategori">{{ $umkm->kategori->kategori_umkm ?? 'Tanpa Kategori' }}</span>
-            <span class="badge-kelurahan">{{ $umkm->kelurahan->nama_kelurahan ?? 'Tanpa Kelurahan' }}</span>
-          </div>
-
-          <div class="btn-group-custom">
-            <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">Maps</a>
-            <a href="https://wa.me/{{ $umkm->kontak }}" target="_blank" class="btn-card btn-kontak">Kontak</a>
-          </div>
+        <div class="btn-group-custom">
+          <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">Maps</a>
+          <a href="https://wa.me/{{ $umkm->kontak }}" target="_blank" class="btn-card btn-kontak">Kontak</a>
         </div>
       </div>
     </div>
     @empty
-    <div class="col-12 text-center py-5">
+    <div class="text-center py-5">
       <iconify-icon icon="lucide:box" style="font-size: 48px; color: #9CA3AF; margin-bottom: 16px;"></iconify-icon>
       <h5 style="color: #4B5563;">Tidak ada UMKM yang ditemukan.</h5>
       <p style="color: #9CA3AF; font-size: 14px;">Coba ubah kata kunci pencarian atau filter Anda.</p>
@@ -262,4 +351,34 @@
   </div>
 
 </div>
+
+<script>
+  // Fungsi untuk menangani klik pada custom dropdown
+  function applyFilter(type, value, label) {
+    // 1. Ubah nilai pada input tersembunyi
+    document.getElementById('input-' + type).value = value;
+
+    // 2. Kirim form secara otomatis
+    document.getElementById('form-filter').submit();
+  }
+
+  // --- Opsional: Skrip untuk mengingat teks label setelah halaman direfresh ---
+  document.addEventListener('DOMContentLoaded', function() {
+    // Ambil nilai filter saat ini dari URL/Input
+    let currentKategori = document.getElementById('input-kategori').value;
+    let currentKelurahan = document.getElementById('input-kelurahan').value;
+
+    // Jika ada nilai, cari labelnya di dalam daftar dan ubah teks tombolnya
+    if (currentKategori) {
+      let activeItem = document.querySelector(`a[onclick*="applyFilter('kategori', '${currentKategori}'"]`);
+      if (activeItem) document.getElementById('label-kategori').innerText = activeItem.innerText;
+    }
+
+    if (currentKelurahan) {
+      let activeItem = document.querySelector(`a[onclick*="applyFilter('kelurahan', '${currentKelurahan}'"]`);
+      if (activeItem) document.getElementById('label-kelurahan').innerText = activeItem.innerText;
+    }
+  });
+</script>
+
 @endsection
