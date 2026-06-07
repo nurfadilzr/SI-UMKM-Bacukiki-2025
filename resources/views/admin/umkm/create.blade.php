@@ -228,164 +228,205 @@
     color: white;
     background-color: var(--color-green);
   }
+
+  /* CSS MOBILE */
+  @media (max-width: 768px) {
+
+    /* 3. Dropdown group juga mengambil sisa lebar penuh di baris kedua */
+    .dropdown-group {
+      display: flex;
+      flex-wrap: nowrap;
+      /* Pertahankan sejajar di HP */
+      justify-content: center;
+      width: 100%;
+      gap: 10px;
+    }
+
+    /* 4. Kedua dropdown membagi sisa ruang secara adil (50:50) */
+    .form-select-custom {
+      flex: 1;
+      /* Perintah agar lebarnya seimbang */
+      min-width: 0;
+      /* Mencegah elemen keluar batas layar jika terlalu kecil */
+      font-size: 13px;
+      padding: 8px 28px 8px 12px;
+      background-position: right 8px center;
+    }
+  }
 </style>
 
-<form action="{{ route('umkm.store') }}" method="POST" id="form-create" enctype="multipart/form-data">
-  @csrf
+<div class="container-fluid p-3 p-md-4">
 
-  <div class="create-card">
-    <h3 id="step-title" style="font-size: 20px; font-weight: 700; color: var(--color-black); margin-bottom: 30px;">Input Data UMKM</h3>
-    <a href="{{ route('umkm.index') }}" class="btn-close-custom"><iconify-icon icon="lucide:x"></iconify-icon></a>
+  <form action="{{ route('umkm.store') }}" method="POST" id="form-create" enctype="multipart/form-data">
+    @csrf
 
-    <div class="stepper-container" id="stepper">
-      <div class="step-item step-active" id="stepper-1">
-        <div class="step-circle">1</div>
-        <span class="step-text">Input Data</span>
-      </div>
-      <div class="step-item" id="stepper-2">
-        <div class="step-circle">2</div>
-        <span class="step-text">Input Koordinat</span>
-      </div>
-      <div class="step-item" id="stepper-3">
-        <div class="step-circle">3</div>
-        <span class="step-text">Status Verifikasi</span>
-      </div>
-      <div class="step-item" id="stepper-4">
-        <div class="step-circle">4</div>
-        <span class="step-text">Status UMKM</span>
-      </div>
-    </div>
+    <div class="create-card">
+      <h3 id="step-title" style="font-size: 20px; font-weight: 700; color: var(--color-black); margin-bottom: 30px;">Input Data UMKM</h3>
 
-    @if ($errors->any())
-    <div class="alert alert-danger" style="border-radius: 8px; font-size: 13px; border:none; background-color:rgba(211,47,47,0.1); color:#D32F2F">
-      <strong>Gagal Menyimpan Data!</strong> Silakan periksa kembali isian Anda:
-      <ul class="mb-0 mt-1">
-        @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-      </ul>
-    </div>
-    @endif
+      <div class="stepper-container" id="stepper">
+        <div class="step-item step-active" id="stepper-1">
+          <div class="step-circle">1</div>
+          <span class="step-text">Input Data</span>
+        </div>
+        <div class="step-item" id="stepper-2">
+          <div class="step-circle">2</div>
+          <span class="step-text">Input Koordinat</span>
+        </div>
+        <div class="step-item" id="stepper-3">
+          <div class="step-circle">3</div>
+          <span class="step-text">Status Verifikasi</span>
+        </div>
+        <div class="step-item" id="stepper-4">
+          <div class="step-circle">4</div>
+          <span class="step-text">Status UMKM</span>
+        </div>
+      </div>
 
-    <div id="content-step-1">
-      <p class="info-text mb-4">Lengkapi data informasi dasar UMKM di bawah ini.</p>
-      <div class="row g-4 mb-4">
-        <div class="col-lg-4">
-          <div class="foto-edit-container" id="foto-preview-box">
-            <div class="foto-overlay-edit">Tekan untuk menambahkan foto</div>
-            <img src="https://via.placeholder.com/800x600?text=Upload+Foto+UMKM" id="foto-preview-img">
+      @if ($errors->any())
+      <div class="alert alert-danger" style="border-radius: 8px; font-size: 13px; border:none; background-color:rgba(211,47,47,0.1); color:#D32F2F">
+        <strong>Gagal Menyimpan Data!</strong> Silakan periksa kembali isian Anda:
+        <ul class="mb-0 mt-1">
+          @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+        </ul>
+      </div>
+      @endif
+
+      <div id="content-step-1">
+        <p class="info-text mb-4">Lengkapi data informasi dasar UMKM di bawah ini.</p>
+        <div class="row g-4 mb-4">
+          <div class="col-lg-4">
+            <div class="foto-edit-container" id="foto-preview-box">
+              <div class="foto-overlay-edit">Tekan untuk menambahkan foto</div>
+              <img src="https://via.placeholder.com/800x600?text=Upload+Foto+UMKM" id="foto-preview-img">
+            </div>
+            <input type="file" name="new_foto" id="input-new-foto" style="display: none;" accept="image/jpeg,image/png,image/jpg" required>
           </div>
-          <input type="file" name="new_foto" id="input-new-foto" style="display: none;" accept="image/jpeg,image/png,image/jpg" required>
-        </div>
 
-        <div class="col-lg-8">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label-custom">Nama UMKM</label>
-              <input type="text" name="nama" class="form-control-custom" placeholder="Masukkan nama UMKM" value="{{ old('nama') }}" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label-custom">Kontak UMKM</label>
-              <input type="text" name="kontak" class="form-control-custom" placeholder="Masukkan kontak UMKM" value="{{ old('kontak') }}" required>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label-custom">Kategori UMKM</label>
-              <select name="id_kategori" class="form-select-custom" required>
-                <option value="" disabled selected>Pilih Kategori UMKM</option>
-                @foreach($kategoris as $kategori)
-                <option value="{{ $kategori->id }}" {{ old('id_kategori') == $kategori->id ? 'selected' : '' }}>{{ $kategori->kategori_umkm }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label-custom">Kelurahan UMKM</label>
-              <select name="id_kelurahan" class="form-select-custom" required>
-                <option value="" disabled selected>Pilih Kelurahan UMKM</option>
-                @foreach($kelurahans as $kelurahan)
-                <option value="{{ $kelurahan->id }}" {{ old('id_kelurahan') == $kelurahan->id ? 'selected' : '' }}>{{ $kelurahan->nama_kelurahan }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-12">
-              <label class="form-label-custom">Alamat UMKM</label>
-              <input type="text" name="alamat" class="form-control-custom" placeholder="Masukkan alamat UMKM" value="{{ old('alamat') }}" required>
-            </div>
-            <div class="col-12">
-              <label class="form-label-custom">Link Titik Lokasi UMKM (Google Maps)</label>
-              <input type="url" name="titik_maps" class="form-control-custom" placeholder="Masukkan link titik lokasi UMKM" value="{{ old('titik_maps') }}" required>
+          <div class="col-lg-8">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label-custom">Nama UMKM</label>
+                <input type="text" name="nama" class="form-control-custom" placeholder="Masukkan nama UMKM" value="{{ old('nama') }}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label-custom">Kontak UMKM</label>
+                <input type="text" name="kontak" class="form-control-custom" placeholder="Masukkan kontak UMKM" value="{{ old('kontak') }}" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label-custom">Kategori UMKM</label>
+                <div class="dropdown w-100">
+                  <button class="btn form-control-custom w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="btn-kategori" style="background-color: #FFFFFF;">
+                    <span id="label-kategori" class="text-truncate text-muted">Pilih Kategori UMKM</span>
+                    <iconify-icon icon="lucide:chevron-down" style="color: #9CA3AF; min-width: 16px;"></iconify-icon>
+                  </button>
+                  <ul class="dropdown-menu w-100 shadow-sm" style="border-radius: 8px; font-size: 13px; border: 1px solid #E5E7EB; padding: 8px 0; max-height: 250px; overflow-y: auto;">
+                    @foreach($kategoris as $kategori)
+                    <li><a class="dropdown-item py-2" href="#" onclick="pilihDropdown('kategori', '{{ $kategori->id }}', '{{ $kategori->kategori_umkm }}', event)">{{ $kategori->kategori_umkm }}</a></li>
+                    @endforeach
+                  </ul>
+                  <input type="text" name="id_kategori" id="input-kategori" value="{{ old('id_kategori') }}" style="opacity: 0; position: absolute; z-index: -1; width: 1px; height: 1px;" required>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label-custom">Kelurahan UMKM</label>
+                <div class="dropdown w-100">
+                  <button class="btn form-control-custom w-100 text-start d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="btn-kelurahan" style="background-color: #FFFFFF;">
+                    <span id="label-kelurahan" class="text-truncate text-muted">Pilih Kelurahan UMKM</span>
+                    <iconify-icon icon="lucide:chevron-down" style="color: #9CA3AF; min-width: 16px;"></iconify-icon>
+                  </button>
+                  <ul class="dropdown-menu w-100 shadow-sm" style="border-radius: 8px; font-size: 13px; border: 1px solid #E5E7EB; padding: 8px 0; max-height: 250px; overflow-y: auto;">
+                    @foreach($kelurahans as $kelurahan)
+                    <li><a class="dropdown-item py-2" href="#" onclick="pilihDropdown('kelurahan', '{{ $kelurahan->id }}', '{{ $kelurahan->nama_kelurahan }}', event)">{{ $kelurahan->nama_kelurahan }}</a></li>
+                    @endforeach
+                  </ul>
+                  <input type="text" name="id_kelurahan" id="input-kelurahan" value="{{ old('id_kelurahan') }}" style="opacity: 0; position: absolute; z-index: -1; width: 1px; height: 1px;" required>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label-custom">Alamat UMKM</label>
+                <input type="text" name="alamat" class="form-control-custom" placeholder="Masukkan alamat UMKM" value="{{ old('alamat') }}" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label-custom">Link Titik Lokasi UMKM (Google Maps)</label>
+                <input type="url" name="titik_maps" class="form-control-custom" placeholder="Masukkan link titik lokasi UMKM" value="{{ old('titik_maps') }}" required>
+              </div>
             </div>
           </div>
         </div>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <a href="{{ route('umkm.index') }}" class="btn btn-batal">Batal</a>
+          <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(2)">Selanjutnya</button> -->
+          <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(1, 2)">Selanjutnya</button>
+        </div>
       </div>
-      <div class="d-flex justify-content-end gap-2 mt-4">
-        <a href="{{ route('umkm.index') }}" class="btn btn-batal">Batal</a>
-        <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(2)">Selanjutnya</button> -->
-        <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(1, 2)">Selanjutnya</button>
-      </div>
-    </div>
 
-    <div id="content-step-2" style="display: none;">
-      <p class="info-text mb-4">Silakan input titik koordinat lokasi UMKM.</p>
-      <div class="row g-4 mb-4">
-        <div class="col-md-6">
-          <label class="form-label-custom">Latitude</label>
-          <input type="text" name="latitude" class="form-control-custom" placeholder="Masukkan latitude (lintang)" value="{{ old('latitude') }}" required>
+      <div id="content-step-2" style="display: none;">
+        <p class="info-text mb-4">Silakan input titik koordinat lokasi UMKM.</p>
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <label class="form-label-custom">Latitude</label>
+            <input type="text" name="latitude" class="form-control-custom" placeholder="Masukkan latitude (lintang)" value="{{ old('latitude') }}" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-custom">Longitude</label>
+            <input type="text" name="longitude" class="form-control-custom" placeholder="Masukkan longitude (bujur)" value="{{ old('longitude') }}" required>
+          </div>
         </div>
-        <div class="col-md-6">
-          <label class="form-label-custom">Longitude</label>
-          <input type="text" name="longitude" class="form-control-custom" placeholder="Masukkan longitude (bujur)" value="{{ old('longitude') }}" required>
+        <div class="d-flex justify-content-end gap-2 mt-5">
+          <button type="button" class="btn btn-batal" onclick="goToStep(1)">Sebelumnya</button>
+          <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(3)">Selanjutnya</button> -->
+          <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(2, 3)">Selanjutnya</button>
         </div>
       </div>
-      <div class="d-flex justify-content-end gap-2 mt-5">
-        <button type="button" class="btn btn-batal" onclick="goToStep(1)">Sebelumnya</button>
-        <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(3)">Selanjutnya</button> -->
-        <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(2, 3)">Selanjutnya</button>
-      </div>
-    </div>
 
-    <div id="content-step-3" style="display: none;">
-      <p class="info-text mb-4">Pilih status verifikasi data sesuai dengan kondisi UMKM.</p>
-      <div class="mb-4">
-        <label class="form-label-custom mb-2">Status Verifikasi Data UMKM</label>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_verif" id="verif_disetujui" value="disetujui" {{ old('status_verif') == 'disetujui' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="verif_disetujui">Disetujui</label>
+      <div id="content-step-3" style="display: none;">
+        <p class="info-text mb-4">Pilih status verifikasi data sesuai dengan kondisi UMKM.</p>
+        <div class="mb-4">
+          <label class="form-label-custom mb-2">Status Verifikasi Data UMKM</label>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_verif" id="verif_disetujui" value="disetujui" {{ old('status_verif') == 'disetujui' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="verif_disetujui">Disetujui</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_verif" id="verif_menunggu" value="menunggu" {{ old('status_verif', 'menunggu') == 'menunggu' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="verif_menunggu">Menunggu</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_verif" id="verif_ditolak" value="ditolak" {{ old('status_verif') == 'ditolak' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="verif_ditolak">Ditolak</label>
+          </div>
         </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_verif" id="verif_menunggu" value="menunggu" {{ old('status_verif', 'menunggu') == 'menunggu' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="verif_menunggu">Menunggu</label>
-        </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_verif" id="verif_ditolak" value="ditolak" {{ old('status_verif') == 'ditolak' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="verif_ditolak">Ditolak</label>
+        <div class="d-flex justify-content-end gap-2 mt-5">
+          <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
+          <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(4)">Selanjutnya</button> -->
+          <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(3, 4)">Selanjutnya</button>
         </div>
       </div>
-      <div class="d-flex justify-content-end gap-2 mt-5">
-        <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
-        <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(4)">Selanjutnya</button> -->
-        <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(3, 4)">Selanjutnya</button>
-      </div>
-    </div>
 
-    <div id="content-step-4" style="display: none;">
-      <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
-      <div class="mb-4">
-        <label class="form-label-custom mb-2">Status UMKM</label>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ old('status_umkm', 'aktif') == 'aktif' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="aktif_ya">Aktif</label>
+      <div id="content-step-4" style="display: none;">
+        <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
+        <div class="mb-4">
+          <label class="form-label-custom mb-2">Status UMKM</label>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_umkm" id="aktif_ya" value="aktif" {{ old('status_umkm', 'aktif') == 'aktif' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="aktif_ya">Aktif</label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ old('status_umkm') == 'tidak' ? 'checked' : '' }} required>
+            <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
+          </div>
         </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="status_umkm" id="aktif_tidak" value="tidak" {{ old('status_umkm') == 'tidak' ? 'checked' : '' }} required>
-          <label class="form-check-label" for="aktif_tidak">Tidak Aktif</label>
+        <div class="d-flex justify-content-end gap-2 mt-5">
+          <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
+          <button type="submit" class="btn btn-selanjutnya">Simpan</button>
         </div>
       </div>
-      <div class="d-flex justify-content-end gap-2 mt-5">
-        <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
-        <button type="submit" class="btn btn-selanjutnya">Simpan</button>
-      </div>
-    </div>
 
-  </div>
-</form>
+    </div>
+  </form>
+
+</div>
 
 <script>
   // FUNGSI GANTI TAHAP STEPPER
@@ -443,40 +484,6 @@
   }
 
   // Fungsi untuk memvalidasi sebelum pindah tahap
-  // function validasiDanLanjut(stepSekarang, stepTujuan) {
-  //   // 1. Ambil kotak area step saat ini (misal: content-step-1)
-  //   const areaStep = document.getElementById('content-step-' + stepSekarang);
-
-  //   // 2. Cari semua input/select yang memiliki atribut 'required' di dalam tahap tersebut
-  //   const fieldWajib = areaStep.querySelectorAll('input[required], select[required], textarea[required]');
-
-  //   let semuaValid = true;
-
-  //   // 3. Cek satu per satu
-  //   fieldWajib.forEach(field => {
-  //     if (field.value.trim() === '') {
-  //       // JIKA KOSONG: Gagalkan validasi dan ubah border jadi merah
-  //       semuaValid = false;
-  //       field.style.borderColor = 'var(--color-orange)'; // Warna merah
-  //       // field.style.backgroundColor = 'var(--color-orange-50)'; // Background merah sangat muda (opsional)
-  //     } else {
-  //       // JIKA TERISI: Kembalikan warna border ke normal
-  //       field.style.borderColor = '#E5E7EB';
-  //       field.style.backgroundColor = '#FFFFFF';
-  //     }
-  //   });
-
-  //   // 4. Keputusan Akhir
-  //   if (semuaValid) {
-  //     // Jika tidak ada yang kosong, silakan pindah ke tahap berikutnya
-  //     goToStep(stepTujuan);
-  //   } else {
-  //     // (Opsional) Tampilkan peringatan jika ingin lebih tegas
-  //     // alert('Terdapat data yang belum diisi. Silakan lengkapi kotak berwarna merah.');
-  //   }
-  // }
-
-  // Fungsi untuk memvalidasi sebelum pindah tahap
   function validasiDanLanjut(stepSekarang, stepTujuan) {
     const areaStep = document.getElementById('content-step-' + stepSekarang);
     const fieldWajib = areaStep.querySelectorAll('input[required], select[required], textarea[required]');
@@ -484,12 +491,16 @@
     let semuaValid = true;
 
     fieldWajib.forEach(field => {
-      // Tentukan target yang akan diwarnai (Khusus foto, targetkan kotak pembungkusnya)
+      // Tentukan target yang akan diwarnai 
       const isFoto = field.type === 'file';
-      const targetVisual = isFoto ? document.getElementById('foto-preview-box') : field;
+      const isCustomDropdown = field.id === 'input-kategori' || field.id === 'input-kelurahan';
+
+      let targetVisual = field;
+      if (isFoto) targetVisual = document.getElementById('foto-preview-box');
+      if (isCustomDropdown) targetVisual = document.getElementById('btn-' + field.id.replace('input-', ''));
 
       // Cari lokasi tempat teks error akan disisipkan
-      const tempatPesan = isFoto ? targetVisual : field;
+      const tempatPesan = targetVisual;
       let errorText = tempatPesan.parentNode.querySelector('.pesan-error-wajib');
 
       if (field.value.trim() === '') {
@@ -533,6 +544,47 @@
   }
 
   // ==========================================
+  // FUNGSI UNTUK DROPDOWN KUSTOM
+  // ==========================================
+  function pilihDropdown(tipe, id, label, event) {
+    event.preventDefault(); // Mencegah halaman melompat ke atas
+
+    // 1. Ubah teks pada tombol agar terlihat sudah dipilih
+    const labelElement = document.getElementById('label-' + tipe);
+    labelElement.innerText = label;
+    labelElement.classList.remove('text-muted');
+    labelElement.style.color = 'var(--color-black)';
+
+    // 2. Isi nilai ke input rahasia untuk dikirim ke database
+    document.getElementById('input-' + tipe).value = id;
+
+    // 3. Hilangkan efek error validasi seketika jika sebelumnya kosong
+    const btnVisual = document.getElementById('btn-' + tipe);
+    btnVisual.style.borderColor = '#E5E7EB';
+    btnVisual.style.backgroundColor = '#FFFFFF';
+
+    const errorText = btnVisual.parentNode.querySelector('.pesan-error-wajib');
+    if (errorText) errorText.remove();
+  }
+
+  // Mengembalikan nilai dropdown jika gagal submit (validasi backend error)
+  document.addEventListener('DOMContentLoaded', function() {
+    @if(old('id_kategori'))
+    const oldKatName = "{{ $kategoris->firstWhere('id', old('id_kategori'))->kategori_umkm ?? 'Pilih Kategori UMKM' }}";
+    document.getElementById('label-kategori').innerText = oldKatName;
+    document.getElementById('label-kategori').classList.remove('text-muted');
+    document.getElementById('label-kategori').style.color = 'var(--color-black)';
+    @endif
+
+    @if(old('id_kelurahan'))
+    const oldKelName = "{{ $kelurahans->firstWhere('id', old('id_kelurahan'))->nama_kelurahan ?? 'Pilih Kelurahan UMKM' }}";
+    document.getElementById('label-kelurahan').innerText = oldKelName;
+    document.getElementById('label-kelurahan').classList.remove('text-muted');
+    document.getElementById('label-kelurahan').style.color = 'var(--color-black)';
+    @endif
+  });
+
+  // ==========================================
   // BONUS UX: Hilangkan error seketika saat diketik/diisi
   // ==========================================
   document.addEventListener('DOMContentLoaded', function() {
@@ -559,20 +611,5 @@
       });
     });
   });
-  // ==========================================
-  // BONUS UX: Hilangkan warna merah secara otomatis saat user mulai mengetik
-  // ==========================================
-  // document.addEventListener('DOMContentLoaded', function() {
-  //   const semuaFieldWajib = document.querySelectorAll('input[required], select[required], textarea[required]');
-
-  //   semuaFieldWajib.forEach(field => {
-  //     field.addEventListener('input', function() {
-  //       if (this.value.trim() !== '') {
-  //         this.style.borderColor = '#E5E7EB'; // Kembali normal
-  //         this.style.backgroundColor = '#FFFFFF';
-  //       }
-  //     });
-  //   });
-  // });
 </script>
 @endsection

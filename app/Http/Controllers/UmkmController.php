@@ -156,6 +156,8 @@ class UmkmController extends Controller
       'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
+      'latitude' => 'nullable|numeric',
+      'longitude' => 'nullable|numeric',
       'new_foto' => 'required|image|mimes:jpeg,png,jpg|max:10240' // maks 2MB
     ]);
 
@@ -164,22 +166,6 @@ class UmkmController extends Controller
     if (str_starts_with($kontak_bersih, '0')) {
       $kontak_bersih = '62' . substr($kontak_bersih, 1);
     }
-
-    // LOGIKA PENANGANAN FOTO BARU
-    // if ($request->hasFile('new_foto')) {
-    //   // 1. Upload foto baru ke public/uploads/umkm/
-    //   $file = $request->file('new_foto');
-    //   // Membuat nama file unik: ID_UMKM_BARU-Nama-Acak.ekstensi
-    //   // Karena ID UMKM baru belum ada, kita gunakan string acak saja
-    //   $filename = 'new-' . Str::slug($request->nama) . '-' . Str::random(5) . '.' . $file->getClientOriginalExtension();
-    //   $file->move(public_path('uploads/umkm/'), $filename);
-
-    //   // 2. Tentukan path foto baru di database
-    //   $foto_path = asset('uploads/umkm/' . $filename);
-    // } else {
-    //   // Ini seharusnya tidak terjadi karena validasi 'required' di atas
-    //   $foto_path = 'https://via.placeholder.com/800x600?text=Foto+Tidak+Ditemukan';
-    // }
 
     if ($request->hasFile('new_foto')) {
       // 1. Ambil file dari request
@@ -226,8 +212,8 @@ class UmkmController extends Controller
       'id_admin' => Auth::id() ?? 1,
       'status_verif' => $request->status_verif ?? 'disetujui',
       'status_umkm'  => $request->status_umkm ?? 'aktif',
-      // Untuk data baru, status verif dan status umkm 
-      // akan mengikuti default 'menunggu' dan 'aktif' dari database
+      'latitude' => $request->latitude,
+      'longitude' => $request->longitude,
     ]);
 
     // Kembali ke halaman tabel dengan pesan sukses
@@ -377,6 +363,7 @@ class UmkmController extends Controller
     return redirect()->back()->with('success', 'Data UMKM berhasil dihapus dari sistem.');
   }
 
+  // Fungsi untuk menampilkan halaman verifikasi data
   public function verifikasi($id)
   {
     $umkm = Umkm::with(['kelurahan', 'kategori'])->findOrFail($id);
@@ -412,7 +399,6 @@ class UmkmController extends Controller
     // Ambil status bawaan dari form
     $final_status_umkm = $request->status_umkm;
 
-    // Jika ditolak, "Begal" statusnya dan paksa jadi 'tidak'
     if ($request->status_verif === 'ditolak') {
       $final_status_umkm = 'tidak';
     }
@@ -447,18 +433,18 @@ class UmkmController extends Controller
       'status_verif' => $request->status_verif,
       'status_umkm' => $final_status_umkm,
       'foto' => $foto_path,
+      'catatan_penolakan' => $request->catatan_penolakan,
     ]);
 
     // Cek apakah data ini baru saja ditolak
-    if ($request->status_verif === 'ditolak') {
-      // Redirect dengan membawa data khusus (wa_rejected)
-      return redirect()->route('umkm.index')
-        ->with('success', 'Verifikasi selesai! Data UMKM berhasil ditolak.')
-        ->with('wa_rejected', [
-          'nama' => $umkm->nama,
-          'kontak' => $umkm->kontak,
-          'alasan' => $request->catatan_penolakan
-        ]);
+    if ($request->status_verif == 'ditolak') {
+      $umkm = Umkm::find($id); // Pastikan Anda mengambil data UMKM-nya
+      // PENTING: return redirect harus membawa ->with('wa_rejected', [...])
+      return redirect()->route('umkm.index')->with('wa_rejected', [
+        'nama'   => $umkm->nama,
+        'kontak' => $umkm->kontak,
+        'catatan_penolakan' => $request->catatan_penolakan // <-- Pastikan 'alasan' sesuai dengan atribut name="..." di input form Anda!
+      ]);
     }
 
     // Jika disetujui / menunggu, redirect biasa

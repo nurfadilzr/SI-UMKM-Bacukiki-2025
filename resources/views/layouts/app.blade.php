@@ -197,10 +197,8 @@
 </head>
 
 <body>
-
-  <div class="d-flex min-vh-100">
-
-    <aside class="admin-sidebar-desktop d-none d-md-flex flex-column bg-white shadow-sm" style="width: 180px; height: 100vh; position: sticky; top: 0;">
+  <div class="d-flex min-vh-100 w-100">
+    <aside class="admin-sidebar-desktop flex-shrink-0 d-none d-md-flex flex-column bg-white shadow-sm" style="width: 180px; height: 100vh; position: sticky; top: 0; align-self: flex-start; overflow-y: auto;">
       <div class="sidebar-header">
         <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo">
         <div>
@@ -215,7 +213,7 @@
         <a href="{{ route('umkm.daftar') }}" class="nav-link-custom {{ request()->routeIs('umkm.daftar') ? 'active' : '' }}">
           <iconify-icon icon="lucide:list"></iconify-icon> Daftar UMKM
         </a>
-        <a href="{{ route('umkm.index') }}" class="nav-link-custom {{ request()->routeIs('umkm.index', 'umkm.edit') ? 'active' : '' }}">
+        <a href="{{ route('umkm.index') }}" class="nav-link-custom {{ request()->routeIs('umkm.index', 'umkm.edit', 'umkm.verifikasi', 'umkm.create', 'umkm.import.form') ? 'active' : '' }}">
           <iconify-icon icon="lucide:shield-check"></iconify-icon> Verifikasi Data
         </a>
         <a href="{{ route('umkm.peta') }}" class="nav-link-custom {{ request()->routeIs('umkm.peta') ? 'active' : '' }}">
@@ -237,7 +235,7 @@
 
     </aside>
 
-    <div class="flex-grow-1 d-flex flex-column" style="min-width: 0;">
+    <div class="flex-grow-1 d-flex flex-column" style="min-width: 0; overflow-x: hidden;">
 
       <!-- navbar mobile -->
       <nav class="d-md-none d-flex justify-content-between align-items-center bg-white shadow-sm px-4 py-3 sticky-top">
@@ -254,7 +252,7 @@
         </button>
       </nav>
 
-      <main class="p-3 p-md-4">
+      <main>
         @yield('content')
       </main>
 
@@ -298,49 +296,6 @@
 
     </div>
   </div>
-
-  <!-- <aside class="sidebar">
-    <div class="sidebar-header">
-      <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo">
-      <div>
-        <p class="sidebar-title">SI Data UMKM</p>
-        <span class="sidebar-subtitle">Kecamatan Bacukiki</span>
-      </div>
-    </div>
-
-    <nav class="nav-menu">
-      <a href="{{ route('dashboard') }}"
-        class="nav-link-custom {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-        <iconify-icon icon="lucide:layout-dashboard"></iconify-icon> Dashboard
-      </a>
-      <a href="{{ route('umkm.daftar') }}"
-        class="nav-link-custom {{ request()->routeIs('umkm.daftar') ? 'active' : '' }}">
-        <iconify-icon icon="lucide:list"></iconify-icon> Daftar UMKM
-      </a>
-      <a href="{{ route('umkm.index') }}"
-        class="nav-link-custom {{ request()->routeIs('umkm.index', 'umkm.edit') ? 'active' : '' }}">
-        <iconify-icon icon="lucide:shield-check"></iconify-icon> Verifikasi Data
-      </a>
-      <a href="{{ route('umkm.peta') }}"
-        class="nav-link-custom {{ request()->routeIs('umkm.peta') ? 'active' : '' }}">
-        <iconify-icon icon="lucide:map-pin"></iconify-icon> Peta Sebaran
-      </a>
-      <a href="{{ route('kategori.index') }}"
-        class="nav-link-custom {{ request()->routeIs('kategori.index') ? 'active' : '' }}">
-        <iconify-icon icon="lucide:tags"></iconify-icon> Tambah Kategori
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <a href="https://docs.google.com/document/d/1JmJYP7vHWA6wmZHJ9xqZ2lJ_ZzdvJuNGbdQ9m4TZb0o/edit?usp=sharing" target="_blank" class="nav-link-custom btn-book"><iconify-icon icon="lucide:book-open"></iconify-icon> Manual Book</a>
-      <a href="#" class="nav-link-custom btn-keluar"><iconify-icon icon="lucide:log-out"></iconify-icon> Keluar</a>
-    </div>
-  </aside> -->
-
-  <!-- <main class="main-content">
-    @yield('content')
-  </main> -->
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

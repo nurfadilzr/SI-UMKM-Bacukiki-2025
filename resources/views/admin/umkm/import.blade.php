@@ -5,7 +5,7 @@
 <style>
 	.page-title {
 		font-weight: 700;
-		font-size: 22px;
+		font-size: 20px;
 		color: var(--color-black);
 	}
 
@@ -26,7 +26,7 @@
 	}
 </style>
 
-<div class="container mt-3">
+<div class="container-fluid mb-5 p-3 p-md-4">
 	<div class="card">
 		<div class="card-header">
 			<h3 class="page-title">Import Data UMKM dari Spreadsheet</h3>

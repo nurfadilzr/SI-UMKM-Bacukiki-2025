@@ -151,7 +151,7 @@
   /* =========================================
      === CSS RESPONSIVE KHUSUS MOBILE ===
      ========================================= */
-  @media (max-width: 768px) {
+  @media (max-width: 991.98px) {
     .page-title {
       font-size: 20px;
       margin-bottom: 16px;
@@ -171,10 +171,17 @@
       padding: 10px 8px;
       /* Mengurangi padding tabel agar lebih muat di HP */
     }
+
+    .modal-custom-width {
+      width: calc(100% - 32px) !important;
+      /* Lebar 100% dikurangi margin 16px kiri & 16px kanan */
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
   }
 </style>
 
-<div class="container-fluid mb-5">
+<div class="container-fluid mb-5 p-3 p-md-4">
   <h3 class="page-title">Tambah Kategori UMKM</h3>
 
   @if(session('success'))
@@ -247,7 +254,7 @@
               </tr>
 
               <div class="modal fade" id="modalEdit{{ $kategori->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-centered modal-custom-width">
                   <div class="modal-content" style="border-radius: 12px;">
                     <form action="{{ route('kategori.update', $kategori->id) }}" method="POST">
                       @csrf
@@ -270,7 +277,7 @@
               </div>
 
               <div class="modal fade" id="modalDelete{{ $kategori->id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-centered modal-custom-width">
                   <div class="modal-content" style="border-radius: 12px;">
                     <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST">
                       @csrf

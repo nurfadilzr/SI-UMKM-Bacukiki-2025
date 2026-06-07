@@ -25,7 +25,7 @@ Route::get('/admin/umkm', [UmkmController::class, 'index'])->name('umkm.index');
 // Rute untuk menghapus data UMKM
 Route::delete('/admin/umkm/{id}', [UmkmController::class, 'destroy'])->name('umkm.destroy');
 
-// (Persiapan) Rute untuk halaman verifikasi nanti
+// Rute untuk halaman verifikasi nanti
 Route::get('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'verifikasi'])->name('umkm.verifikasi');
 // Route BARU untuk menyimpan/memperbarui data verifikasi
 Route::put('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'updateVerifikasi'])->name('umkm.updateVerifikasi');
@@ -72,9 +72,18 @@ Route::get('/peta-sebaran', [BerandaController::class, 'peta'])->name('peta');
 
 // php artisan migrate:fresh --seed     
 
+// mobile = 320-430         md > 768        sm > 576
+// tablet = 768-1024        lg > 992        xs < 576
+// desktop = 1024-1440      xl > 1200
+
 // klo loading lama
 // di .env, SESSION_DRIVER=file
 // hapus semua file di folder bootstrap-cache kecuali .gitignore
 
 
 // login, public page, mobile version
+
+// tampilan verif mobile blm                        donnnn
+// marker peta ilang klo dipencet sembarang         donnnn
+// btn simpan tambah data manual
+// dropdown kategori dan kelurahan di halaman create, verif, edit

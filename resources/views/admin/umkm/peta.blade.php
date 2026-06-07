@@ -65,23 +65,29 @@
   .btn-kontak {
     background-color: var(--color-green);
     color: #FFFFFF;
+  }
 
+  @media (max-width: 991.98px) {
+    .page-title {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
   }
 </style>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-<div class="container-fluid">
+<div class="container-fluid p-3 p-md-4 ">
   <h3 class="page-title">Peta Sebaran UMKM</h3>
 
   <div class="row">
 
-    <div class="col-xl-7 mb-4 mb-xl-0">
-      <div class="bg-white p-2 p-md-3 shadow-sm mx-auto w-100" style="border-radius: 16px; min-width: 480px; max-width: 500px;">
+    <div class="col-lg-6 mb-4 mb-xl-0">
+      <div class="bg-white p-2 p-md-3 shadow-sm mx-auto w-100" style="border-radius: 16px; min-width: 300px; max-width: 500px;">
 
         <div id="map-preview" style="height: 60vh; min-height: 450px; max-height: 550px; z-index: 1; border-radius: 12px;"></div>
 
-        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 gap-md-3 mt-2 mb-1" style="font-size: 10px; color: #444;">
+        <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 gap-md-3 mt-2 mb-1" style="font-size: 12px; color: #404040;">
           <span class="font-weight-bold d-none d-sm-inline" style="color: #111;">Keterangan:</span>
           <div class="d-flex align-items-center">
             <iconify-icon icon="mdi:map-marker" style="color: #41644A; font-size: 18px;"></iconify-icon> <span class="d-none d-sm-inline">Galung Maloang</span><span class="d-inline d-sm-none">G. Maloang</span>
@@ -99,7 +105,7 @@
       </div>
     </div>
 
-    <div class="col-xl-5 ps-xl-5">
+    <div class="col-lg-4 ps-lg-4">
       <div class="bg-white p-3 shadow-sm text-center mx-auto ms-lg-auto" style="border-radius: 16px; min-width: 350px; max-width: 400px; width: 100%;">
         <h5 class="mb-3" style="color: #333; font-weight: 600; font-size: 18px;">Detail UMKM</h5>
         <hr style="border-color: #ddd;">
@@ -132,7 +138,7 @@
     </div>
   </div>
 </div>
-</div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -257,6 +263,26 @@
         document.getElementById('dtl-btn-maps').href = umkm.titik_maps || `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
         document.getElementById('dtl-btn-kontak').href = umkm.kontak ? `https://wa.me/${umkm.kontak}` : '#';
       });
+    });
+
+    // jika klik area sembarang pada peta setelah menampilkan detail
+    map.on('click', function() {
+
+      // 1. Kembalikan ukuran semua marker menjadi kecil
+      resetMarkerSizes();
+      selectedMarker = null; // Kosongkan state marker yang terpilih
+
+      // 2. Sembunyikan isi detail UMKM
+      document.getElementById('detail-isi').style.display = 'none';
+
+      // 3. Munculkan kembali teks default "Klik salah satu marker..."
+      document.getElementById('detail-kosong').style.display = 'block';
+
+      // Opsional: Refresh ukuran peta agar tidak ada glitch saat kartu menyusut
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+
     });
   });
 </script>

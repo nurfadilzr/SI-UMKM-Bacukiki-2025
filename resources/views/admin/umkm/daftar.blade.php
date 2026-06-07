@@ -90,7 +90,7 @@
     display: flex;
     flex-wrap: wrap;
     /* Izinkan kartu turun ke bawah JIKA tidak muat */
-    gap: 24px;
+    gap: 20px;
 
     /* RUMUS MAKSIMAL 4 KARTU: 
        (260px * 4 kartu) + (24px * 3 jarak) = 1112px 
@@ -140,7 +140,6 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Mengisi sisa ruang agar tombol selalu di bawah */
   }
 
   .umkm-title {
@@ -279,7 +278,7 @@
   }
 </style>
 
-<div>
+<div class="container-fluid mb-5 p-3 p-md-4 ">
   <h2 class="page-title">Daftar UMKM</h2>
 
   <form action="{{ route('umkm.daftar') }}" method="GET" id="form-filter">
