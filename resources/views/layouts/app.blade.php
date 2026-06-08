@@ -17,23 +17,21 @@
   <style>
     /* === DESIGN TOKENS (COLOR STYLES) === */
     :root {
-      /* 5 Warna Utama (Base = 500) */
       --color-green: #41644A;
-      --color-blue: #1B3B6F;
       --color-orange: #D17A22;
-      --color-black: #000000;
+      --color-blue: #1B3B6F;
       --color-gray: #404040;
+      --color-black: #000000;
 
-      /* Turunan Warna (Opacity/Lightness untuk Background Badge dll) */
-      --color-green-light: rgba(65, 100, 74, 0.15);
+      --color-green-50: #ECEFED;
+      --color-green-100: #D9E0DB;
       --color-green-300: #B3C1B7;
       --color-green-800: #54745C;
 
-      --color-orange-light: rgba(209, 122, 34, 0.15);
       --color-orange-50: #FAF2E9;
+      --color-orange-100: #F6E4D3;
       --color-orange-200: #F1D7BD;
 
-      --color-blue-light: #BBC4D4;
       --color-blue-200: #BBC4D4;
       --color-blue-600: #5F769A;
       --color-blue-700: #49628C;
@@ -46,10 +44,6 @@
       --color-gray-700: #666666;
 
       --color-black-50: #E6E6E6;
-      --color-bg-main: #FAFAFA;
-      /* Background Konten Utama */
-      --color-border: #E5E7EB;
-      /* Border Color */
     }
 
     /* === GLOBAL TYPOGRAPHY === */
@@ -74,7 +68,7 @@
     .mobile-menu-list li a {
       display: block;
       padding: 10px 0;
-      color: #111;
+      color: var(--color-black);
       font-size: 16px;
       font-weight: 600;
       text-decoration: none;
@@ -93,7 +87,7 @@
     .sidebar {
       width: 180px;
       background-color: #ffffff;
-      border-right: 1px solid var(--color-border);
+      border-right: 1px solid var(--color-gray-50);
       display: flex;
       flex-direction: column;
       position: sticky;
@@ -116,7 +110,6 @@
       color: var(--color-black);
       font-weight: 700;
       font-size: 13px;
-      /* Diperkecil dari 14px */
       line-height: 1.2;
       margin-bottom: -6px;
     }
@@ -152,7 +145,7 @@
     }
 
     .nav-link-custom:hover {
-      background-color: var(--color-green-light);
+      background-color: var(--color-green-100);
       color: var(--color-green);
     }
 
@@ -164,7 +157,7 @@
 
     .sidebar-footer {
       padding: 12px 14px;
-      border-top: 2px solid var(--color-border);
+      border-top: 2px solid var(--color-gray-50);
       margin-top: auto;
     }
 
@@ -177,12 +170,12 @@
     }
 
     .btn-book:hover {
-      background-color: var(--color-blue-light);
+      background-color: var(--color-blue-200);
       color: var(--color-blue);
     }
 
     .btn-keluar:hover {
-      background-color: var(--color-orange-light);
+      background-color: var(--color-orange-100);
       color: var(--color-orange);
     }
 
@@ -228,7 +221,7 @@
         <a href="https://docs.google.com/document/d/1JmJYP7vHWA6wmZHJ9xqZ2lJ_ZzdvJuNGbdQ9m4TZb0o/edit?usp=sharing" target="_blank" class="nav-link-custom btn-book">
           <iconify-icon icon="lucide:book-open"></iconify-icon> Manual Book
         </a>
-        <a href="#" class="nav-link-custom btn-keluar">
+        <a href="{{ route('logout') }}" class="nav-link-custom btn-keluar">
           <iconify-icon icon="lucide:log-out"></iconify-icon> Keluar
         </a>
       </div>
@@ -242,13 +235,13 @@
         <div class="d-flex align-items-center">
           <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="35" class="me-2">
           <div>
-            <div style="font-weight: 700; font-size: 15px; line-height: 1;">SI Data UMKM</div>
-            <div style="font-size: 11px; color: #555;">Kecamatan Bacukiki</div>
+            <div style="font-weight: 700; font-size: 15px; line-height: 1; color: var(--color-black);">SI Data UMKM</div>
+            <div style="font-size: 11px; color: var(--color-gray);">Kecamatan Bacukiki</div>
           </div>
         </div>
 
         <button class="btn border-0 p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileAdminMenu">
-          <iconify-icon icon="lucide:menu" style="font-size: 28px; color: #333;"></iconify-icon>
+          <iconify-icon icon="lucide:menu" style="font-size: 28px; color: var(--color-gray);"></iconify-icon>
         </button>
       </nav>
 
@@ -265,8 +258,8 @@
       <div class="d-flex align-items-center">
         <img src="{{ asset('images/logo_pemda.png') }}" alt="Logo" height="35" class="me-2">
         <div>
-          <div style="font-weight: 700; font-size: 15px; line-height: 1; color: #000;">SI Data UMKM</div>
-          <div style="font-size: 11px; color: #555;">Kecamatan Bacukiki</div>
+          <div style="font-weight: 700; font-size: 15px; line-height: 1; color: var(--color-black);">SI Data UMKM</div>
+          <div style="font-size: 11px; color: var(--color-gray);">Kecamatan Bacukiki</div>
         </div>
       </div>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="font-size: 16px;"></button>
@@ -283,12 +276,12 @@
       </ul>
 
       <div class="mt-2">
-        <a href="https://docs.google.com/document/d/1JmJYP7vHWA6wmZHJ9xqZ2lJ_ZzdvJuNGbdQ9m4TZb0o/edit?usp=sharing" target="_blank" class="btn w-100 text-white mb-3 py-2" style="background-color: #1B3B6F; font-weight: 600; border-radius: 8px;">
+        <a href="https://docs.google.com/document/d/1JmJYP7vHWA6wmZHJ9xqZ2lJ_ZzdvJuNGbdQ9m4TZb0o/edit?usp=sharing" target="_blank" class="btn w-100 text-white mb-3 py-2" style="background-color: var(--color-blue); font-weight: 600; border-radius: 8px;">
           Manual Book
         </a>
-        <form action="#" method="POST">
+        <form action="{{ route('logout') }}" method="POST">
           @csrf
-          <button type="submit" class="btn w-100 text-white py-2" style="background-color: #D17A22; font-weight: 600; border-radius: 8px;">
+          <button type="submit" class="btn w-100 text-white py-2" style="background-color: var(--color-orange); font-weight: 600; border-radius: 8px;">
             Keluar
           </button>
         </form>

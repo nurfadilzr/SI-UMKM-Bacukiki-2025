@@ -242,7 +242,9 @@
         // Simpan marker yang sedang dipilih
         selectedMarker = marker;
 
-        // --- Sisa kode untuk menampilkan detail di sidebar (TETAP SAMA) ---
+        map.flyTo([lat, lng], 15, {
+          duration: 0.5
+        });
 
         // Sembunyikan teks default, Munculkan isi detail
         document.getElementById('detail-kosong').style.display = 'none';
@@ -262,6 +264,16 @@
         // Ganti Link Tombol
         document.getElementById('dtl-btn-maps').href = umkm.titik_maps || `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
         document.getElementById('dtl-btn-kontak').href = umkm.kontak ? `https://wa.me/${umkm.kontak}` : '#';
+
+        // Jika dibuka di HP, otomatis auto-scroll layar ke bagian kotak detail setelah diklik
+        if (window.innerWidth < 992) {
+          setTimeout(() => {
+            detailContent.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }, 500);
+        }
       });
     });
 

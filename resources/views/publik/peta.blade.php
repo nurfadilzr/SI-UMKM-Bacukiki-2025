@@ -13,7 +13,7 @@
   <style>
     body {
       font-family: 'Lato', sans-serif;
-      color: #333;
+      color: #404040;
       background-color: #ECEFED;
       display: flex;
       flex-direction: column;
@@ -61,7 +61,6 @@
       height: 100%;
       width: 100%;
       max-width: 280px;
-      /* Batas maksimal lebar card (Bisa diubah: 280px, 300px, 320px) */
       margin: 0 auto;
     }
 
@@ -97,7 +96,7 @@
     .umkm-title {
       font-size: 18px;
       font-weight: 700;
-      color: #1F2937;
+      color: #000;
       margin-bottom: 12px;
       white-space: nowrap;
       overflow: hidden;
@@ -211,10 +210,8 @@
   </nav>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
   <main class="flex-grow-1">
     <section class="container py-4 py-lg-5 my-3">
-
       <div class="d-lg-none text-center mb-4 px-2">
         <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 700; color: #41644A;">PETA SEBARAN</p>
         <h2 class="font-weight-bold mb-2" style="color: #000; font-weight: 700;">Peta Sebaran UMKM</h2>
@@ -222,16 +219,12 @@
           Marker berbeda warna menunjukkan lokasi UMKM berdasarkan kelurahan. Data yang ditampilkan telah melalui proses verifikasi oleh admin kecamatan.
         </p>
       </div>
-
       <div class="row align-items-start">
-
         <div class="col-lg-7 mb-4 mb-lg-0">
           <div class="bg-white p-2 p-md-3 shadow-sm" style="border-radius: 16px;">
-
             <div id="map-preview" style="height: 60vh; min-height: 400px; max-height: 550px; z-index: 1; border-radius: 12px;"></div>
-
             <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 gap-md-3 mt-3 mb-2" style="font-size: 12px; color: #444;">
-              <span class="font-weight-bold d-none d-sm-inline" style="color: #111;">Keterangan:</span>
+              <span class="font-weight-bold d-none d-sm-inline" style="color: #000;">Keterangan:</span>
               <div class="d-flex align-items-center">
                 <iconify-icon icon="mdi:map-marker" style="color: #41644A; font-size: 18px;"></iconify-icon> <span class="d-none d-sm-inline">Galung Maloang</span><span class="d-inline d-sm-none">G. Maloang</span>
               </div>
@@ -245,12 +238,9 @@
                 <iconify-icon icon="mdi:map-marker" style="color: #404040; font-size: 18px;"></iconify-icon> <span class="d-none d-sm-inline">Watang Bacukiki</span><span class="d-inline d-sm-none">W. Bacukiki</span>
               </div>
             </div>
-
           </div>
         </div>
-
         <div class="col-lg-5 ps-lg-5">
-
           <div class="d-none d-lg-block text-end mb-5">
             <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 700; color: #41644A;">PETA SEBARAN</p>
             <h2 class="font-weight-bold mb-2" style="color: #000; font-weight: 700;">Peta Sebaran UMKM</h2>
@@ -258,11 +248,9 @@
               Marker berbeda warna menunjukkan lokasi UMKM berdasarkan kelurahan. Data yang ditampilkan telah melalui proses verifikasi oleh admin kecamatan.
             </p>
           </div>
-
           <div class="bg-white p-4 shadow-sm text-center mx-auto ms-lg-auto" style="border-radius: 16px; max-width: 420px; width: 100%;">
             <h5 class="mb-3" style="color: #333; font-weight: 600;">Detail UMKM</h5>
             <hr style="border-color: #ddd;">
-
             <div id="detail-kosong" class="py-3">
               <p class="text-muted fst-italic mb-0" style="font-size: 14px;">
                 Klik salah satu marker untuk melihat detail umkm
@@ -400,8 +388,6 @@
           map.flyTo([lat, lng], 15, {
             duration: 0.5
           });
-
-          // --- Sisa kode untuk menampilkan detail di sidebar (TETAP SAMA) ---
 
           // Sembunyikan teks default, Munculkan isi detail
           document.getElementById('detail-kosong').style.display = 'none';

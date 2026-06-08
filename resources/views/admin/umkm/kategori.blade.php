@@ -181,9 +181,8 @@
   }
 </style>
 
-<div class="container-fluid mb-5 p-3 p-md-4">
+<div class="container-fluid p-3 p-md-4">
   <h3 class="page-title">Tambah Kategori UMKM</h3>
-
   @if(session('success'))
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     {{ session('success') }}

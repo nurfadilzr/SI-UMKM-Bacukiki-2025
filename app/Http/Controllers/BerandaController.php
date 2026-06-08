@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class BerandaController extends Controller
 {
+  // Menampilkan halaman beranda
   public function index()
   {
     // 1. Data untuk Insight Cards (Hanya UMKM yang disetujui)
@@ -19,7 +20,7 @@ class BerandaController extends Controller
     // 2. Data 3 UMKM unggulan/terbaru untuk ditampilkan di card
     $umkmTerbaru = Umkm::with(['kategori', 'kelurahan'])
       ->where('status_verif', 'disetujui')
-      ->latest()
+      ->oldest()
       ->take(3)
       ->get();
 
@@ -45,18 +46,20 @@ class BerandaController extends Controller
     ));
   }
 
+  // Menampilkan halaman daftar umkm
   public function daftar()
   {
     // Mengambil data UMKM yang disetujui
     // Gunakan paginate() agar halaman tidak berat jika data mencapai ratusan
     $umkms = Umkm::with(['kategori', 'kelurahan'])
       ->where('status_verif', 'disetujui')
-      ->latest()
+      ->oldest()
       ->paginate(12);
 
     return view('publik.daftar', compact('umkms'));
   }
 
+  // Menampilkan halaman peta sebaran
   public function peta()
   {
     // Mengambil semua data UMKM yang disetujui dan memiliki koordinat

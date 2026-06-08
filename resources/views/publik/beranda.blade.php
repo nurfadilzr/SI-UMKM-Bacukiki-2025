@@ -13,7 +13,7 @@
   <style>
     body {
       font-family: 'Lato', sans-serif;
-      color: #333;
+      color: #000;
       background-color: #ECEFED;
     }
 
@@ -101,22 +101,16 @@
     /* Separator Responsif untuk Summary Card */
     .summary-divider {
       border-bottom: 1px solid #dee2e6;
-      /* Garis horizontal pembatas di HP */
       margin-bottom: 25px;
-      /* Jarak luar bawah di HP */
       padding-bottom: 25px;
-      /* Jarak dalam bawah di HP */
     }
 
     /* Jika layar sebesar tablet/laptop (min 768px), ubah perilakunya */
     @media (min-width: 768px) {
       .summary-divider {
         border-bottom: none;
-        /* Hilangkan garis horizontal */
         border-right: 1px solid #dee2e6;
-        /* Ubah menjadi garis vertikal di kanan */
         margin-bottom: 0;
-        /* Kembalikan jarak ke normal */
         padding-bottom: 0;
       }
     }
@@ -129,13 +123,11 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 15px;
-        /* Memberi ruang untuk scrollbar */
         scroll-snap-type: x mandatory;
       }
 
       .mobile-horizontal-scroll>div {
         flex: 0 0 85%;
-        /* Lebar kartu di HP 85% layar */
         scroll-snap-align: center;
       }
     }
@@ -153,13 +145,11 @@
       height: 100%;
       width: 100%;
       max-width: 280px;
-      /* Batas maksimal lebar card (Bisa diubah: 280px, 300px, 320px) */
       margin: 0 auto;
     }
 
     .umkm-card:hover {
       transform: translateY(-4px);
-      /* box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.1); */
       box-shadow: 0px 14px 28px rgba(149, 157, 165, 0.3);
     }
 
@@ -260,11 +250,15 @@
       border-radius: 8px;
       font-size: 14px;
       font-weight: 600;
-      background-color: #8C8C8C;
+      background-color: #C6C6C6;
       border: none;
       padding: 12px 16px;
       color: #000;
       text-decoration: none;
+    }
+
+    .btn-more:hover {
+      background-color: #8C8C8C;
     }
 
     /* Footer */
@@ -344,7 +338,6 @@
       <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 600; color: #41644A;">DAFTAR UMKM</p>
       <h4 style="color: #000; font-weight: 700;">Berbagai Kategori Dari Setiap Kelurahan, UMKM Bacukiki Semakin Terdepan</h4>
     </div>
-
     <div class="row g-1 mb-4 mobile-horizontal-scroll">
       @foreach($umkmTerbaru as $umkm)
       <div class="col-md-4">
@@ -377,7 +370,6 @@
           <h4 style="font-size: 20px; font-weight: 600; color: #41644A; margin-bottom: 10px;">Jumlah UMKM tiap Kelurahan</h4>
           <p style="font-size: 14px; font-weight: 500; color: #000">Data berikut menunjukkan persebaran jumlah UMKM<br> di setiap kelurahan di Kecamatan Bacukiki sebagai<br> gambaran potensi ekonomi lokal.</p>
         </div>
-
         <div class="col-md-6 offset-md-1 px-4 px-md-0">
           <div class="row g-3 g-md-4">
             @foreach($kelurahans as $kelurahan)
@@ -396,7 +388,6 @@
 
   <section class="container py-5 mt-4 mb-5">
     <div class="row align-items-start">
-
       <div class="col-lg-5 col-md-6 order-1 order-md-2 text-center text-md-end ps-lg-5 mb-4 mb-md-0">
         <p class="text-uppercase mb-1" style="font-size: 12px; font-weight: 700; color: #41644A;">PETA SEBARAN</p>
         <h4 class="font-weight-bold" style="color: #000; font-weight: 700; font-size: 28px;">Peta Sebaran UMKM</h4>
@@ -404,12 +395,10 @@
           Marker berbeda warna menunjukkan lokasi UMKM berdasarkan kelurahan. Data yang ditampilkan telah melalui proses verifikasi oleh admin kecamatan.
         </p>
       </div>
-
       <div class="col-lg-7 col-md-6 order-2 order-md-1">
         <div class="bg-white p-2 rounded shadow-sm" style="border: 1px solid #eaeaea;">
           <div id="map-preview" class="rounded bg-light d-flex align-items-center justify-content-center" style="height: 400px; z-index: 1;">
           </div>
-
           <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mt-3 mb-2" style="font-size: 12px; color: #444;">
             <span class="font-weight-bold d-none d-sm-inline" style="color: #111;">Keterangan:</span>
             <div class="d-flex align-items-center">
@@ -427,7 +416,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </section>
 

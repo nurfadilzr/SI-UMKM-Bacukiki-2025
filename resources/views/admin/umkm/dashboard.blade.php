@@ -10,30 +10,26 @@
     margin-bottom: 0;
   }
 
-  .form-select-custom {
-    display: block;
-    width: 150px;
+  /* CSS Tombol Filter Custom (Desktop) */
+  .btn-filter-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 160px;
     padding: 10px 14px;
     font-size: 13px;
     color: var(--color-black);
     background-color: #FFFFFF;
-    border: 1px solid #9CA3AF;
+    border: 1px solid var(--color-gray-500);
     border-radius: 6px;
-    margin: 0;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    background-size: 14px 10px;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
   }
 
-  .form-select-custom:focus {
+  .btn-filter-custom:focus,
+  .btn-filter-custom:hover {
     border-color: var(--color-green);
-    box-shadow: 0 0 0 0.15rem var(--color-green-light);
-    outline: none;
+    box-shadow: 0 0 0 0.15rem rgba(65, 100, 74, 0.15);
+    /* Bayangan hijau tipis */
   }
 
   .card-title-custom {
@@ -83,13 +79,12 @@
       font-size: 20px;
     }
 
-    .form-select-custom {
-      width: 120px;
+    .btn-filter-custom {
+      width: 140px;
       padding: 8px 12px;
       font-size: 12px;
     }
 
-    /* Mengecilkan font dan ikon agar muat side-by-side */
     .stat-title {
       font-size: 11px;
     }
@@ -140,21 +135,47 @@
   }
 </style>
 
-<div class="container-fluid mb-5 p-3 p-md-4" style="background-color: #F3F4F6; min-height: 100vh;">
+<div class="container-fluid mb-5 p-3 p-md-4" style="background-color: var(--color-gray-light); min-height: 100vh;">
+
+  @php
+  // Logika untuk menentukan teks label mana yang sedang aktif
+  $currentFilter = request('filter', 'semua');
+  $filterLabel = 'Filter';
+
+  if ($currentFilter == 'bulan_ini') $filterLabel = 'Bulan Ini';
+  elseif ($currentFilter == '3_bulan') $filterLabel = '3 Bulan Terakhir';
+  elseif ($currentFilter == '6_bulan') $filterLabel = '6 Bulan Terakhir';
+  elseif ($currentFilter == 'tahun_ini') $filterLabel = 'Tahun Ini';
+  @endphp
 
   <div class="d-flex justify-content-between align-items-center mb-3 mb-md-4">
     <h2 class="page-title">Dashboard</h2>
-    <select class="form-select form-select-custom" onchange="window.location.href='?filter=' + this.value">
-      <option value="semua" {{ request('filter', 'semua') == 'semua' ? 'selected' : '' }}>Filter</option>
-      <option value="bulan_ini" {{ request('filter') == 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
-      <option value="3_bulan" {{ request('filter') == '3_bulan' ? 'selected' : '' }}>3 Bulan Terakhir</option>
-      <option value="6_bulan" {{ request('filter') == '6_bulan' ? 'selected' : '' }}>6 Bulan Terakhir</option>
-      <option value="tahun_ini" {{ request('filter') == 'tahun_ini' ? 'selected' : '' }}>Tahun Ini</option>
-    </select>
+    <div class="dropdown">
+      <button class="btn btn-filter-custom text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="text-truncate">{{ $filterLabel }}</span>
+        <iconify-icon icon="lucide:chevron-down" style="color: var(--color-gray-500); min-width: 16px;"></iconify-icon>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius: 8px; font-size: 13px; border: 1px solid #E5E7EB; padding: 8px 0; min-width: 160px;">
+        <li>
+          <a class="dropdown-item py-2 {{ $currentFilter == 'semua' ? 'bg-light text-dark fw-bold' : '' }}" href="?filter=semua">Semua</a>
+        </li>
+        <li>
+          <a class="dropdown-item py-2 {{ $currentFilter == 'bulan_ini' ? 'bg-light text-dark fw-bold' : '' }}" href="?filter=bulan_ini">Bulan Ini</a>
+        </li>
+        <li>
+          <a class="dropdown-item py-2 {{ $currentFilter == '3_bulan' ? 'bg-light text-dark fw-bold' : '' }}" href="?filter=3_bulan">3 Bulan Terakhir</a>
+        </li>
+        <li>
+          <a class="dropdown-item py-2 {{ $currentFilter == '6_bulan' ? 'bg-light text-dark fw-bold' : '' }}" href="?filter=6_bulan">6 Bulan Terakhir</a>
+        </li>
+        <li>
+          <a class="dropdown-item py-2 {{ $currentFilter == 'tahun_ini' ? 'bg-light text-dark fw-bold' : '' }}" href="?filter=tahun_ini">Tahun Ini</a>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="row g-2 g-md-3 mb-2 mb-md-3">
-
     <div class="col-12 col-md-3">
       <div class="row g-2 g-md-3 h-100">
         <div class="col-6 col-md-12">
@@ -203,9 +224,7 @@
   </div>
 
   <div class="row g-2 g-md-3">
-
     <div class="col-12 col-md-8 d-flex flex-column gap-2 gap-md-3">
-
       <div class="card mobile-p p-3 border-0" style="border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
         <h6 class="card-title-custom mb-3 text-start">Jumlah UMKM tiap Kelurahan</h6>
         <div style="position: relative; height: 100%; min-height: 200px; width: 100%;">
@@ -221,14 +240,14 @@
 
         <div class="table-responsive">
           <table class="table table-borderless mb-0 table-mobile-text" style="font-size: 13px;">
-            <tbody style="border: 1px solid #E5E7EB; border-radius: 8px;">
+            <tbody style="border: 1px solid var(--color-gray-200); border-radius: 8px;">
               @forelse($umkmMenunggu as $umkm)
               <tr style="border-bottom: 1px solid #E5E7EB;">
                 <td class="py-2 px-2 px-md-3 text-secondary">{{ $umkm->nama }}</td>
                 <td class="py-2 text-secondary">{{ $umkm->kelurahan ? $umkm->kelurahan->nama_kelurahan : '-' }}</td>
                 <td class="py-2 text-secondary">{{ $umkm->kategori ? $umkm->kategori->kategori_umkm : '-' }}</td>
                 <td class="py-2 text-end px-2 px-md-3">
-                  <span class="badge-mobile" style="background-color: #FEEED7; color: var(--color-orange); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap;">
+                  <span class="badge-mobile" style="background-color: var(--color-orange-200); color: var(--color-orange); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap;">
                     {{ ucfirst($umkm->status_verif) }}
                   </span>
                 </td>

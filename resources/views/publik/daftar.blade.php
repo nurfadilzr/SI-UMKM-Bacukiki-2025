@@ -13,7 +13,7 @@
   <style>
     body {
       font-family: 'Lato', sans-serif;
-      color: #333;
+      color: #404040;
       background-color: #ECEFED;
       display: flex;
       flex-direction: column;
@@ -97,7 +97,7 @@
     .umkm-title {
       font-size: 18px;
       font-weight: 700;
-      color: #1F2937;
+      color: #000;
       margin-bottom: 12px;
       white-space: nowrap;
       overflow: hidden;
@@ -219,23 +219,18 @@
 
   <section class="container mb-5 pb-5 px-4 px-md-2">
     <div class="row g-5">
-
       @foreach($umkms as $umkm)
       <div class="col-12 col-md-6 col-lg-3">
         <div class="h-100 d-flex flex-column" style="border: 1px solid #eee; border-radius: 16px; overflow: hidden; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-
           <div style="aspect-ratio: 4/3; width: 100%; overflow: hidden;">
             <img src="{{ $umkm->foto ? $umkm->foto : 'https://via.placeholder.com/400x300?text=Tidak+Ada+Foto' }}" style="width: 100%; height: 100%; object-fit: cover;" alt="Foto Usaha">
           </div>
-
           <div class="p-3 d-flex flex-column flex-grow-1">
             <h5 class="umkm-title">{{ $umkm->nama }}</h5>
-
             <div class="d-flex flex-wrap gap-2 mb-4">
               <span class="badge-kategori">{{ $umkm->kategori->kategori_umkm ?? '-' }}</span>
               <span class="badge-kelurahan">{{ $umkm->kelurahan->nama_kelurahan ?? '-' }}</span>
             </div>
-
             <div class="btn-group-custom">
               <a href="{{ $umkm->titik_maps ?? '#' }}" target="_blank" class="btn-card btn-maps">Maps</a>
               <a href="https://wa.me/{{ $umkm->kontak }}" target="_blank" class="btn-card btn-kontak">Kontak</a>
@@ -244,9 +239,7 @@
         </div>
       </div>
       @endforeach
-
     </div>
-
     <div class="d-flex justify-content-center mt-5">
       {{ $umkms->links('pagination::bootstrap-5') }}
     </div>

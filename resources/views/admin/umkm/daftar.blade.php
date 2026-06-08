@@ -64,7 +64,7 @@
     border-radius: 8px;
     padding: 10px 36px 10px 16px;
     font-size: 14px;
-    color: #4B5563;
+    color: var(--color-gray);
     background-color: #FFFFFF;
     cursor: pointer;
     appearance: none;
@@ -76,8 +76,9 @@
   }
 
   .filter-select-custom:focus {
-    border-color: var(--color-green);
-    outline: none;
+    background-color: #FFFFFF;
+    border-color: var(--color-green) !important;
+    box-shadow: 0 0 0 3px rgba(65, 100, 74, 0.15) !important;
   }
 
   /* === STYLING UMKM CARD === */
@@ -337,9 +338,9 @@
       </div>
     </div>
     @empty
-    <div class="text-center py-5">
+    <div class="d-flex flex-column justify-content-center align-items-center text-center w-100" style="min-height: 50vh;">
       <iconify-icon icon="lucide:box" style="font-size: 48px; color: #9CA3AF; margin-bottom: 16px;"></iconify-icon>
-      <h5 style="color: #4B5563;">Tidak ada UMKM yang ditemukan.</h5>
+      <h5 style="color: #4B5563; font-weight: 600;">Tidak ada UMKM yang ditemukan.</h5>
       <p style="color: #9CA3AF; font-size: 14px;">Coba ubah kata kunci pencarian atau filter Anda.</p>
     </div>
     @endforelse

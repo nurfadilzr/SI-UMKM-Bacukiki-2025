@@ -7,83 +7,78 @@ use App\Http\Controllers\PetaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\Auth\LoginController;
+
+/*
+|--------------------------------------------------------------------------
+| ROUTE PUBLIK (AKSES BEBAS TANPA LOGIN)
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/tes', function () {
     return 'Halo, project bisa jalan!';
 });
 
-// Rute untuk menampilkan halaman form import
-Route::get('/admin/import', [UmkmController::class, 'showImportForm'])->name('umkm.import.form');
-// Rute untuk memproses file CSV yang diupload
-Route::post('/admin/import', [UmkmController::class, 'processImport'])->name('umkm.import.process');
-
-// Rute untuk menampilkan halaman tabel UMKM
-Route::get('/admin/umkm', [UmkmController::class, 'index'])->name('umkm.index');
-// Rute untuk menghapus data UMKM
-Route::delete('/admin/umkm/{id}', [UmkmController::class, 'destroy'])->name('umkm.destroy');
-
-// Rute untuk halaman verifikasi nanti
-Route::get('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'verifikasi'])->name('umkm.verifikasi');
-// Route BARU untuk menyimpan/memperbarui data verifikasi
-Route::put('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'updateVerifikasi'])->name('umkm.updateVerifikasi');
-
-// Route untuk menampilkan halaman edit
-Route::get('/admin/umkm/{id}/edit', [UmkmController::class, 'edit'])->name('umkm.edit');
-// Route BARU untuk menyimpan/memperbarui data hasil editan
-Route::put('/admin/umkm/{id}/update', [UmkmController::class, 'update'])->name('umkm.update');
-
-// Route tambah data manual
-Route::get('/admin/tambah-umkm', [UmkmController::class, 'create'])->name('umkm.create');
-Route::post('/admin/tambah-umkm', [UmkmController::class, 'store'])->name('umkm.store');
-
-// Route daftar umkm (card)
-Route::get('/admin/daftar-umkm', [DaftarController::class, 'index'])->name('umkm.daftar');
-
-// Route tampilkan peta sebaran
-Route::get('/admin/peta-sebaran', [PetaController::class, 'petaSebaran'])->name('umkm.peta');
-
-// ROUTE KHUSUS MANAJEMEN KATEGORI 
-Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kategori.index');
-Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
-Route::put('/admin/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
-Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
-
-// Route untuk dashboard
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-
-// Route publik tanpa login
 Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/daftar-umkm', [BerandaController::class, 'daftar'])->name('daftar');
 Route::get('/peta-sebaran', [BerandaController::class, 'peta'])->name('peta');
 
+/*
+|--------------------------------------------------------------------------
+| ROUTE AUTENTIKASI (LOGIN & LOGOUT)
+|--------------------------------------------------------------------------
+*/
 
+// Menampilkan halaman login
+Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Memproses form login (POST)
+Route::post('/admin/login', [LoginController::class, 'login']);
+// Memproses logout (disarankan pakai POST untuk keamanan, tapi GET juga bisa untuk kemudahan)
+Route::get('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
+/*
+|--------------------------------------------------------------------------
+| ROUTE ADMIN (WAJIB LOGIN)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
 
+    // Route untuk Dashboard
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Route untuk menampilkan halaman Manajemen Verifikasi UMKM & Hapus UMKM
+    Route::get('/admin/umkm', [UmkmController::class, 'index'])->name('umkm.index');
+    Route::delete('/admin/umkm/{id}', [UmkmController::class, 'destroy'])->name('umkm.destroy');
 
+    // Route untuk Import CSV
+    Route::get('/admin/import', [UmkmController::class, 'showImportForm'])->name('umkm.import.form');
+    Route::post('/admin/import', [UmkmController::class, 'processImport'])->name('umkm.import.process');
 
-// git add . 
-// git commit -m ""
-// git push -u origin main
+    // Route untuk Verifikasi Data
+    Route::get('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'verifikasi'])->name('umkm.verifikasi');
+    Route::put('/admin/umkm/{id}/verifikasi', [UmkmController::class, 'updateVerifikasi'])->name('umkm.updateVerifikasi');
 
-// php artisan migrate:fresh --seed     
+    // Route untuk Edit Data
+    Route::get('/admin/umkm/{id}/edit', [UmkmController::class, 'edit'])->name('umkm.edit');
+    Route::put('/admin/umkm/{id}/update', [UmkmController::class, 'update'])->name('umkm.update');
 
-// mobile = 320-430         md > 768        sm > 576
-// tablet = 768-1024        lg > 992        xs < 576
-// desktop = 1024-1440      xl > 1200
+    // Route Tambah Data Manual
+    Route::get('/admin/tambah-umkm', [UmkmController::class, 'create'])->name('umkm.create');
+    Route::post('/admin/tambah-umkm', [UmkmController::class, 'store'])->name('umkm.store');
 
-// klo loading lama
-// di .env, SESSION_DRIVER=file
-// hapus semua file di folder bootstrap-cache kecuali .gitignore
+    // Route Daftar UMKM (Card View)
+    Route::get('/admin/daftar-umkm', [DaftarController::class, 'index'])->name('umkm.daftar');
 
+    // Route Tampilkan Peta Sebaran Admin
+    Route::get('/admin/peta-sebaran', [PetaController::class, 'petaSebaran'])->name('umkm.peta');
 
-// login, public page, mobile version
-
-// tampilan verif mobile blm                        donnnn
-// marker peta ilang klo dipencet sembarang         donnnn
-// btn simpan tambah data manual
-// dropdown kategori dan kelurahan di halaman create, verif, edit
+    // Route Khusus Manajemen Kategori
+    Route::get('/admin/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::put('/admin/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+});
