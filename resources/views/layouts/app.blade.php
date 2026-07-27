@@ -14,6 +14,8 @@
 
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
+  <link rel="shortcut icon" href="{{ asset('images/logo_pemda.png') }}" type=image/jpg>
+
   <style>
     /* === DESIGN TOKENS (COLOR STYLES) === */
     :root {
@@ -83,7 +85,7 @@
       color: var(--color-black);
     }
 
-    /* === STYLING SIDEBAR (Disesuaikan ke 90%) === */
+    /*===STYLING SIDEBAR (Disesuaikan ke 90%)===*/
     .sidebar {
       width: 180px;
       background-color: #ffffff;
@@ -179,7 +181,6 @@
       color: var(--color-orange);
     }
 
-    /* === STYLING KONTEN UTAMA (Disesuaikan ke 90%) === */
     .main-content {
       margin-left: 180px;
       flex-grow: 1;
@@ -214,6 +215,9 @@
         </a>
         <a href="{{ route('kategori.index') }}" class="nav-link-custom {{ request()->routeIs('kategori.index') ? 'active' : '' }}">
           <iconify-icon icon="lucide:tags"></iconify-icon> Tambah Kategori
+        </a>
+        <a href="{{ route('kelurahan.index') }}" class="nav-link-custom {{ request()->routeIs('kelurahan.index') ? 'active' : '' }}">
+          <iconify-icon icon="lucide:map-plus"></iconify-icon> Tambah Kelurahan
         </a>
       </nav>
 
@@ -272,7 +276,8 @@
         <li class="mb-3"><a href="{{ route('umkm.daftar') }}">Daftar UMKM</a></li>
         <li class="mb-3"><a href="{{ route('umkm.index') }}">Verifikasi Data</a></li>
         <li class="mb-3"><a href="{{ route('umkm.peta') }}">Peta Sebaran</a></li>
-        <li class="mb-2"><a href="{{ route('kategori.index') }}">Tambah Kategori</a></li>
+        <li class="mb-3"><a href="{{ route('kategori.index') }}">Tambah Kategori</a></li>
+        <li class="mb-2"><a href="{{ route('kelurahan.index') }}">Tambah Kelurahan</a></li>
       </ul>
 
       <div class="mt-2">

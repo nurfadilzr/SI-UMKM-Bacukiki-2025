@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Umkm;
@@ -34,74 +35,164 @@ class UmkmController extends Controller
   }
 
   // 3. Proses membaca file CSV
+  // public function processImport(Request $request)
+  // {
+  //   // Validasi file harus berupa CSV
+  //   $request->validate([
+  //     'file_csv' => 'required|mimes:csv,txt|max:2048',
+  //   ]);
+
+  //   $file = $request->file('file_csv');
+  //   $handle = fopen($file->path(), 'r');
+
+  //   // Lewati baris pertama jika itu adalah header (judul kolom Excel)
+  //   fgetcsv($handle);
+
+  //   $row_number = 2; // Mulai dari baris ke-2 (karena baris 1 header)
+
+  //   while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+  //     // Asumsi urutan kolom CSV (Sesuaikan dengan file Excel/Spreadsheet-mu):
+  //     // 0: Timestamp/Row ID, 1: Nama UMKM, 2: Alamat, 3: Kelurahan, 4: Titik Maps, 5: Kategori, 6: WA, 7: Foto
+
+  //     // Cari ID Kelurahan berdasarkan nama yang diketik di form
+  //     $kelurahan = Kelurahan::where('nama_kelurahan', $data[3])->first();
+  //     $id_kelurahan = $kelurahan ? $kelurahan->id : null;
+
+  //     // Cari ID Kategori berdasarkan nama yang diketik di form
+  //     $kategori = Kategori::where('kategori_umkm', $data[5])->first();
+  //     $id_kategori = $kategori ? $kategori->id : null;
+
+  //     // bersihkan nomor wa
+  //     $kontak_raw = $data[6];
+  //     $kontak_bersih = preg_replace('/[^0-9]/', '', $kontak_raw);
+  //     if (str_starts_with($kontak_bersih, '0')) {
+  //       $kontak_bersih = '62' . substr($kontak_bersih, 1);
+  //     }
+
+  //     // Proses link foto
+  //     $link_foto_asli = $data[7];
+  //     $link_foto_direct = $this->convertDriveLink($link_foto_asli);
+
+  //     // updateOrCreate: Cari data. Jika ada, Timpali/Update. Jika tidak ada, buat baru.
+  //     // firstOrCreate: Cari data. Jika ada, Abaikan/Biarkan saja. Jika tidak ada, buat baru.
+  //     Umkm::firstOrCreate(
+  //       [
+  //         // Patokan data unik (Misal dari Timestamp form atau ID khusus di Spreadsheet)
+  //         'spreadsheet_row_id' => $data[0]
+  //       ],
+  //       [
+  //         'nama' => $data[1],
+  //         'alamat' => $data[2],
+  //         'titik_maps' => $data[4],
+  //         'kontak' => $kontak_bersih,
+  //         'id_kelurahan' => $id_kelurahan,
+  //         'id_kategori' => $id_kategori,
+  //         'foto' => $link_foto_direct,
+  //         // Mengambil ID admin yang sedang login. 
+  //         // Jika karena alasan tertentu auth kosong (misal saat testing), beri nilai default 1.
+  //         'id_admin' => Auth::id() ?? 1,
+  //         // Status default 'menunggu' dan 'aktif' otomatis terisi oleh database, 
+  //         // tapi jika ingin dipertegas, bisa ditulis di sini:
+  //         // 'status_verif' => 'menunggu',
+  //         // 'status_umkm' => 'aktif',
+  //       ]
+  //     );
+  //     $row_number++;
+  //   }
+
+  //   fclose($handle);
+
+  //   return redirect()->back()->with('success', 'Data UMKM berhasil di-import dan sedang menunggu verifikasi!');
+  // }
+
   public function processImport(Request $request)
   {
-    // Validasi file harus berupa CSV
+    // 1. Validasi file dan ukuran beserta pesan kustom
     $request->validate([
-      'file_csv' => 'required|mimes:csv,txt|max:2048',
+      'file_csv' => 'required|mimes:csv,txt|max:2048', // max:2048 = 2MB
+    ], [
+      'file_csv.required' => 'File CSV wajib diunggah.',
+      'file_csv.mimes' => 'Format file tidak didukung, harap gunakan CSV.',
+      'file_csv.max' => 'Ukuran file CSV terlalu besar. Maksimal 2 MB.',
     ]);
 
     $file = $request->file('file_csv');
     $handle = fopen($file->path(), 'r');
 
-    // Lewati baris pertama jika itu adalah header (judul kolom Excel)
+    // Lewati baris pertama jika itu adalah header
     fgetcsv($handle);
 
-    $row_number = 2; // Mulai dari baris ke-2 (karena baris 1 header)
+    $row_number = 2; // Mulai dari baris ke-2
 
-    while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
-      // Asumsi urutan kolom CSV (Sesuaikan dengan file Excel/Spreadsheet-mu):
-      // 0: Timestamp/Row ID, 1: Nama UMKM, 2: Alamat, 3: Kelurahan, 4: Titik Maps, 5: Kategori, 6: WA, 7: Foto
+    // 2. Mulai Database Transaction
+    DB::beginTransaction();
 
-      // Cari ID Kelurahan berdasarkan nama yang diketik di form
-      $kelurahan = Kelurahan::where('nama_kelurahan', $data[3])->first();
-      $id_kelurahan = $kelurahan ? $kelurahan->id : null;
+    try {
+      while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
 
-      // Cari ID Kategori berdasarkan nama yang diketik di form
-      $kategori = Kategori::where('kategori_umkm', $data[5])->first();
-      $id_kategori = $kategori ? $kategori->id : null;
+        // Abaikan baris jika sepenuhnya kosong
+        if (empty(array_filter($data))) {
+          $row_number++;
+          continue;
+        }
 
-      // bersihkan nomor wa
-      $kontak_raw = $data[6];
-      $kontak_bersih = preg_replace('/[^0-9]/', '', $kontak_raw);
-      if (str_starts_with($kontak_bersih, '0')) {
-        $kontak_bersih = '62' . substr($kontak_bersih, 1);
+        // 3. Validasi Kesesuaian Kolom
+        // Pastikan jumlah kolom minimal 8 (index 0 sampai 7)
+        if (count($data) < 8) {
+          throw new \Exception("Format tidak sesuai pada baris ke-{$row_number}. File CSV harus memiliki setidaknya 8 kolom.");
+        }
+
+        // Cari ID Kelurahan berdasarkan nama yang diketik di form (gunakan trim untuk hapus spasi berlebih)
+        $kelurahan = Kelurahan::where('nama_kelurahan', trim($data[3]))->first();
+        $id_kelurahan = $kelurahan ? $kelurahan->id : null;
+
+        // Cari ID Kategori berdasarkan nama
+        $kategori = Kategori::where('kategori_umkm', trim($data[5]))->first();
+        $id_kategori = $kategori ? $kategori->id : null;
+
+        // Bersihkan nomor WA
+        $kontak_raw = $data[6];
+        $kontak_bersih = preg_replace('/[^0-9]/', '', $kontak_raw);
+        if (str_starts_with($kontak_bersih, '0')) {
+          $kontak_bersih = '62' . substr($kontak_bersih, 1);
+        }
+
+        // Proses link foto
+        $link_foto_asli = $data[7];
+        $link_foto_direct = $this->convertDriveLink($link_foto_asli);
+
+        // Simpan ke database
+        Umkm::firstOrCreate(
+          [
+            'spreadsheet_row_id' => trim($data[0])
+          ],
+          [
+            'nama' => trim($data[1]),
+            'alamat' => trim($data[2]),
+            'titik_maps' => trim($data[4]),
+            'kontak' => $kontak_bersih,
+            'id_kelurahan' => $id_kelurahan,
+            'id_kategori' => $id_kategori,
+            'foto' => $link_foto_direct,
+            'id_admin' => Auth::id() ?? 1,
+          ]
+        );
+
+        $row_number++;
       }
 
-      // Proses link foto
-      $link_foto_asli = $data[7];
-      $link_foto_direct = $this->convertDriveLink($link_foto_asli);
+      // Jika semua baris berhasil, simpan permanen ke database
+      DB::commit();
+      fclose($handle);
 
-      // updateOrCreate: Cari data. Jika ada, Timpali/Update. Jika tidak ada, buat baru.
-      // firstOrCreate: Cari data. Jika ada, Abaikan/Biarkan saja. Jika tidak ada, buat baru.
-      Umkm::firstOrCreate(
-        [
-          // Patokan data unik (Misal dari Timestamp form atau ID khusus di Spreadsheet)
-          'spreadsheet_row_id' => $data[0]
-        ],
-        [
-          'nama' => $data[1],
-          'alamat' => $data[2],
-          'titik_maps' => $data[4],
-          'kontak' => $kontak_bersih,
-          'id_kelurahan' => $id_kelurahan,
-          'id_kategori' => $id_kategori,
-          'foto' => $link_foto_direct,
-          // Mengambil ID admin yang sedang login. 
-          // Jika karena alasan tertentu auth kosong (misal saat testing), beri nilai default 1.
-          'id_admin' => Auth::id() ?? 1,
-          // Status default 'menunggu' dan 'aktif' otomatis terisi oleh database, 
-          // tapi jika ingin dipertegas, bisa ditulis di sini:
-          // 'status_verif' => 'menunggu',
-          // 'status_umkm' => 'aktif',
-        ]
-      );
-      $row_number++;
+      return redirect()->back()->with('success', 'Data UMKM berhasil di-import dan sedang menunggu verifikasi!');
+    } catch (\Exception $e) {
+      // Jika ada error (kolom kurang atau masalah database), batalkan semua inputan
+      DB::rollBack();
+      fclose($handle);
+
+      return redirect()->back()->with('error', 'Gagal mengimpor data. File yang anda unggah tidak sesuai. Silakan cek kembali dan unggah file yang benar.');
     }
-
-    fclose($handle);
-
-    return redirect()->back()->with('success', 'Data UMKM berhasil di-import dan sedang menunggu verifikasi!');
   }
 
   // 4. menampilkan tabel data umkm
@@ -151,14 +242,28 @@ class UmkmController extends Controller
     // Validasi input (Sertakan validasi wajib untuk 'new_foto')
     $request->validate([
       'nama' => 'required|string|max:255',
-      'kontak' => 'required|string|max:20',
+
+      'kontak' => [
+        'required',
+        'regex:/^(08|628)[0-9]{8,12}$/'
+      ],
+
       'id_kategori' => 'required|exists:kategori,id',
       'id_kelurahan' => 'required|exists:kelurahan,id',
       'alamat' => 'required|string',
       'titik_maps' => 'required|url',
       'latitude' => 'nullable|numeric',
       'longitude' => 'nullable|numeric',
-      'new_foto' => 'required|image|mimes:jpeg,png,jpg|max:10240' // maks 2MB
+      'new_foto' => 'required|image|mimes:jpeg,png,jpg|max:10240'
+    ], [
+
+      'kontak.required' => 'Nomor WhatsApp wajib diisi.',
+      'kontak.regex' => 'Nomor WhatsApp harus diawali 08 atau 628 dan terdiri dari 10–15 digit angka.',
+
+      'new_foto.required' => 'Foto UMKM wajib diunggah.',
+      'new_foto.image' => 'File harus berupa gambar.',
+      'new_foto.mimes' => 'Format gambar harus JPG, JPEG, atau PNG.',
+      'new_foto.max' => 'Ukuran gambar maksimal 10 MB.',
     ]);
 
     // Bersihkan nomor wa
@@ -210,7 +315,7 @@ class UmkmController extends Controller
       'id_kategori' => $request->id_kategori,
       'foto' => $foto_path, // Path foto yang sudah diproses di atas
       'id_admin' => Auth::id() ?? 1,
-      'status_verif' => $request->status_verif ?? 'disetujui',
+      'status_verif' => 'disetujui',
       'status_umkm'  => $request->status_umkm ?? 'aktif',
       'latitude' => $request->latitude,
       'longitude' => $request->longitude,

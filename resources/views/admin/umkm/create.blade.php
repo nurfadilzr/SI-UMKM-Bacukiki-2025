@@ -53,12 +53,12 @@
   .step-item:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 16px;
+    top: 20px;
     left: 50%;
     width: 100%;
     height: 2px;
-    background-color: var(--color-border);
-    z-index: 1;
+    background-color: #B3B3B3;
+    z-index: 0;
     transition: background-color 0.3s;
   }
 
@@ -68,7 +68,7 @@
 
   .step-circle {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -77,8 +77,8 @@
     align-items: center;
     font-weight: 600;
     font-size: 14px;
-    border: 2px solid var(--color-border);
-    color: #9CA3AF;
+    border: 2px solid #B3B3B3;
+    color: #B3B3B3;
     background-color: #FFFFFF;
     transition: all 0.3s;
   }
@@ -93,7 +93,7 @@
   .step-text {
     font-size: 12px;
     font-weight: 500;
-    color: #9CA3AF;
+    color: #B3B3B3;
     text-align: center;
     transition: color 0.3s;
   }
@@ -272,12 +272,12 @@
           <div class="step-circle">2</div>
           <span class="step-text">Input Koordinat</span>
         </div>
-        <div class="step-item" id="stepper-3">
+        <!-- <div class="step-item" id="stepper-3">
           <div class="step-circle">3</div>
           <span class="step-text">Status Verifikasi</span>
-        </div>
-        <div class="step-item" id="stepper-4">
-          <div class="step-circle">4</div>
+        </div> -->
+        <div class="step-item" id="stepper-3">
+          <div class="step-circle">3</div>
           <span class="step-text">Status UMKM</span>
         </div>
       </div>
@@ -306,11 +306,11 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label-custom">Nama UMKM</label>
-                <input type="text" name="nama" class="form-control-custom" placeholder="Masukkan nama UMKM" value="{{ old('nama') }}" required>
+                <input type="text" name="nama" class="form-control-custom" placeholder="contoh: Warung Berkah" value="{{ old('nama') }}" required>
               </div>
               <div class="col-md-6">
                 <label class="form-label-custom">Kontak UMKM</label>
-                <input type="text" name="kontak" class="form-control-custom" placeholder="Masukkan kontak UMKM" value="{{ old('kontak') }}" required>
+                <input type="text" id="kontak" name="kontak" class="form-control-custom" placeholder="contoh: 081234567890" value="{{ old('kontak') }}" required>
               </div>
               <div class="col-md-6">
                 <label class="form-label-custom">Kategori UMKM</label>
@@ -345,18 +345,17 @@
               </div>
               <div class="col-12">
                 <label class="form-label-custom">Alamat UMKM</label>
-                <input type="text" name="alamat" class="form-control-custom" placeholder="Masukkan alamat UMKM" value="{{ old('alamat') }}" required>
+                <input type="text" name="alamat" class="form-control-custom" placeholder="contoh: Jl. Seroja No. 1" value="{{ old('alamat') }}" required>
               </div>
               <div class="col-12">
                 <label class="form-label-custom">Link Titik Lokasi UMKM (Google Maps)</label>
-                <input type="url" name="titik_maps" class="form-control-custom" placeholder="Masukkan link titik lokasi UMKM" value="{{ old('titik_maps') }}" required>
+                <input type="url" name="titik_maps" class="form-control-custom" placeholder="contoh: https://maps.app.goo.gl/nC9mG2kyBvKESyn76" value="{{ old('titik_maps') }}" required>
               </div>
             </div>
           </div>
         </div>
         <div class="d-flex justify-content-end gap-2 mt-4">
           <a href="{{ route('umkm.index') }}" class="btn btn-batal">Batal</a>
-          <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(2)">Selanjutnya</button> -->
           <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(1, 2)">Selanjutnya</button>
         </div>
       </div>
@@ -366,21 +365,20 @@
         <div class="row g-4 mb-4">
           <div class="col-md-6">
             <label class="form-label-custom">Latitude</label>
-            <input type="text" name="latitude" class="form-control-custom" placeholder="Masukkan latitude (lintang)" value="{{ old('latitude') }}" required>
+            <input type="text" name="latitude" class="form-control-custom" placeholder="contoh: -4.014483594504468" value="{{ old('latitude') }}" inputmode="decimal" required>
           </div>
           <div class="col-md-6">
             <label class="form-label-custom">Longitude</label>
-            <input type="text" name="longitude" class="form-control-custom" placeholder="Masukkan longitude (bujur)" value="{{ old('longitude') }}" required>
+            <input type="text" name="longitude" class="form-control-custom" placeholder="contoh: 119.65160926671558" value="{{ old('longitude') }}" inputmode="decimal" required>
           </div>
         </div>
         <div class="d-flex justify-content-end gap-2 mt-5">
           <button type="button" class="btn btn-batal" onclick="goToStep(1)">Sebelumnya</button>
-          <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(3)">Selanjutnya</button> -->
           <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(2, 3)">Selanjutnya</button>
         </div>
       </div>
 
-      <div id="content-step-3" style="display: none;">
+      <!-- <div id="content-step-3" style="display: none;">
         <p class="info-text mb-4">Pilih status verifikasi data sesuai dengan kondisi UMKM.</p>
         <div class="mb-4">
           <label class="form-label-custom mb-2">Status Verifikasi Data UMKM</label>
@@ -399,12 +397,11 @@
         </div>
         <div class="d-flex justify-content-end gap-2 mt-5">
           <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
-          <!-- <button type="button" class="btn btn-selanjutnya" onclick="goToStep(4)">Selanjutnya</button> -->
           <button type="button" class="btn btn-selanjutnya" onclick="validasiDanLanjut(3, 4)">Selanjutnya</button>
         </div>
-      </div>
+      </div> -->
 
-      <div id="content-step-4" style="display: none;">
+      <div id="content-step-3" style="display: none;">
         <p class="info-text mb-4">Pilih status keaktifan UMKM.</p>
         <div class="mb-4">
           <label class="form-label-custom mb-2">Status UMKM</label>
@@ -418,7 +415,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-end gap-2 mt-5">
-          <button type="button" class="btn btn-batal" onclick="goToStep(3)">Sebelumnya</button>
+          <button type="button" class="btn btn-batal" onclick="goToStep(2)">Sebelumnya</button>
           <button type="submit" class="btn btn-selanjutnya">Simpan</button>
         </div>
       </div>
@@ -429,22 +426,239 @@
 </div>
 
 <script>
-  // FUNGSI GANTI TAHAP STEPPER
+  // ==========================================
+  // 1. FUNGSI GANTI TAHAP STEPPER
+  // ==========================================
   function goToStep(stepNumber) {
     document.getElementById('content-step-1').style.display = 'none';
     document.getElementById('content-step-2').style.display = 'none';
     document.getElementById('content-step-3').style.display = 'none';
-    document.getElementById('content-step-4').style.display = 'none';
 
     document.getElementById('content-step-' + stepNumber).style.display = 'block';
 
     const titleElement = document.getElementById('step-title');
     if (stepNumber === 1) titleElement.innerText = 'Input Data UMKM';
     if (stepNumber === 2) titleElement.innerText = 'Input Titik Koordinat UMKM';
-    if (stepNumber === 3) titleElement.innerText = 'Pilih Status Verifikasi Data UMKM';
-    if (stepNumber === 4) titleElement.innerText = 'Pilih Status UMKM';
+    if (stepNumber === 3) titleElement.innerText = 'Pilih Status UMKM';
 
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 3; i++) {
+      let stepDiv = document.getElementById('stepper-' + i);
+      stepDiv.classList.remove('step-active', 'step-completed');
+
+      let circle = stepDiv.querySelector('.step-circle');
+      circle.innerHTML = i;
+
+      if (i < stepNumber) {
+        stepDiv.classList.add('step-completed');
+        circle.innerHTML = '<iconify-icon icon="lucide:check" style="font-size: 18px;"></iconify-icon>';
+      } else if (i === stepNumber) {
+        stepDiv.classList.add('step-active');
+      }
+    }
+  }
+
+  // ==========================================
+  // 2. FUNGSI PREVIEW FOTO BARU
+  // ==========================================
+  const fotoPreviewBox = document.getElementById('foto-preview-box');
+  const inputNewFoto = document.getElementById('input-new-foto');
+  const fotoPreviewImg = document.getElementById('foto-preview-img');
+
+  if (fotoPreviewBox) {
+    fotoPreviewBox.addEventListener('click', function() {
+      inputNewFoto.click();
+    });
+    inputNewFoto.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file && file.type.match('image.*')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          fotoPreviewImg.src = e.target.result;
+          fotoPreviewBox.style.border = 'none';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // ==========================================
+  // 3. FUNGSI RESTRIKSI & VALIDASI KONTAK
+  // ==========================================
+  const kontak = document.getElementById('kontak');
+  if (kontak) {
+    kontak.addEventListener('input', function() {
+      // a. Hapus semua karakter yang BUKAN angka seketika saat diketik
+      this.value = this.value.replace(/[^0-9]/g, '');
+
+      // b. Batasi maksimal 15 karakter
+      if (this.value.length > 15) {
+        this.value = this.value.slice(0, 15);
+      }
+
+      // c. Validasi awalan dan jumlah minimal digit
+      const nomor = this.value;
+      if (nomor.length === 0) {
+        this.setCustomValidity(''); // Biarkan HTML5 'required' yang menangani ini
+      } else if (!nomor.startsWith('08') && !nomor.startsWith('628')) {
+        this.setCustomValidity('Nomor WA harus diawali 08 atau 628.');
+      } else if (nomor.length < 10) {
+        this.setCustomValidity('Nomor WA minimal 10 digit.');
+      } else {
+        this.setCustomValidity(''); // Valid
+      }
+    });
+  }
+
+  // ==========================================
+  // 4. FUNGSI VALIDASI SEBELUM PINDAH TAHAP
+  // ==========================================
+  function validasiDanLanjut(stepSekarang, stepTujuan) {
+    const areaStep = document.getElementById('content-step-' + stepSekarang);
+    const fieldWajib = areaStep.querySelectorAll('input[required], select[required], textarea[required]');
+
+    let semuaValid = true;
+
+    fieldWajib.forEach(field => {
+      const isFoto = field.type === 'file';
+      const isCustomDropdown = field.id === 'input-kategori' || field.id === 'input-kelurahan';
+
+      // Tentukan elemen mana yang akan diwarnai
+      let targetVisual = field;
+      if (isFoto) targetVisual = document.getElementById('foto-preview-box');
+      if (isCustomDropdown) targetVisual = document.getElementById('btn-' + field.id.replace('input-', ''));
+
+      // Cari elemen pesan error (jika sudah ada sebelumnya)
+      let errorText = targetVisual.parentNode.querySelector('.pesan-error-wajib');
+
+      if (!field.checkValidity()) {
+        // ==========================================
+        // JIKA GAGAL VALIDASI
+        // ==========================================
+        semuaValid = false;
+
+        // 1. Ubah warna border (Oranye)
+        targetVisual.style.borderColor = '#D17A22';
+
+        // 2. Buat elemen teks error JIKA belum ada
+        if (!errorText) {
+          errorText = document.createElement('small');
+          errorText.className = 'pesan-error-wajib';
+          errorText.style.cssText = 'color: #D17A22; font-size: 12px; margin-top: 4px; display: block; font-weight: 500;';
+          targetVisual.parentNode.insertBefore(errorText, targetVisual.nextSibling);
+        }
+
+        // 3. Tentukan isi pesannya
+        if (field.validity.valueMissing) {
+          errorText.innerText = '*Wajib diisi';
+        } else if (field.id === 'kontak' && field.validationMessage) {
+          errorText.innerText = '*' + field.validationMessage;
+        } else {
+          errorText.innerText = '*Format tidak sesuai';
+        }
+
+      } else {
+        // ==========================================
+        // JIKA VALID (TERISI BENAR)
+        // ==========================================
+        targetVisual.style.borderColor = '#E5E7EB';
+        targetVisual.style.backgroundColor = isFoto ? 'transparent' : '#FFFFFF';
+
+        // Hapus teks error jika sebelumnya ada
+        if (errorText) {
+          errorText.remove();
+        }
+      }
+    });
+
+    // Pindah step jika tidak ada error sama sekali
+    if (semuaValid) {
+      goToStep(stepTujuan);
+    }
+  }
+
+  // ==========================================
+  // 5. FUNGSI UNTUK DROPDOWN KUSTOM
+  // ==========================================
+  function pilihDropdown(tipe, id, label, event) {
+    event.preventDefault();
+
+    const labelElement = document.getElementById('label-' + tipe);
+    labelElement.innerText = label;
+    labelElement.classList.remove('text-muted');
+    labelElement.style.color = 'var(--color-black)';
+
+    document.getElementById('input-' + tipe).value = id;
+
+    const btnVisual = document.getElementById('btn-' + tipe);
+    btnVisual.style.borderColor = '#E5E7EB';
+    btnVisual.style.backgroundColor = '#FFFFFF';
+
+    const errorText = btnVisual.parentNode.querySelector('.pesan-error-wajib');
+    if (errorText) errorText.remove();
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    @if(old('id_kategori'))
+    const oldKatName = "{{ $kategoris->firstWhere('id', old('id_kategori'))->kategori_umkm ?? 'Pilih Kategori UMKM' }}";
+    document.getElementById('label-kategori').innerText = oldKatName;
+    document.getElementById('label-kategori').classList.remove('text-muted');
+    document.getElementById('label-kategori').style.color = 'var(--color-black)';
+    @endif
+
+    @if(old('id_kelurahan'))
+    const oldKelName = "{{ $kelurahans->firstWhere('id', old('id_kelurahan'))->nama_kelurahan ?? 'Pilih Kelurahan UMKM' }}";
+    document.getElementById('label-kelurahan').innerText = oldKelName;
+    document.getElementById('label-kelurahan').classList.remove('text-muted');
+    document.getElementById('label-kelurahan').style.color = 'var(--color-black)';
+    @endif
+  });
+
+  // ==========================================
+  // 6. HILANGKAN ERROR SEKETIKA SAAT DIKETIK
+  // ==========================================
+  document.addEventListener('DOMContentLoaded', function() {
+    const semuaFieldWajib = document.querySelectorAll('input[required], select[required], textarea[required]');
+
+    semuaFieldWajib.forEach(field => {
+      const eventType = (field.type === 'file' || field.tagName === 'SELECT') ? 'change' : 'input';
+
+      field.addEventListener(eventType, function() {
+        if (this.checkValidity()) {
+          const isFoto = this.type === 'file';
+          const isCustomDropdown = this.id === 'input-kategori' || this.id === 'input-kelurahan';
+
+          let targetVisual = this;
+          if (isFoto) targetVisual = document.getElementById('foto-preview-box');
+          if (isCustomDropdown) targetVisual = document.getElementById('btn-' + this.id.replace('input-', ''));
+
+          targetVisual.style.borderColor = '#E5E7EB';
+          targetVisual.style.backgroundColor = isFoto ? 'transparent' : '#FFFFFF';
+
+          const errorText = targetVisual.parentNode.querySelector('.pesan-error-wajib');
+          if (errorText) errorText.remove();
+        }
+      });
+    });
+  });
+</script>
+
+<!-- <script>
+  // FUNGSI GANTI TAHAP STEPPER
+  function goToStep(stepNumber) {
+    document.getElementById('content-step-1').style.display = 'none';
+    document.getElementById('content-step-2').style.display = 'none';
+    // document.getElementById('content-step-3').style.display = 'none';
+    document.getElementById('content-step-3').style.display = 'none';
+
+    document.getElementById('content-step-' + stepNumber).style.display = 'block';
+
+    const titleElement = document.getElementById('step-title');
+    if (stepNumber === 1) titleElement.innerText = 'Input Data UMKM';
+    if (stepNumber === 2) titleElement.innerText = 'Input Titik Koordinat UMKM';
+    // if (stepNumber === 3) titleElement.innerText = 'Pilih Status Verifikasi Data UMKM';
+    if (stepNumber === 3) titleElement.innerText = 'Pilih Status UMKM';
+
+    for (let i = 1; i <= 3; i++) {
       let stepDiv = document.getElementById('stepper-' + i);
       stepDiv.classList.remove('step-active', 'step-completed');
 
@@ -483,6 +697,23 @@
     });
   }
 
+  // Fungsi untuk validasi input kontak
+  const kontak = document.getElementById('kontak');
+  kontak.addEventListener('input', function() {
+    const nomor = this.value;
+    const regex = /^(08|628)[0-9]{8,12}$/; // diawali 08 atau 628, hanya angka, stlh awalan 8-12 digit
+
+    if (nomor.length === 0) {
+      this.setCustomValidity('');
+    } else if (!regex.test(nomor)) {
+      this.setCustomValidity(
+        'Nomor WhatsApp harus diawali 08 atau 628 dan terdiri dari 10-15 digit.'
+      );
+    } else {
+      this.setCustomValidity('');
+    }
+  });
+
   // Fungsi untuk memvalidasi sebelum pindah tahap
   function validasiDanLanjut(stepSekarang, stepTujuan) {
     const areaStep = document.getElementById('content-step-' + stepSekarang);
@@ -503,7 +734,7 @@
       const tempatPesan = targetVisual;
       let errorText = tempatPesan.parentNode.querySelector('.pesan-error-wajib');
 
-      if (field.value.trim() === '') {
+      if (!field.checkValidity()) {
         // ==========================================
         // JIKA KOSONG: Gagal validasi
         // ==========================================
@@ -511,18 +742,25 @@
 
         // 1. Ubah warna border & background (Warna Oranye/Merah Bata)
         targetVisual.style.borderColor = '#D17A22';
-        // targetVisual.style.backgroundColor = '#FFFBEB';
 
         // 2. Buat dan munculkan teks *Wajib diisi jika belum ada
-        if (!errorText) {
+        if (field.validity.valueMissing) {
+          errorText.innerText = '*Wajib diisi';
           errorText = document.createElement('small');
           errorText.className = 'pesan-error-wajib';
           errorText.style.cssText = 'color: #D17A22; font-size: 12px; margin-top: 4px; display: block; font-weight: 500;';
-          errorText.innerText = '*Wajib diisi';
-
-          // Sisipkan tepat di bawah elemen target
           tempatPesan.parentNode.insertBefore(errorText, tempatPesan.nextSibling);
+
+        } else if (field.name === 'kontak') {
+          errorText.innerText = '*Nomor WA harus diawali 08 atau 628.';
+          errorText = document.createElement('small');
+          errorText.style.cssText = 'color: #D17A22; font-size: 12px; margin-top: 4px; display: block; font-weight: 500;';
+          tempatPesan.parentNode.insertBefore(errorText, tempatPesan.nextSibling);
+
+        } else {
+          errorText.innerText = field.validationMessage;
         }
+
       } else {
         // ==========================================
         // JIKA TERISI: Kembalikan ke normal
@@ -611,5 +849,5 @@
       });
     });
   });
-</script>
+</script> -->
 @endsection

@@ -7,6 +7,7 @@ use App\Http\Controllers\PetaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\KelurahanController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -81,4 +82,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/kategori', [KategoriController::class, 'store'])->name('kategori.store');
     Route::put('/admin/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/admin/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+
+    // Route Khusus Manajemen kelurahan
+    Route::get('/admin/kelurahan', [KelurahanController::class, 'index'])->name('kelurahan.index');
+    Route::post('/admin/kelurahan', [KelurahanController::class, 'store'])->name('kelurahan.store');
+    Route::put('/admin/kelurahan/{id}', [KelurahanController::class, 'update'])->name('kelurahan.update');
+    Route::delete('/admin/kelurahan/{id}', [KelurahanController::class, 'destroy'])->name('kelurahan.destroy');
 });

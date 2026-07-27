@@ -51,12 +51,12 @@
   .step-item:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 16px;
+    top: 20px;
     left: 50%;
     width: 100%;
     height: 2px;
-    background-color: var(--color-border);
-    z-index: 1;
+    background-color: #B3B3B3;
+    z-index: 0;
     transition: background-color 0.3s;
   }
 
@@ -66,7 +66,7 @@
 
   .step-circle {
     position: relative;
-    z-index: 2;
+    z-index: 1;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -75,8 +75,8 @@
     align-items: center;
     font-weight: 600;
     font-size: 13px;
-    border: 2px solid var(--color-border);
-    color: #9CA3AF;
+    border: 2px solid #B3B3B3;
+    color: #B3B3B3;
     background-color: #FFFFFF;
     transition: all 0.3s;
   }
@@ -91,7 +91,7 @@
   .step-text {
     font-size: 12px;
     font-weight: 500;
-    color: #9CA3AF;
+    color: #B3B3B3;
     text-align: center;
     transition: color 0.3s;
   }
@@ -192,7 +192,7 @@
 
   .form-control-custom {
     border-radius: 6px;
-    border: 1px solid #9CA3AF;
+    border: 1px solid var(--color-gray-500);
     font-size: 13px;
     color: var(--color-black);
     padding: 10px 14px;
@@ -327,15 +327,6 @@
 
       <div id="content-step-1">
         <p class="info-text mb-4">Silakan cek kesesuaian data UMKM di bawah. Anda dapat langsung mengedit data jika terdapat ketidaksesuaian.</p>
-
-        @if ($errors->any())
-        <div class="alert alert-danger" style="border-radius: 8px; font-size: 13px; border:none; background-color:rgba(211,47,47,0.1); color:#D32F2F">
-          <strong>Gagal Menyimpan Data!</strong> Periksa kembali pengisian Anda.
-          <ul class="mb-0 mt-1">
-            @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
-          </ul>
-        </div>
-        @endif
 
         <div class="row g-4 mb-4">
           <div class="col-lg-4">
@@ -487,7 +478,7 @@
 
         <div id="box-catatan" class="mt-4" style="display: none; background-color: var(--color-orange-50); border: 1px solid #D17A22; padding: 16px; border-radius: 8px;">
           <label class="form-label-custom mb-2" style="color: #D17A22;">Alasan Penolakan <span style="color: #D17A22;">*</span></label>
-          <textarea name="catatan_penolakan" id="input-catatan" class="form-control-custom" rows="3" placeholder="Tuliskan secara jelas mengapa data UMKM ini ditolak..."></textarea>
+          <textarea name="catatan_penolakan" id="input-catatan" class="form-control-custom" rows="3" placeholder="Tuliskan secara jelas mengapa data UMKM ini ditolak..." required></textarea>
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-5">
