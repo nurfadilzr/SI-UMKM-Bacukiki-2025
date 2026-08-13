@@ -213,6 +213,38 @@
     color: #FFFFFF;
   }
 
+  /* CSS pagination */
+  .pagination .page-link {
+    color: var(--color-green) !important;
+    border-color: #E5E7EB;
+  }
+
+  /* 2. Mengubah warna background saat kotak angka sedang aktif (diklik) */
+  .pagination .page-item.active .page-link {
+    background-color: var(--color-green) !important;
+    border-color: var(--color-green) !important;
+    color: #FFFFFF !important;
+  }
+
+  /* 3. Efek saat mouse diarahkan (hover) ke kotak angka */
+  .pagination .page-link:hover {
+    background-color: var(--color-green-light, #F0FDF4) !important;
+    color: var(--color-green) !important;
+    border-color: #E5E7EB;
+  }
+
+  /* 4. Menghilangkan bayangan (glow) biru saat diklik, ganti jadi hijau */
+  .pagination .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(65, 100, 74, 0.25) !important;
+  }
+
+  /* 5. Warna untuk tombol yang mati (disabled) seperti panah kiri di halaman pertama */
+  .pagination .page-item.disabled .page-link {
+    color: #9CA3AF !important;
+    background-color: #F9FAFB !important;
+    border-color: #E5E7EB;
+  }
+
   /* =========================================
      === CSS RESPONSIVE KHUSUS MOBILE ===
      ========================================= */
