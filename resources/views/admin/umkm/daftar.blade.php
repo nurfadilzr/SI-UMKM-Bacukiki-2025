@@ -346,8 +346,13 @@
     @endforelse
   </div>
 
-  <div class="mt-4">
-    {{ $umkms->links('pagination::bootstrap-5') }}
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 gap-2" style="font-size: 12px; color: var(--color-gray-500);">
+    <div>
+      Menampilkan {{ $umkms->firstItem() ?? 0 }} - {{ $umkms->lastItem() ?? 0 }} dari {{ $umkms->total() }} data
+    </div>
+    <div style="transform: scale(0.9); transform-origin: center right;">
+      {{ $umkms->withQueryString()->links('pagination::bootstrap-4') }}
+    </div>
   </div>
 
 </div>
