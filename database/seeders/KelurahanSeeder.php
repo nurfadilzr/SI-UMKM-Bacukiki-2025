@@ -14,10 +14,10 @@ class KelurahanSeeder extends Seeder
   public function run(): void
   {
     DB::table('kelurahan')->insert([
-      ['nama_kelurahan' => 'Galung Maloang'],
-      ['nama_kelurahan' => 'Lemoe'],
-      ['nama_kelurahan' => 'Lompoe'],
-      ['nama_kelurahan' => 'Watang Bacukiki'],
+      ['nama_kelurahan' => 'Galung Maloang', 'id_admin' => 1],
+      ['nama_kelurahan' => 'Lemoe', 'id_admin' => 1],
+      ['nama_kelurahan' => 'Lompoe', 'id_admin' => 1],
+      ['nama_kelurahan' => 'Watang Bacukiki', 'id_admin' => 1],
     ]);
   }
 }
