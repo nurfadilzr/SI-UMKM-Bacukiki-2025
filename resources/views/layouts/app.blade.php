@@ -161,6 +161,7 @@
       padding: 12px 14px;
       border-top: 2px solid var(--color-gray-50);
       margin-top: auto;
+      width: 100%;
     }
 
     .btn-book {
@@ -169,6 +170,16 @@
 
     .btn-keluar {
       color: var(--color-orange);
+      background: transparent;
+      border: none;
+      padding: 8px 10px;
+      font-weight: 500;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border-radius: 5px;
     }
 
     .btn-book:hover {
