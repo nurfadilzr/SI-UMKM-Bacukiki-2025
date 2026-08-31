@@ -39,7 +39,7 @@ Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('log
 // Memproses form login (POST)
 Route::post('/admin/login', [LoginController::class, 'login']);
 // Memproses logout (disarankan pakai POST untuk keamanan, tapi GET juga bisa untuk kemudahan)
-Route::get('/admin/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/admin/logout', [LoginController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------

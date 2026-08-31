@@ -225,9 +225,12 @@
         <a href="https://docs.google.com/document/d/1JmJYP7vHWA6wmZHJ9xqZ2lJ_ZzdvJuNGbdQ9m4TZb0o/edit?usp=sharing" target="_blank" class="nav-link-custom btn-book">
           <iconify-icon icon="lucide:book-open"></iconify-icon> Manual Book
         </a>
-        <a href="{{ route('logout') }}" class="nav-link-custom btn-keluar">
-          <iconify-icon icon="lucide:log-out"></iconify-icon> Keluar
-        </a>
+        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+          @csrf
+          <button type="submit" class="nav-link-custom btn-keluar">
+            <iconify-icon icon="lucide:log-out"></iconify-icon> Keluar
+          </button>
+        </form>
       </div>
 
     </aside>
